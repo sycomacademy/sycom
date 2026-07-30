@@ -19,6 +19,15 @@ import {
 } from "@/components/dashboard/course/course-members-schema";
 import { useDebouncedSearch } from "@/hooks/use-debounced-search";
 import { useTRPC, useTRPCClient } from "@/lib/trpc/client";
+import {
+  AlertDialog,
+  AlertDialogClose,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@sycom/ui/components/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@sycom/ui/components/avatar";
 import { Badge } from "@sycom/ui/components/badge";
 import { Button } from "@sycom/ui/components/button";
@@ -122,6 +131,18 @@ function StudentListItem({
   onView: (enrollmentId: string) => void;
 }) {
   const completionLabel = `${enrollment.completedLessonCount}/${enrollment.totalLessonCount} complete`;
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
+
+  const handleConfirmRemove = async () => {
+    setIsRemoving(true);
+    try {
+      await onRemove(enrollment.enrollmentId);
+      setConfirmOpen(false);
+    } finally {
+      setIsRemoving(false);
+    }
+  };
 
   return (
     <div className="flex items-center justify-between gap-3 border px-4 py-3">
@@ -149,10 +170,32 @@ function StudentListItem({
         <Button onClick={() => onView(enrollment.enrollmentId)} size="sm" variant="outline">
           View student
         </Button>
-        <Button onClick={() => void onRemove(enrollment.enrollmentId)} size="sm" variant="ghost">
+        <Button onClick={() => setConfirmOpen(true)} size="sm" variant="ghost">
           Kick out
         </Button>
       </div>
+
+      <AlertDialog onOpenChange={setConfirmOpen} open={confirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Kick out student</AlertDialogTitle>
+            <AlertDialogDescription>
+              This removes <strong>{enrollment.name}</strong> ({enrollment.email}) from this course,
+              along with their progress and any issued certificate. They can be re-enrolled later.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogClose render={<Button variant="outline" />}>Cancel</AlertDialogClose>
+            <Button
+              loading={isRemoving}
+              onClick={() => void handleConfirmRemove()}
+              variant="destructive"
+            >
+              Kick out
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
