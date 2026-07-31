@@ -36,27 +36,41 @@ function ContinueBar({
   const { allCorrect, questionCount } = useQuestionGate(editor);
 
   const idx = lessons.findIndex((l) => l.id === lessonId);
+  const previous = idx > 0 ? lessons[idx - 1] : undefined;
   const next = idx >= 0 ? lessons[idx + 1] : undefined;
   const gated = questionCount > 0 && !allCorrect;
 
-  if (!next) {
-    return (
-      <p className="text-sm text-muted-foreground">This is the last lesson in the curriculum.</p>
-    );
-  }
-
   return (
-    <Button
-      disabled={gated}
-      render={
-        <Link
-          params={{ courseId, lessonId: next.id }}
-          to="/dashboard/org/courses/$courseId/curriculum/$lessonId/view"
-        />
-      }
-    >
-      Next lesson
-    </Button>
+    <div className="flex items-center justify-end gap-3 border-t px-4 py-3">
+      {previous ? (
+        <Button
+          render={
+            <Link
+              params={{ courseId, lessonId: previous.id }}
+              to="/dashboard/org/courses/$courseId/curriculum/$lessonId/view"
+            />
+          }
+          variant="outline"
+        >
+          Previous lesson
+        </Button>
+      ) : null}
+      {next ? (
+        <Button
+          disabled={gated}
+          render={
+            <Link
+              params={{ courseId, lessonId: next.id }}
+              to="/dashboard/org/courses/$courseId/curriculum/$lessonId/view"
+            />
+          }
+        >
+          Next lesson
+        </Button>
+      ) : (
+        <p className="text-sm text-muted-foreground">This is the last lesson in the curriculum.</p>
+      )}
+    </div>
   );
 }
 
@@ -105,9 +119,7 @@ function LessonViewPage() {
               onEditorReady={setEditor}
               showAdvancedChrome={false}
             />
-            <div className="flex justify-end border-t px-4 py-3">
-              <ContinueBar courseId={courseId} editor={editor} lessonId={lessonId} />
-            </div>
+            <ContinueBar courseId={courseId} editor={editor} lessonId={lessonId} />
           </QuestionTrackingProvider>
         </CardPanel>
       </Card>
