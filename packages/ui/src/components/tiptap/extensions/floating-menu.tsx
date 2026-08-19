@@ -4,7 +4,6 @@ import {
   AlignRight,
   AudioLines,
   ChevronRight,
-  CircleHelp,
   Code2,
   CodeSquare,
   Heading1,
@@ -58,18 +57,6 @@ type SlashCommandState = {
 };
 
 const commandGroups: FloatingMenuGroup[] = [
-  {
-    group: "Interactive",
-    items: [
-      {
-        title: "Question",
-        description: "Multiple choice or select-all that apply",
-        icon: CircleHelp,
-        keywords: "question quiz poll mcq",
-        command: (editor) => editor.chain().focus().insertLessonQuestion().run(),
-      },
-    ],
-  },
   {
     group: "Basic blocks",
     items: [
