@@ -13,7 +13,8 @@ type CourseDetailTabRoute =
   | "/dashboard/org/courses/$courseId/curriculum"
   | "/dashboard/org/courses/$courseId/members"
   | "/dashboard/org/courses/$courseId/announcements"
-  | "/dashboard/org/courses/$courseId/analytics";
+  | "/dashboard/org/courses/$courseId/analytics"
+  | "/dashboard/org/courses/$courseId/certificates";
 
 /** Lesson editor is full-width; skip course title + tab bar (see `course/route.tsx` for list-level SecondaryMenu). */
 function isLessonEditPath(pathname: string, courseId: string): boolean {
@@ -43,6 +44,10 @@ function getActiveCourseTab(pathname: string, courseId: string): CourseDetailTab
   }
   if (normalized === `${base}/announcements`) {
     return "/dashboard/org/courses/$courseId/announcements";
+  }
+
+  if (normalized === `${base}/certificates`) {
+    return "/dashboard/org/courses/$courseId/certificates";
   }
 
   return "/dashboard/org/courses/$courseId";
@@ -140,6 +145,15 @@ function CourseDetailLayout() {
             value="/dashboard/org/courses/$courseId/announcements"
           >
             Announcements
+          </TabsTab>
+          <TabsTab
+            nativeButton={false}
+            render={
+              <Link params={{ courseId }} to="/dashboard/org/courses/$courseId/certificates" />
+            }
+            value="/dashboard/org/courses/$courseId/certificates"
+          >
+            Certificates
           </TabsTab>
         </TabsList>
       </Tabs>

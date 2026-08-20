@@ -19,6 +19,7 @@ import {
   saveCurriculumOrder,
   setCourseCategories,
   updateCourse,
+  updateCourseCertificateSettings,
   updateSectionPatch,
 } from "@sycom/db/queries/index";
 import type { OrganizationRole } from "@sycom/db/schema/auth";
@@ -46,6 +47,7 @@ import {
   removeCourseCoInstructorSchema,
   saveCurriculumOrderSchema,
   setCourseCategoriesSchema,
+  updateCourseCertificateSettingsSchema,
   updateCourseSchema,
   updateSectionSchema,
 } from "../schemas";
@@ -234,6 +236,19 @@ export const orgCourseRouter = router({
     .mutation(async ({ ctx, input }) => {
       await loadOrgCourseOrThrow(ctx, input.courseId);
       await saveCurriculumOrder(ctx.db, input);
+      return { success: true };
+    }),
+
+  updateCertificateSettings: protectedProcedure
+    .input(updateCourseCertificateSettingsSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadOrgCourseOrThrow(ctx, input.courseId);
+
+      await updateCourseCertificateSettings(ctx.db, {
+        courseId: input.courseId,
+        certificateSettings: input.certificateSettings,
+      });
+
       return { success: true };
     }),
 
