@@ -1,11 +1,14 @@
 import {
   createEnrollment,
+  ensureCertificateForEnrollment,
+  getCertificateSendContext,
   getCourseById,
   getCourseEnrollmentDetail,
   getEnrollmentProgressSummary,
   getLessonWithCourseId,
   getSectionById,
   listCourseEnrollments,
+  markCertificateEmailSent,
   markLessonCompleted,
   markLessonStarted,
   removeEnrollment,
@@ -13,6 +16,7 @@ import {
 } from "@sycom/db/queries/index";
 import { TRPCError } from "@trpc/server";
 
+import { sendCourseCertificateEmail } from "../../lib/certificate-email";
 import type { Context } from "../context";
 import { protectedProcedure, router } from "../init";
 import {
@@ -29,6 +33,7 @@ import {
   markLessonCompletedInputSchema,
   markLessonStartedInputSchema,
   removeCourseEnrollmentSchema,
+  sendCourseCertificateSchema,
   submitLessonAttemptInputSchema,
 } from "../schemas";
 import { platformPermissionMiddleware } from "../middleware/permissions";
@@ -106,6 +111,54 @@ export const enrollmentRouter = router({
         throw new TRPCError({ code: "NOT_FOUND", message: "Enrollment not found" });
       }
       return { success: true };
+    }),
+
+  sendCertificate: protectedProcedure
+    .input(sendCourseCertificateSchema)
+    .mutation(async ({ ctx, input }) => {
+      await assertPlatformOrOrgCourseWrite(ctx, input.courseId);
+
+      const context = await getCertificateSendContext(ctx.db, input);
+      if (!context) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Enrollment not found" });
+      }
+
+      if (context.totalLessonCount === 0) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This course has no lessons yet, so there is nothing to certify.",
+        });
+      }
+
+      if (context.completedLessonCount < context.totalLessonCount) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `${context.recipientName} hasn't completed every lesson yet.`,
+        });
+      }
+
+      const issued = await ensureCertificateForEnrollment(ctx.db, {
+        enrollmentId: context.enrollmentId,
+        courseId: context.courseId,
+        userId: context.userId,
+        courseCertificateSettings: context.courseCertificateSettings,
+      });
+
+      await sendCourseCertificateEmail({
+        to: context.recipientEmail,
+        recipientName: context.recipientName,
+        courseTitle: context.courseTitle,
+        certificateNumber: issued.certificateNumber,
+        issuedAt: issued.issuedAt,
+        courseCertificateSettings: context.courseCertificateSettings,
+      });
+
+      const sentAt = await markCertificateEmailSent(ctx.db, {
+        certificateId: issued.id,
+        sentTo: context.recipientEmail,
+      });
+
+      return { sentAt, sentTo: context.recipientEmail, resent: issued.emailSentAt !== null };
     }),
 
   enroll: protectedProcedure

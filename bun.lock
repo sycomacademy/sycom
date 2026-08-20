@@ -96,6 +96,7 @@
         "@sycom/auth": "workspace:*",
         "@sycom/certificates": "workspace:*",
         "@sycom/db": "workspace:*",
+        "@sycom/emails": "workspace:*",
         "@sycom/env": "workspace:*",
         "@sycom/logger": "workspace:*",
         "@sycom/storage": "workspace:*",

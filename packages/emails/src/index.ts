@@ -8,12 +8,18 @@ export { OrgOwnerAssignedEmail } from "./templates/org-owner-assigned";
 export { OrgMemberInviteEmail } from "./templates/org-member-invite";
 export { PlatformInviteEmail } from "./templates/platform-invite";
 export { VerifyEmail } from "./templates/verify-email";
+export { CourseCertificateEmail } from "./templates/course-certificate";
 
 export const resend = new Resend(env.RESEND_API_KEY);
 
 const DEFAULT_FROM = env.RESEND_EMAIL_FROM;
 const DEFAULT_REPLY_TO = env.RESEND_EMAIL_REPLY_TO;
 const emailLogger = createLoggerWithContext("email:send");
+
+type EmailAttachment = {
+  filename: string;
+  content: Buffer;
+};
 
 type SendEmailArgs = {
   to: string;
@@ -22,6 +28,7 @@ type SendEmailArgs = {
   from?: string;
   headers?: Record<string, string>;
   replyTo?: string | string[];
+  attachments?: EmailAttachment[];
 };
 
 /**
@@ -34,6 +41,7 @@ export async function sendEmail({
   from = DEFAULT_FROM,
   headers,
   replyTo = DEFAULT_REPLY_TO,
+  attachments,
 }: SendEmailArgs) {
   const response = await resend.emails.send({
     from,
@@ -42,6 +50,7 @@ export async function sendEmail({
     html,
     headers,
     replyTo,
+    attachments,
   });
 
   if (response.error) {

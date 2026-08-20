@@ -51,6 +51,7 @@ export type CourseEnrollmentRow = {
   totalLessonCount: number;
   lastActivityAt: Date | null;
   certificateIssued: boolean;
+  certificateSentAt: Date | null;
 };
 
 export type ListCourseEnrollmentsResult = {
@@ -73,6 +74,7 @@ export type CourseEnrollmentDetail = {
   completedAt: Date | null;
   lastActivityAt: Date | null;
   certificateIssued: boolean;
+  certificateSentAt: Date | null;
   lessons: EnrollmentLessonProgress[];
 };
 
@@ -684,6 +686,12 @@ export async function listCourseEnrollments(
         certificateIssued: sql<boolean>`exists(
           select 1 from ${certificate} where ${certificate.enrollmentId} = ${enrollment.id}
         )`,
+        certificateSentAt: sql<Date | null>`(
+          select ${certificate.emailSentAt}
+          from ${certificate}
+          where ${certificate.enrollmentId} = ${enrollment.id}
+          limit 1
+        )`,
       })
       .from(enrollment)
       .innerJoin(user, eq(user.id, enrollment.userId))
@@ -763,7 +771,7 @@ export async function getCourseEnrollmentDetail(
         asc(lesson.createdAt),
       ),
     database
-      .select({ id: certificate.id })
+      .select({ id: certificate.id, emailSentAt: certificate.emailSentAt })
       .from(certificate)
       .where(eq(certificate.enrollmentId, input.enrollmentId))
       .limit(1),
@@ -777,6 +785,7 @@ export async function getCourseEnrollmentDetail(
   return {
     ...row,
     certificateIssued: Boolean(certificateRow[0]),
+    certificateSentAt: certificateRow[0]?.emailSentAt ?? null,
     lessons: lessonRows.map((lessonRow) => ({
       ...lessonRow,
       status: lessonRow.status ?? "not_started",
@@ -794,4 +803,150 @@ export async function removeEnrollment(database: Database, input: { enrollmentId
     .returning({ id: enrollment.id, courseId: enrollment.courseId, userId: enrollment.userId });
 
   return deleted ?? null;
+}
+
+export type CertificateSendContext = {
+  enrollmentId: string;
+  courseId: string;
+  userId: string;
+  recipientName: string;
+  recipientEmail: string;
+  courseTitle: string;
+  courseCertificateSettings: unknown;
+  completedLessonCount: number;
+  totalLessonCount: number;
+  certificate: {
+    id: string;
+    certificateNumber: string;
+    issuedAt: Date;
+    emailSentAt: Date | null;
+  } | null;
+};
+
+/** Everything needed to render + email a course certificate for one enrollment. */
+export async function getCertificateSendContext(
+  database: Database,
+  input: { courseId: string; enrollmentId: string },
+): Promise<CertificateSendContext | null> {
+  const [row] = await database
+    .select({
+      enrollmentId: enrollment.id,
+      courseId: enrollment.courseId,
+      userId: enrollment.userId,
+      recipientName: user.name,
+      recipientEmail: user.email,
+      courseTitle: course.title,
+      courseCertificateSettings: course.certificateSettings,
+      completedLessonCount: sql<number>`(
+        select count(*)::int
+        from ${lessonProgress}
+        where ${lessonProgress.enrollmentId} = ${enrollment.id}
+          and ${lessonProgress.status} = 'completed'
+      )`,
+      totalLessonCount: sql<number>`(
+        select count(*)::int
+        from ${lesson}
+        inner join ${section} on ${lesson.sectionId} = ${section.id}
+        where ${section.courseId} = ${enrollment.courseId}
+      )`,
+      certificateId: certificate.id,
+      certificateNumber: certificate.certificateNumber,
+      certificateIssuedAt: certificate.issuedAt,
+      certificateEmailSentAt: certificate.emailSentAt,
+    })
+    .from(enrollment)
+    .innerJoin(user, eq(user.id, enrollment.userId))
+    .innerJoin(course, eq(course.id, enrollment.courseId))
+    .leftJoin(certificate, eq(certificate.enrollmentId, enrollment.id))
+    .where(and(eq(enrollment.id, input.enrollmentId), eq(enrollment.courseId, input.courseId)))
+    .limit(1);
+
+  if (!row) {
+    return null;
+  }
+
+  const { certificateId, certificateNumber, certificateIssuedAt, certificateEmailSentAt, ...rest } =
+    row;
+
+  return {
+    ...rest,
+    certificate:
+      certificateId && certificateNumber && certificateIssuedAt
+        ? {
+            id: certificateId,
+            certificateNumber,
+            issuedAt: certificateIssuedAt,
+            emailSentAt: certificateEmailSentAt,
+          }
+        : null,
+  };
+}
+
+/**
+ * Returns the enrollment's certificate, issuing one first when it doesn't exist yet
+ * (manual issue from the certificates page; automatic issue happens on course completion).
+ */
+export async function ensureCertificateForEnrollment(
+  database: Database,
+  input: {
+    enrollmentId: string;
+    courseId: string;
+    userId: string;
+    courseCertificateSettings?: unknown;
+  },
+): Promise<{ id: string; certificateNumber: string; issuedAt: Date; emailSentAt: Date | null }> {
+  const [existing] = await database
+    .select({
+      id: certificate.id,
+      certificateNumber: certificate.certificateNumber,
+      issuedAt: certificate.issuedAt,
+      emailSentAt: certificate.emailSentAt,
+    })
+    .from(certificate)
+    .where(eq(certificate.enrollmentId, input.enrollmentId))
+    .limit(1);
+
+  if (existing) {
+    return existing;
+  }
+
+  const [created] = await database
+    .insert(certificate)
+    .values({
+      enrollmentId: input.enrollmentId,
+      courseId: input.courseId,
+      userId: input.userId,
+      certificateNumber: buildCertificateNumber(),
+      issuedAt: now(),
+      metadata:
+        input.courseCertificateSettings != null
+          ? { courseCertificateSettings: input.courseCertificateSettings }
+          : null,
+    })
+    .returning({
+      id: certificate.id,
+      certificateNumber: certificate.certificateNumber,
+      issuedAt: certificate.issuedAt,
+      emailSentAt: certificate.emailSentAt,
+    });
+
+  if (!created) {
+    throw new Error("Failed to issue certificate");
+  }
+
+  return created;
+}
+
+/** Records that the certificate PDF was emailed to `sentTo`. */
+export async function markCertificateEmailSent(
+  database: Database,
+  input: { certificateId: string; sentTo: string },
+): Promise<Date> {
+  const sentAt = now();
+  await database
+    .update(certificate)
+    .set({ emailSentAt: sentAt, emailSentTo: input.sentTo })
+    .where(eq(certificate.id, input.certificateId));
+
+  return sentAt;
 }

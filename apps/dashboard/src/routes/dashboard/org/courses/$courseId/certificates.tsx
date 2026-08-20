@@ -25,6 +25,7 @@ import {
   useState,
 } from "react";
 
+import { CertificateMemberRow } from "@/components/dashboard/course/certificate-member-row";
 import {
   courseCertificatesSearchSchema,
   type CourseCertificatesSearchInput,
@@ -32,13 +33,9 @@ import {
 import {
   courseMembersPageSize,
   getCourseMembersListInput,
-  type CourseEnrollmentRow,
 } from "@/components/dashboard/course/course-members-schema";
 import { useDebouncedSearch } from "@/hooks/use-debounced-search";
 import { useTRPC } from "@/lib/trpc/client";
-import { Avatar, AvatarFallback, AvatarImage } from "@sycom/ui/components/avatar";
-import { Badge } from "@sycom/ui/components/badge";
-import { Button } from "@sycom/ui/components/button";
 import { Card, CardDescription, CardHeader, CardPanel, CardTitle } from "@sycom/ui/components/card";
 import { Field, FieldLabel } from "@sycom/ui/components/field";
 import { Input } from "@sycom/ui/components/input";
@@ -47,8 +44,6 @@ import { Radio, RadioGroup } from "@sycom/ui/components/radio-group";
 import { Spinner } from "@sycom/ui/components/spinner";
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@sycom/ui/components/tabs";
 import { toastManager } from "@sycom/ui/components/toast";
-import { buildImageUrl } from "@sycom/ui/image/cdn";
-import { getInitials } from "@sycom/ui/lib/string";
 import type { AppRouterInputs, AppRouterOutputs } from "server/trpc/routers/_app";
 
 type EnrollmentListResult = AppRouterOutputs["enrollment"]["listByCourse"];
@@ -178,39 +173,6 @@ export const Route = createFileRoute("/dashboard/org/courses/$courseId/certifica
   },
   component: CourseCertificatesPage,
 });
-
-function CertificateMemberRow({ enrollment }: { enrollment: CourseEnrollmentRow }) {
-  const completionLabel = `${enrollment.completedLessonCount}/${enrollment.totalLessonCount} complete`;
-
-  return (
-    <div className="flex items-center justify-between gap-3 border px-4 py-3">
-      <div className="flex min-w-0 items-center gap-3">
-        <Avatar className="size-10 rounded-md">
-          {enrollment.image ? (
-            <AvatarImage alt={enrollment.name} src={buildImageUrl(enrollment.image)} />
-          ) : null}
-          <AvatarFallback className="rounded-md text-xs text-muted-foreground">
-            {getInitials(enrollment.name)}
-          </AvatarFallback>
-        </Avatar>
-        <div className="min-w-0">
-          <p className="truncate text-sm font-medium">{enrollment.name}</p>
-          <p className="truncate text-xs text-muted-foreground">{enrollment.email}</p>
-          <div className="mt-1 flex flex-wrap gap-2">
-            <Badge variant="outline">{enrollment.status}</Badge>
-            <Badge variant="secondary">{completionLabel}</Badge>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex shrink-0 items-center gap-2">
-        <Button onClick={() => alert("Not implemented")} size="sm" type="button" variant="outline">
-          Send certificate
-        </Button>
-      </div>
-    </div>
-  );
-}
 
 function CourseCertificatesPage() {
   const { courseId } = Route.useParams();
@@ -725,7 +687,11 @@ function CourseCertificatesPage() {
                 </div>
               ) : (
                 enrollments.map((row) => (
-                  <CertificateMemberRow enrollment={row} key={row.enrollmentId} />
+                  <CertificateMemberRow
+                    courseId={courseId}
+                    enrollment={row}
+                    key={row.enrollmentId}
+                  />
                 ))
               )}
 

@@ -948,6 +948,12 @@ export const removeCourseEnrollmentSchema = z.object({
 });
 export type RemoveCourseEnrollmentInput = z.infer<typeof removeCourseEnrollmentSchema>;
 
+export const sendCourseCertificateSchema = z.object({
+  courseId: z.string().min(1),
+  enrollmentId: z.string().min(1),
+});
+export type SendCourseCertificateInput = z.infer<typeof sendCourseCertificateSchema>;
+
 // catalog (student course catalog + enroll)
 export const listCatalogCoursesSchema = z.object({
   limit: z.number().int().min(1).max(100).default(20),

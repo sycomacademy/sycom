@@ -139,6 +139,10 @@ export const certificate = pgTable(
       .references(() => user.id, { onDelete: "cascade" }),
     certificateNumber: text("certificate_number").notNull().unique(),
     issuedAt: timestamp("issued_at").notNull(),
+    /** Last time the certificate PDF was emailed to the learner (null = never sent). */
+    emailSentAt: timestamp("email_sent_at"),
+    /** Address the certificate was last emailed to. */
+    emailSentTo: text("email_sent_to"),
     metadata: jsonb("metadata"),
     createdAt,
   },
