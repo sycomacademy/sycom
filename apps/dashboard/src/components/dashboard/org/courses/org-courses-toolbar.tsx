@@ -3,10 +3,11 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "@sycom/ui/componen
 import { Spinner } from "@sycom/ui/components/spinner";
 import { Tabs, TabsList, TabsTab } from "@sycom/ui/components/tabs";
 import { cn } from "@sycom/ui/lib/utils";
-import { LayoutGridIcon, ListIcon, Plus, RefreshCcw, Search } from "lucide-react";
+import { FileTextIcon, LayoutGridIcon, ListIcon, Plus, RefreshCcw, Search } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { CreateOrgCourseSheet } from "./create-org-course-sheet";
+import { ImportCourseDialog } from "@/components/dashboard/course/import-course-dialog";
 import type { OrgCourseViewMode } from "./org-courses-schema";
 
 export type OrgCoursesToolbarProps = {
@@ -57,6 +58,17 @@ export function OrgCoursesToolbar({
           >
             <RefreshCcw className={cn(isFetching ? "animate-spin" : "", "size-4")} />
           </Button>
+
+          <ImportCourseDialog
+            courseProcedureRouter="orgCourse"
+            mode="create"
+            trigger={
+              <Button variant="outline">
+                <FileTextIcon className="size-4" />
+                From Word
+              </Button>
+            }
+          />
 
           <CreateOrgCourseSheet
             trigger={

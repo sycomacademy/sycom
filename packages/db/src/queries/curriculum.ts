@@ -414,3 +414,95 @@ export async function saveCurriculumOrder(
     }
   }
 }
+
+// ---------------------------------------------------------------------------
+// Document import
+// ---------------------------------------------------------------------------
+
+export type ImportedLessonInput = {
+  title: string;
+  content: unknown;
+};
+
+export type ImportedSectionInput = {
+  title: string;
+  description?: string | null;
+  lessons: ImportedLessonInput[];
+};
+
+export type ImportedSectionResult = {
+  sectionId: string;
+  lessonIds: string[];
+};
+
+/**
+ * Append a parsed document's sections to a course, after everything already there.
+ * Import never replaces or merges — an author who wants the old tree gone deletes
+ * it themselves, so a mis-parsed file can't destroy existing work.
+ *
+ * Sections are inserted in sequence and rolled back together on failure, mirroring
+ * `insertGeneratedCourseTree`; only the newly created rows are removed, so existing
+ * curriculum is untouched either way.
+ */
+export async function appendImportedSections(
+  database: Database,
+  input: { courseId: string; sections: ImportedSectionInput[] },
+): Promise<ImportedSectionResult[]> {
+  const [orderRow] = await database
+    .select({ value: max(section.order) })
+    .from(section)
+    .where(eq(section.courseId, input.courseId));
+
+  let nextOrder = (orderRow?.value ?? -1) + 1;
+  const created: ImportedSectionResult[] = [];
+
+  try {
+    for (const sectionInput of input.sections) {
+      const [newSection] = await database
+        .insert(section)
+        .values({
+          courseId: input.courseId,
+          title: sectionInput.title,
+          description: sectionInput.description ?? null,
+          order: nextOrder,
+        })
+        .returning({ id: section.id });
+
+      if (!newSection) {
+        throw new Error("Failed to insert imported section");
+      }
+      nextOrder += 1;
+
+      const lessonIds: string[] = [];
+
+      if (sectionInput.lessons.length > 0) {
+        const rows = await database
+          .insert(lesson)
+          .values(
+            sectionInput.lessons.map((lessonInput, index) => ({
+              sectionId: newSection.id,
+              title: lessonInput.title,
+              // Imported lessons are always articles; questions still land as real
+              // question nodes, and an author promotes a lesson to quiz or exam
+              // afterwards (both need scheduling the document can't express).
+              type: "article" as const,
+              content: lessonInput.content ?? null,
+              order: index,
+            })),
+          )
+          .returning({ id: lesson.id });
+
+        lessonIds.push(...rows.map((row) => row.id));
+      }
+
+      created.push({ sectionId: newSection.id, lessonIds });
+    }
+
+    return created;
+  } catch (err) {
+    for (const entry of created) {
+      await database.delete(section).where(eq(section.id, entry.sectionId));
+    }
+    throw err;
+  }
+}

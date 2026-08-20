@@ -79,14 +79,8 @@ export function ExportToolbar() {
       } else if (format === "md") {
         blob = new Blob([editor.getMarkdown()], { type: MIME.md });
       } else {
-        // docx: lazy-load the converter so the bundle stays light when unused.
-        const { default: HtmlToDocx } = await import("@turbodocx/html-to-docx");
-        const html = `<!DOCTYPE html><html><body>${editor.getHTML()}</body></html>`;
-        const result = (await HtmlToDocx(html)) as Blob | ArrayBuffer;
-        blob =
-          result instanceof Blob
-            ? result
-            : new Blob([new Uint8Array(result as ArrayBuffer)], { type: MIME.docx });
+        const { renderDocx } = await import("@sycom/ui/lib/docx");
+        blob = await renderDocx(`<!DOCTYPE html><html><body>${editor.getHTML()}</body></html>`);
       }
 
       downloadBlob(blob, format);

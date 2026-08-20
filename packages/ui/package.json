@@ -6,6 +6,7 @@
   "exports": {
     "./globals.css": "./src/styles/globals.css",
     "./lib/*": "./src/lib/*.ts",
+    "./lib/docx": "./src/lib/docx/index.ts",
     "./components/*": "./src/components/*.tsx",
     "./hooks/*": "./src/hooks/*.ts",
     "./image": "./src/image/index.ts",
@@ -15,6 +16,7 @@
   },
   "scripts": {
     "check-types": "tsc --noEmit",
+    "test": "bun test",
     "storybook": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build"
   },
@@ -84,9 +86,11 @@
     "@tailwindcss/vite": "^4.2.4",
     "@types/canvas-confetti": "^1.9.0",
     "@types/culori": "^4.0.1",
+    "@types/jsdom": "^30.0.0",
     "@types/qrcode": "^1.5.6",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "jsdom": "^30.0.1",
     "motion": "^12.38.0",
     "storybook": "^10.3.6",
     "tailwindcss": "catalog:",

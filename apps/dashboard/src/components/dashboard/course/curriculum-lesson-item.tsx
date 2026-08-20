@@ -40,6 +40,7 @@ import type React from "react";
 import { lazy, memo, Suspense, useCallback, useEffect, useMemo, useState } from "react";
 
 import { AutoSaveStatus } from "@/components/dashboard/course/auto-save-status";
+import { DestructiveDialog } from "@/components/dashboard/destructive-dialog";
 import { useAutoSave } from "@/hooks/use-auto-save";
 import { useLessonSignedMediaResolver } from "@/hooks/use-lesson-signed-media";
 import { useTRPCClient } from "@/lib/trpc/client";
@@ -158,7 +159,19 @@ function CurriculumLessonItemImpl({
   const [draftType, setDraftType] = useState<CurriculumLesson["type"]>(lesson.type);
   const [draftOpenAt, setDraftOpenAt] = useState<Date | null>(lesson.openAt);
   const [draftDueAt, setDraftDueAt] = useState<Date | null>(lesson.dueAt);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const resolveMediaUrl = useLessonSignedMediaResolver(content);
+
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await onDeleteLesson(lesson.id);
+      setDeleteOpen(false);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   useEffect(() => {
     if (expanded) {
@@ -314,7 +327,7 @@ function CurriculumLessonItemImpl({
                 (
                   <Button
                     aria-label="Delete lesson"
-                    onClick={() => void onDeleteLesson(lesson.id)}
+                    onClick={() => setDeleteOpen(true)}
                     size="sm"
                     variant="ghost"
                   />
@@ -325,6 +338,21 @@ function CurriculumLessonItemImpl({
             </TooltipTrigger>
             <TooltipPopup>Delete lesson</TooltipPopup>
           </Tooltip>
+
+          <DestructiveDialog
+            confirmLabel="Delete lesson"
+            description={
+              <>
+                This permanently deletes <strong>{lesson.title}</strong> and its content. Learner
+                progress on this lesson is lost.
+              </>
+            }
+            loading={isDeleting}
+            onConfirm={() => void handleConfirmDelete()}
+            onOpenChange={setDeleteOpen}
+            open={deleteOpen}
+            title="Delete lesson"
+          />
         </div>
 
         <CollapsibleContent>

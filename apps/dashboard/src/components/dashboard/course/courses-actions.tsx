@@ -3,17 +3,9 @@ import { useNavigate } from "@tanstack/react-router";
 import { MoreHorizontalIcon, PencilIcon, ShareIcon, Trash2Icon } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
+import { DestructiveDialog } from "@/components/dashboard/destructive-dialog";
 import { sessionQueryOptions } from "@/lib/auth/session";
 import { useTRPC } from "@/lib/trpc/client";
-import {
-  AlertDialog,
-  AlertDialogClose,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@sycom/ui/components/alert-dialog";
 import { Button } from "@sycom/ui/components/button";
 import {
   DropdownMenu,
@@ -123,27 +115,20 @@ export function CourseActions({ course }: { course: CourseRow }): ReactNode {
       ) : null}
 
       {canDelete ? (
-        <AlertDialog onOpenChange={setDeleteOpen} open={deleteOpen}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Delete course</AlertDialogTitle>
-              <AlertDialogDescription>
-                This permanently deletes <strong>{course.title}</strong> and all of its sections and
-                lessons. Organizations already seeded with this course are not affected.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogClose render={<Button variant="outline" />}>Cancel</AlertDialogClose>
-              <Button
-                loading={deleteMutation.isPending}
-                onClick={() => deleteMutation.mutate({ courseId: course.id })}
-                variant="destructive"
-              >
-                Delete course
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <DestructiveDialog
+          confirmLabel="Delete course"
+          description={
+            <>
+              This permanently deletes <strong>{course.title}</strong> and all of its sections and
+              lessons. Organizations already seeded with this course are not affected.
+            </>
+          }
+          loading={deleteMutation.isPending}
+          onConfirm={() => deleteMutation.mutate({ courseId: course.id })}
+          onOpenChange={setDeleteOpen}
+          open={deleteOpen}
+          title="Delete course"
+        />
       ) : null}
     </>
   );

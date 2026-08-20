@@ -101,10 +101,17 @@ export function ImportToolbar() {
         const raw = await readText(file);
         editor.chain().focus().setContent(raw, { emitUpdate: true, contentType: "markdown" }).run();
       } else if (format === "docx") {
-        const arrayBuffer = await file.arrayBuffer();
-        const { convertToHtml } = await import("mammoth");
-        const { value: html } = await convertToHtml({ arrayBuffer });
-        editor.chain().focus().setContent(html, { emitUpdate: true }).run();
+        // Shared with the course-level import, so a `::: question` fence written in
+        // Word becomes a real question node here too.
+        const { lessonBlocksToDoc, readDocxFile, splitLessonBody } =
+          await import("@sycom/ui/lib/docx");
+        const { html } = await readDocxFile(file, { images: "dataUri" });
+        const doc = lessonBlocksToDoc(splitLessonBody(html), editor.extensionManager.extensions);
+        editor
+          .chain()
+          .focus()
+          .setContent(doc as never, { emitUpdate: true })
+          .run();
       } else {
         const raw = await readText(file);
         editor

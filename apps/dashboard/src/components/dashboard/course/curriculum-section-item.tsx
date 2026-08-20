@@ -17,7 +17,9 @@ import {
   PlusIcon,
   Trash2Icon,
 } from "lucide-react";
-import { memo } from "react";
+import { memo, useState } from "react";
+
+import { DestructiveDialog } from "@/components/dashboard/destructive-dialog";
 
 import { CurriculumLessonItem } from "./curriculum-lesson-item";
 import type { CurriculumSection } from "./curriculum-schema";
@@ -100,6 +102,18 @@ function CurriculumSectionItemImpl({
   sections,
 }: CurriculumSectionItemProps) {
   const moveTargets = sections.filter((candidate) => candidate.id !== section.id);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await onDeleteSection(section.id);
+      setDeleteOpen(false);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <SortableItem value={section.id}>
@@ -165,12 +179,28 @@ function CurriculumSectionItemImpl({
 
             <Button
               aria-label="Delete section"
-              onClick={() => void onDeleteSection(section.id)}
+              onClick={() => setDeleteOpen(true)}
               size="sm"
               variant="ghost"
             >
               <Trash2Icon className="size-4 text-destructive" />
             </Button>
+
+            <DestructiveDialog
+              confirmLabel="Delete section"
+              description={
+                <>
+                  This permanently deletes <strong>{section.title}</strong> and its{" "}
+                  {section.lessons.length} lesson{section.lessons.length === 1 ? "" : "s"}. Learner
+                  progress on those lessons is lost.
+                </>
+              }
+              loading={isDeleting}
+              onConfirm={() => void handleConfirmDelete()}
+              onOpenChange={setDeleteOpen}
+              open={deleteOpen}
+              title="Delete section"
+            />
           </div>
 
           <CollapsibleContent>

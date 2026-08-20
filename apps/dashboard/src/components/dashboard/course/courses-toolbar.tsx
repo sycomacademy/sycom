@@ -4,10 +4,19 @@ import { Spinner } from "@sycom/ui/components/spinner";
 import { Tabs, TabsList, TabsTab } from "@sycom/ui/components/tabs";
 import { cn } from "@sycom/ui/lib/utils";
 import { Link } from "@/components/layout/foresight-link";
-import { LayoutGridIcon, ListIcon, Plus, RefreshCcw, Search, SparklesIcon } from "lucide-react";
+import {
+  FileTextIcon,
+  LayoutGridIcon,
+  ListIcon,
+  Plus,
+  RefreshCcw,
+  Search,
+  SparklesIcon,
+} from "lucide-react";
 import type { ReactNode } from "react";
 
 import { CreateCourseSheet } from "./create-course-sheet";
+import { ImportCourseDialog } from "./import-course-dialog";
 import type { CourseViewMode } from "./courses-schema";
 
 export type CoursesToolbarProps = {
@@ -67,6 +76,16 @@ export function CoursesToolbar({
               Generate with AI
             </Button>
           ) : null}
+
+          <ImportCourseDialog
+            mode="create"
+            trigger={
+              <Button variant="outline">
+                <FileTextIcon className="size-4" />
+                From Word
+              </Button>
+            }
+          />
 
           <CreateCourseSheet
             trigger={

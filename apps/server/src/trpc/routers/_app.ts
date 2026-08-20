@@ -3,6 +3,7 @@ import { checkHealth } from "@sycom/db/queries/health";
 import { publicProcedure, router } from "../init";
 import { adminRouter } from "./admin";
 import { courseAiRouter } from "./course-ai";
+import { courseImportRouter } from "./course-import";
 import { courseRouter } from "./course";
 import { creatorRouter } from "./creator";
 import { catalogRouter } from "./catalog";
@@ -25,6 +26,7 @@ export const appRouter = router({
   catalog: catalogRouter,
   course: courseRouter,
   courseAi: courseAiRouter,
+  courseImport: courseImportRouter,
   creator: creatorRouter,
   enrollment: enrollmentRouter,
   feedback: feedbackRouter,

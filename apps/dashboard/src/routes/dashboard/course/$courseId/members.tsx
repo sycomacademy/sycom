@@ -17,17 +17,9 @@ import {
   type CourseEnrollmentRow,
   type CourseMembersSearchInput,
 } from "@/components/dashboard/course/course-members-schema";
+import { DestructiveDialog } from "@/components/dashboard/destructive-dialog";
 import { useDebouncedSearch } from "@/hooks/use-debounced-search";
 import { useTRPC, useTRPCClient } from "@/lib/trpc/client";
-import {
-  AlertDialog,
-  AlertDialogClose,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@sycom/ui/components/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@sycom/ui/components/avatar";
 import { Badge } from "@sycom/ui/components/badge";
 import { Button } from "@sycom/ui/components/button";
@@ -40,6 +32,7 @@ import { getInitials } from "@sycom/ui/lib/string";
 import type { AppRouterOutputs } from "server/trpc/routers/_app";
 
 type EnrollmentListResult = AppRouterOutputs["enrollment"]["listByCourse"];
+type CourseInstructorRow = AppRouterOutputs["course"]["listCoInstructors"][number];
 
 function getEnrollmentInfiniteQueryOptions(
   trpc: Pick<ReturnType<typeof useTRPC>, "enrollment">,
@@ -121,6 +114,71 @@ export const Route = createFileRoute("/dashboard/course/$courseId/members")({
   component: CourseMembersPage,
 });
 
+function CoInstructorListItem({
+  instructor,
+  onRemove,
+}: {
+  instructor: CourseInstructorRow;
+  onRemove: (userId: string) => Promise<void>;
+}) {
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
+
+  const handleConfirmRemove = async () => {
+    setIsRemoving(true);
+    try {
+      await onRemove(instructor.userId);
+      setConfirmOpen(false);
+    } finally {
+      setIsRemoving(false);
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-between gap-3 border px-4 py-3">
+      <div className="flex min-w-0 items-center gap-3">
+        <Avatar className="size-10 rounded-md">
+          {instructor.image ? (
+            <AvatarImage alt={instructor.name} src={buildImageUrl(instructor.image)} />
+          ) : null}
+          <AvatarFallback className="rounded-md text-xs text-muted-foreground">
+            {getInitials(instructor.name)}
+          </AvatarFallback>
+        </Avatar>
+        <div className="min-w-0">
+          <p className="truncate text-sm font-medium">{instructor.name}</p>
+          <p className="truncate text-xs text-muted-foreground">{instructor.email}</p>
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        <Badge variant={instructor.role === "main" ? "default" : "outline"}>
+          {instructor.role === "main" ? "Main instructor" : "Co-instructor"}
+        </Badge>
+        {instructor.role === "secondary" ? (
+          <Button onClick={() => setConfirmOpen(true)} size="sm" variant="ghost">
+            Remove
+          </Button>
+        ) : null}
+      </div>
+
+      <DestructiveDialog
+        confirmLabel="Remove co-instructor"
+        description={
+          <>
+            This removes <strong>{instructor.name}</strong> ({instructor.email}) as a co-instructor.
+            They lose access to manage this course, but the course and its content stay intact.
+          </>
+        }
+        loading={isRemoving}
+        onConfirm={() => void handleConfirmRemove()}
+        onOpenChange={setConfirmOpen}
+        open={confirmOpen}
+        title="Remove co-instructor"
+      />
+    </div>
+  );
+}
+
 function StudentListItem({
   enrollment,
   onRemove,
@@ -175,27 +233,20 @@ function StudentListItem({
         </Button>
       </div>
 
-      <AlertDialog onOpenChange={setConfirmOpen} open={confirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Kick out student</AlertDialogTitle>
-            <AlertDialogDescription>
-              This removes <strong>{enrollment.name}</strong> ({enrollment.email}) from this course,
-              along with their progress and any issued certificate. They can be re-enrolled later.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogClose render={<Button variant="outline" />}>Cancel</AlertDialogClose>
-            <Button
-              loading={isRemoving}
-              onClick={() => void handleConfirmRemove()}
-              variant="destructive"
-            >
-              Kick out
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DestructiveDialog
+        confirmLabel="Kick out"
+        description={
+          <>
+            This removes <strong>{enrollment.name}</strong> ({enrollment.email}) from this course,
+            along with their progress and any issued certificate. They can be re-enrolled later.
+          </>
+        }
+        loading={isRemoving}
+        onConfirm={() => void handleConfirmRemove()}
+        onOpenChange={setConfirmOpen}
+        open={confirmOpen}
+        title="Kick out student"
+      />
     </div>
   );
 }
@@ -325,39 +376,11 @@ function CourseMembersPage() {
         </CardHeader>
         <CardPanel className="space-y-3">
           {coInstructors.map((instructor) => (
-            <div
-              className="flex items-center justify-between gap-3 border px-4 py-3"
+            <CoInstructorListItem
+              instructor={instructor}
               key={instructor.userId}
-            >
-              <div className="flex min-w-0 items-center gap-3">
-                <Avatar className="size-10 rounded-md">
-                  {instructor.image ? (
-                    <AvatarImage alt={instructor.name} src={buildImageUrl(instructor.image)} />
-                  ) : null}
-                  <AvatarFallback className="rounded-md text-xs text-muted-foreground">
-                    {getInitials(instructor.name)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium">{instructor.name}</p>
-                  <p className="truncate text-xs text-muted-foreground">{instructor.email}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Badge variant={instructor.role === "main" ? "default" : "outline"}>
-                  {instructor.role === "main" ? "Main instructor" : "Co-instructor"}
-                </Badge>
-                {instructor.role === "secondary" ? (
-                  <Button
-                    onClick={() => void handleRemoveCoInstructor(instructor.userId)}
-                    size="sm"
-                    variant="ghost"
-                  >
-                    Remove
-                  </Button>
-                ) : null}
-              </div>
-            </div>
+              onRemove={handleRemoveCoInstructor}
+            />
           ))}
         </CardPanel>
       </Card>

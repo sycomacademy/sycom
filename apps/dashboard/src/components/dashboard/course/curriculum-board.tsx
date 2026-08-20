@@ -17,13 +17,15 @@ import {
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { Button } from "@sycom/ui/components/button";
 import { toastManager } from "@sycom/ui/components/toast";
-import { PlusIcon } from "lucide-react";
+import { DownloadIcon, FileTextIcon, PlusIcon } from "lucide-react";
 import type { JSONContent } from "@tiptap/core";
 import { startTransition, useEffect, useMemo, useState } from "react";
 
 import { useTRPC, useTRPCClient } from "@/lib/trpc/client";
 
 import { CurriculumSectionItem } from "./curriculum-section-item";
+import { downloadBlob, exportCourseToDocx, toBuildSections } from "./export-course";
+import { ImportCourseDialog } from "./import-course-dialog";
 import { cloneCurriculumSections, type CurriculumSection } from "./curriculum-schema";
 
 function buildCurriculumOrderInput(courseId: string, sections: CurriculumSection[]) {
@@ -103,11 +105,15 @@ export function CurriculumBoard({
 
   const queryKey = courseApi.getCurriculum.queryKey({ courseId });
   const { data: curriculum } = useSuspenseQuery(courseApi.getCurriculum.queryOptions({ courseId }));
+  // Already fetched by the parent route's loader; this is a cache read for the
+  // document title, not another request.
+  const { data: course } = useSuspenseQuery(courseApi.get.queryOptions({ courseId }));
 
   const [sections, setSections] = useState(() => cloneCurriculumSections(curriculum));
   const [collapsedSectionIds, setCollapsedSectionIds] = useState<Set<string>>(new Set());
   const [expandedLessonId, setExpandedLessonId] = useState<string | null>(null);
   const [savingLessonId, setSavingLessonId] = useState<string | null>(null);
+  const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
     setSections(cloneCurriculumSections(curriculum));
@@ -157,6 +163,37 @@ export function CurriculumBoard({
             : "Couldn't reach server. Check your connection and try again.",
         type: "error",
       });
+    }
+  };
+
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      const { blob, filename, warnings } = await exportCourseToDocx(trpcClient, {
+        courseTitle: course.title,
+        sections: toBuildSections(sections),
+      });
+
+      downloadBlob(blob, filename);
+      toastManager.add({
+        title: "Course exported",
+        description:
+          warnings.length > 0
+            ? `${warnings.length} item${warnings.length === 1 ? "" : "s"} couldn't be included.`
+            : filename,
+        type: warnings.length > 0 ? "warning" : "success",
+      });
+    } catch (error) {
+      toastManager.add({
+        title: "Couldn't export the course",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Couldn't reach server. Check your connection and try again.",
+        type: "error",
+      });
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -547,10 +584,35 @@ export function CurriculumBoard({
         )}
       </DndContext>
 
-      <Button onClick={() => void handleCreateSection()} size="sm" variant="outline">
-        <PlusIcon className="size-4" />
-        Add section
-      </Button>
+      <div className="flex flex-wrap items-center gap-2">
+        <Button onClick={() => void handleCreateSection()} size="sm" variant="outline">
+          <PlusIcon className="size-4" />
+          Add section
+        </Button>
+
+        <ImportCourseDialog
+          courseId={courseId}
+          courseProcedureRouter={courseProcedureRouter}
+          mode="append"
+          trigger={
+            <Button size="sm" variant="outline">
+              <FileTextIcon className="size-4" />
+              Import from Word
+            </Button>
+          }
+        />
+
+        <Button
+          disabled={sections.length === 0}
+          loading={exporting}
+          onClick={() => void handleExport()}
+          size="sm"
+          variant="outline"
+        >
+          <DownloadIcon className="size-4" />
+          Export to Word
+        </Button>
+      </div>
     </div>
   );
 }

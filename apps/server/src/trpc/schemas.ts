@@ -1523,3 +1523,84 @@ export const deleteAdminCategorySchema = z.object({
   categoryId: z.string().min(1),
 });
 export type DeleteAdminCategoryInput = z.infer<typeof deleteAdminCategorySchema>;
+
+// course-import (Word document → curriculum tree; parsed client-side, revalidated here)
+
+/** Guard rails on a payload the client assembled: parsing there is a convenience, not a trust boundary. */
+const MAX_IMPORT_SECTIONS = 100;
+const MAX_IMPORT_LESSONS_PER_SECTION = 200;
+const MAX_IMPORT_NODES_PER_LESSON = 5000;
+const MAX_IMPORT_NODE_DEPTH = 20;
+
+type ImportedContentNode = {
+  type: string;
+  attrs?: Record<string, unknown>;
+  marks?: Array<{ type: string; attrs?: Record<string, unknown> }>;
+  text?: string;
+  content?: ImportedContentNode[];
+};
+
+const importedContentNodeSchema: z.ZodType<ImportedContentNode> = z.lazy(() =>
+  z.object({
+    type: z.string().min(1).max(64),
+    attrs: z.record(z.string(), z.unknown()).optional(),
+    marks: z
+      .array(
+        z.object({
+          type: z.string().min(1).max(64),
+          attrs: z.record(z.string(), z.unknown()).optional(),
+        }),
+      )
+      .optional(),
+    text: z.string().optional(),
+    get content() {
+      return z.array(importedContentNodeSchema).optional();
+    },
+  }),
+);
+
+function measureContent(node: ImportedContentNode, depth = 1): { nodes: number; depth: number } {
+  let nodes = 1;
+  let maxDepth = depth;
+
+  for (const child of node.content ?? []) {
+    const measured = measureContent(child, depth + 1);
+    nodes += measured.nodes;
+    maxDepth = Math.max(maxDepth, measured.depth);
+  }
+
+  return { nodes, depth: maxDepth };
+}
+
+const importedLessonContentSchema = importedContentNodeSchema
+  .refine((node) => node.type === "doc", "Lesson content must be a document")
+  .refine(
+    (node) => measureContent(node).nodes <= MAX_IMPORT_NODES_PER_LESSON,
+    `A lesson may not exceed ${MAX_IMPORT_NODES_PER_LESSON} content nodes`,
+  )
+  .refine(
+    (node) => measureContent(node).depth <= MAX_IMPORT_NODE_DEPTH,
+    "Lesson content is nested too deeply",
+  );
+
+export const importCourseSectionsSchema = z.object({
+  courseId: z.string().min(1),
+  sections: z
+    .array(
+      z.object({
+        title: z.string().trim().min(1, "Section title is required").max(200),
+        description: z.string().trim().max(2000).nullable().optional(),
+        lessons: z
+          .array(
+            z.object({
+              title: z.string().trim().min(1, "Lesson title is required").max(200),
+              content: importedLessonContentSchema,
+            }),
+          )
+          .max(MAX_IMPORT_LESSONS_PER_SECTION),
+      }),
+    )
+    .min(1, "The document produced no sections")
+    .max(MAX_IMPORT_SECTIONS),
+});
+export type ImportCourseSectionsInput = z.infer<typeof importCourseSectionsSchema>;
