@@ -8,6 +8,9 @@ import {
   CONTENT_HEADING_OFFSET,
   DEFAULT_HEADING_MAP,
   MAX_HEADING_LEVEL,
+  MAX_INLINE_DESCRIPTION_LENGTH,
+  MAX_SECTION_DESCRIPTION_LENGTH,
+  MAX_TITLE_LENGTH,
   type HeadingMap,
   type LessonBlock,
   type ParsedCourseDocument,
@@ -21,6 +24,8 @@ export type SplitCourseDocumentOptions = {
   introSectionTitle?: string;
   /** Fallback lesson title for content that appears before the first lesson heading. */
   untitledLessonTitle?: string;
+  /** Title for the lesson holding a section's intro when it is too long to be a description. */
+  overviewLessonTitle?: string;
 };
 
 const HEADING_TAGS = new Set(["H1", "H2", "H3", "H4", "H5", "H6"]);
@@ -63,6 +68,46 @@ type LessonBuilder = {
   fence: string[] | null;
 };
 
+/**
+ * Word imposes no length limits; the curriculum does. Clamp on a word boundary,
+ * leaving room for the ellipsis so the result really is within `max`.
+ */
+function clamp(text: string, max: number): string {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max - 1);
+  const lastSpace = cut.lastIndexOf(" ");
+  return `${(lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut).trimEnd()}…`;
+}
+
+function blocksPlainText(blocks: readonly LessonBlock[], document: Document): string {
+  const parts: string[] = [];
+
+  for (const block of blocks) {
+    if (block.kind === "question") {
+      parts.push(block.attrs.prompt);
+      continue;
+    }
+    const holder = document.createElement("div");
+    holder.innerHTML = block.html;
+    parts.push(holder.textContent ?? "");
+  }
+
+  return parts.join(" ").replace(/\s+/g, " ").trim();
+}
+
+/**
+ * A blurb is a short run of plain prose. Anything with a question, an image, a list,
+ * a table or a heading is content an author expects to keep, and a description field
+ * would strip it down to text.
+ */
+function isDescriptionSized(blocks: readonly LessonBlock[], text: string): boolean {
+  if (text.length > MAX_INLINE_DESCRIPTION_LENGTH) return false;
+  return blocks.every(
+    (block) =>
+      block.kind === "html" && !/<(img|ul|ol|table|h[1-6]|pre|blockquote)\b/i.test(block.html),
+  );
+}
+
 function newLesson(title: string): LessonBuilder {
   return { title, blocks: [], html: [], fence: null };
 }
@@ -97,6 +142,7 @@ export function splitCourseDocument(
     headingMap = DEFAULT_HEADING_MAP,
     introSectionTitle = "Introduction",
     untitledLessonTitle = "Untitled lesson",
+    overviewLessonTitle = "Overview",
   } = options;
 
   const document = new DOMParser().parseFromString(html, "text/html");
@@ -107,14 +153,14 @@ export function splitCourseDocument(
 
   let section: ParsedSection | null = null;
   let lesson: LessonBuilder | null = null;
-  /** Blocks seen after a section heading but before its first lesson heading. */
-  let sectionIntro: string[] = [];
+  /** Content seen after a section heading but before its first lesson heading. */
+  let sectionIntro: LessonBuilder | null = null;
 
   const startSection = (title: string) => {
     commitLesson();
     commitSection();
-    section = { title, description: null, lessons: [] };
-    sectionIntro = [];
+    section = { title: clamp(title, MAX_TITLE_LENGTH), description: null, lessons: [] };
+    sectionIntro = null;
   };
 
   /** Returns the new builder rather than assigning it, so the caller keeps a non-null binding. */
@@ -122,9 +168,9 @@ export function splitCourseDocument(
     commitLesson();
     if (!section) {
       section = { title: introSectionTitle, description: null, lessons: [] };
-      sectionIntro = [];
+      sectionIntro = null;
     }
-    return newLesson(title);
+    return newLesson(clamp(title, MAX_TITLE_LENGTH));
   };
 
   function commitLesson() {
@@ -135,11 +181,25 @@ export function splitCourseDocument(
 
   function commitSection() {
     if (!section) return;
-    const description = sectionIntro.join(" ").replace(/\s+/g, " ").trim();
-    section.description = description.length > 0 ? description : null;
+
+    if (sectionIntro) {
+      const { blocks } = finishLesson(sectionIntro);
+      const text = blocksPlainText(blocks, document);
+
+      if (blocks.length > 0) {
+        if (isDescriptionSized(blocks, text)) {
+          section.description = clamp(text, MAX_SECTION_DESCRIPTION_LENGTH);
+        } else {
+          // Too substantial to flatten into a description, so it leads the section
+          // as its own lesson — an author's intro survives intact either way.
+          section.lessons.unshift({ title: overviewLessonTitle, blocks });
+        }
+      }
+    }
+
     sections.push(section);
     section = null;
-    sectionIntro = [];
+    sectionIntro = null;
   }
 
   const elements = Array.from(document.body.children);
@@ -147,11 +207,11 @@ export function splitCourseDocument(
   for (const [index, element] of elements.entries()) {
     // A fence in progress swallows everything until it closes, headings included —
     // otherwise an unclosed fence would silently eat the rest of the document.
-    const openFenceLesson = lesson;
-    if (openFenceLesson?.fence) {
+    const openFenceTarget = lesson?.fence ? lesson : sectionIntro?.fence ? sectionIntro : null;
+    if (openFenceTarget?.fence) {
       const lines = elementToFenceLines(element);
-      openFenceLesson.fence.push(...lines);
-      if (linesCloseFence(lines)) closeFence(openFenceLesson);
+      openFenceTarget.fence.push(...lines);
+      if (linesCloseFence(lines)) closeFence(openFenceTarget);
       continue;
     }
 
@@ -191,6 +251,16 @@ export function splitCourseDocument(
     const lines = elementToFenceLines(element);
 
     if (linesOpenFence(lines)) {
+      // A fence before the first lesson stays with the rest of the section intro,
+      // so an intro's prose and its questions end up in one lesson, not two.
+      if (!lesson && section) {
+        sectionIntro ??= newLesson("");
+        flushHtml(sectionIntro);
+        sectionIntro.fence = [...lines];
+        if (linesCloseFence(lines)) closeFence(sectionIntro);
+        continue;
+      }
+
       if (!lesson) lesson = startLesson(untitledLessonTitle);
       flushHtml(lesson);
       lesson.fence = [...lines];
@@ -199,11 +269,12 @@ export function splitCourseDocument(
     }
 
     if (!lesson) {
-      // Prose sitting under a section heading describes the section until a lesson
-      // heading arrives; prose before any heading has nowhere to go but a lesson.
+      // Content under a section heading but before its first lesson belongs to the
+      // section; `commitSection` decides whether it reads as a description or has to
+      // become a lesson. Content before any heading has nowhere to go but a lesson.
       if (section) {
-        const text = textOf(element);
-        if (text.length > 0) sectionIntro.push(text);
+        sectionIntro ??= newLesson("");
+        sectionIntro.html.push(promoteHeading(element, document).outerHTML);
         continue;
       }
       lesson = startLesson(untitledLessonTitle);

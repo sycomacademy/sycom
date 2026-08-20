@@ -59,6 +59,21 @@ export type ParsedCourseDocument = {
   warnings: string[];
 };
 
+/**
+ * Mirrors the caps in `importCourseSectionsSchema` on the server. A Word document
+ * has no such limits, so the splitter clamps to these rather than letting the import
+ * fail on a heading or an intro that ran long.
+ */
+export const MAX_TITLE_LENGTH = 200;
+export const MAX_SECTION_DESCRIPTION_LENGTH = 2000;
+
+/**
+ * Prose between a section heading and its first lesson is only treated as a
+ * description when it is genuinely a blurb. Anything longer is real content and
+ * becomes a lesson instead, so nothing an author wrote gets flattened or dropped.
+ */
+export const MAX_INLINE_DESCRIPTION_LENGTH = 500;
+
 export const PENDING_IMAGE_PREFIX = "pending:";
 
 export function pendingImageSrc(id: string): string {

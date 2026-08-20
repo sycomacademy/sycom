@@ -52,6 +52,7 @@
     "@tiptap/starter-kit": "^3.22.5",
     "@turbodocx/html-to-docx": "^1.20.1",
     "@unpic/react": "^1.0.2",
+    "buffer": "^6.0.3",
     "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

@@ -73,6 +73,30 @@ const DIFFICULTY_ITEMS = DIFFICULTY_LEVELS.map((level) => ({
 /** Base UI reads `{ value, label }`; the heading map itself is looked up separately. */
 const HEADING_MAP_ITEMS = HEADING_MAP_OPTIONS.map(({ value, label }) => ({ value, label }));
 
+/**
+ * The server rejects an oversized tree with a Zod issue list, which is unreadable in
+ * a toast. Turn whatever comes back into one sentence an author can act on.
+ */
+function readableImportError(error: unknown): string {
+  const message = error instanceof Error ? error.message : "";
+
+  if (message.trimStart().startsWith("[")) {
+    try {
+      const issues = JSON.parse(message) as Array<{ path?: unknown[]; message?: string }>;
+      const first = issues[0];
+      if (first?.message) {
+        const where = Array.isArray(first.path) ? first.path.join(" › ") : "";
+        const more = issues.length > 1 ? ` (and ${issues.length - 1} more)` : "";
+        return where ? `${first.message} — at ${where}${more}` : `${first.message}${more}`;
+      }
+    } catch {
+      // Fall through to the raw message.
+    }
+  }
+
+  return message || "Couldn't reach server. Check your connection and try again.";
+}
+
 function countBlocks(parsed: ParsedCourseDocument) {
   let lessons = 0;
   let questions = 0;
@@ -339,10 +363,7 @@ export function ImportCourseDialog(props: ImportCourseDialogProps) {
       setStatus("");
       toastManager.add({
         title: "Couldn't import the document",
-        description:
-          error instanceof Error
-            ? error.message
-            : "Couldn't reach server. Check your connection and try again.",
+        description: readableImportError(error),
         type: "error",
       });
     }

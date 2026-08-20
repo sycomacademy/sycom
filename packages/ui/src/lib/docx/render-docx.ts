@@ -11,7 +11,7 @@ type HtmlToDocxFn = (
   footerHtml?: string | null,
 ) => Promise<Blob | ArrayBuffer>;
 
-type ConverterGlobals = { global?: unknown; HTMLToDOCX?: HtmlToDocxFn };
+type ConverterGlobals = { global?: unknown; Buffer?: unknown; HTMLToDOCX?: HtmlToDocxFn };
 
 let converter: Promise<HtmlToDocxFn> | null = null;
 
@@ -24,36 +24,45 @@ let converter: Promise<HtmlToDocxFn> | null = null;
  * namespace comes back empty and `default` is undefined. It has to be loaded as a
  * classic script, which is what that build was written for.
  *
- * The bundle also reads a bare `global` when choosing between Buffer and Blob,
- * expecting the shim a bundler would have injected; loading it ourselves means
- * supplying that too.
+ * The bundle also expects two Node globals a bundler would normally have injected:
+ * a bare `global`, and `Buffer` — which it reaches for while embedding images, so a
+ * document with a picture fails with "Buffer is not defined" without the polyfill.
  */
+async function installConverterGlobals(globals: ConverterGlobals): Promise<void> {
+  globals.global ??= globalThis;
+  if (globals.Buffer === undefined) {
+    globals.Buffer = (await import("buffer")).Buffer;
+  }
+}
+
 function loadConverter(): Promise<HtmlToDocxFn> {
   const globals = globalThis as unknown as ConverterGlobals;
 
   const pending =
     converter ??
-    new Promise<HtmlToDocxFn>((resolve, reject) => {
-      globals.global ??= globalThis;
+    (async () => {
+      await installConverterGlobals(globals);
 
       if (typeof globals.HTMLToDOCX === "function") {
-        resolve(globals.HTMLToDOCX);
-        return;
+        return globals.HTMLToDOCX;
       }
 
-      const script = document.createElement("script");
-      script.src = converterUrl;
-      script.addEventListener("load", () => {
-        const loaded = globals.HTMLToDOCX;
-        if (typeof loaded === "function") {
-          resolve(loaded);
-        } else {
-          reject(new Error("The Word converter loaded but exposed nothing"));
-        }
+      await new Promise<void>((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = converterUrl;
+        script.addEventListener("load", () => resolve());
+        script.addEventListener("error", () =>
+          reject(new Error("Couldn't load the Word converter")),
+        );
+        document.head.append(script);
       });
-      script.addEventListener("error", () => reject(new Error("Couldn't load the Word converter")));
-      document.head.append(script);
-    });
+
+      const loaded = globals.HTMLToDOCX;
+      if (typeof loaded !== "function") {
+        throw new Error("The Word converter loaded but exposed nothing");
+      }
+      return loaded;
+    })();
 
   // A failed load shouldn't poison every later attempt.
   pending.catch(() => {

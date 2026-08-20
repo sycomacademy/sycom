@@ -57,6 +57,76 @@ describe("splitCourseDocument", () => {
     expect(result.sections[0]?.lessons).toHaveLength(1);
   });
 
+  test("a long section intro becomes an Overview lesson instead of a description", () => {
+    // The real failure this guards: a section with several paragraphs of intro blew
+    // the server's 2000-character description cap and the whole import was rejected.
+    const long = "<p>" + "Ransomware operations evolve constantly. ".repeat(60) + "</p>";
+    const result = splitCourseDocument(`<h1>Threats</h1>${long}<h2>Conti</h2><p>Body</p>`);
+
+    const section = result.sections[0];
+    expect(section?.description).toBeNull();
+    expect(section?.lessons.map((l) => l.title)).toEqual(["Overview", "Conti"]);
+    expect(section?.lessons[0]?.blocks[0]).toMatchObject({ kind: "html" });
+  });
+
+  test("intro content that is not plain prose becomes a lesson, keeping its markup", () => {
+    const result = splitCourseDocument(
+      `<h1>Threats</h1><p>Intro</p><ul><li>One</li><li>Two</li></ul><h2>Conti</h2><p>Body</p>`,
+    );
+
+    const section = result.sections[0];
+    expect(section?.description).toBeNull();
+    expect(section?.lessons[0]?.title).toBe("Overview");
+    const html = section?.lessons[0]?.blocks.map((b) => (b.kind === "html" ? b.html : "")).join("");
+    expect(html).toContain("<ul>");
+    expect(html).toContain("Two");
+  });
+
+  test("an intro with an image is kept as a lesson rather than flattened", () => {
+    const result = splitCourseDocument(
+      `<h1>Threats</h1><p>See below</p><p><img src="pending:x" /></p><h2>Conti</h2><p>B</p>`,
+    );
+
+    expect(result.sections[0]?.description).toBeNull();
+    const html = result.sections[0]?.lessons[0]?.blocks
+      .map((b) => (b.kind === "html" ? b.html : ""))
+      .join("");
+    expect(html).toContain("pending:x");
+  });
+
+  test("a section with only intro content still produces a lesson", () => {
+    const long = "<p>" + "Words and more words. ".repeat(40) + "</p>";
+    const result = splitCourseDocument(`<h1>Threats</h1>${long}<h1>Next</h1><h2>L</h2><p>x</p>`);
+
+    expect(result.sections[0]?.lessons.map((l) => l.title)).toEqual(["Overview"]);
+    expect(result.warnings).toHaveLength(0);
+  });
+
+  test("questions in a section intro stay with its prose in one lesson", () => {
+    const result = splitCourseDocument(
+      `<h1>Threats</h1><p>Read this first, it matters a great deal for what follows.</p>` +
+        `<p>::: question</p><p>Q?</p><p>- [x] A</p><p>- [ ] B</p><p>:::</p>` +
+        `<h2>Conti</h2><p>Body</p>`,
+    );
+
+    const section = result.sections[0];
+    expect(section?.lessons.map((l) => l.title)).toEqual(["Overview", "Conti"]);
+    expect(section?.lessons[0]?.blocks.map((b) => b.kind)).toEqual(["html", "question"]);
+  });
+
+  test("clamps titles and descriptions to what the import will accept", () => {
+    const longTitle = "A".repeat(400);
+    const result = splitCourseDocument(`<h1>${longTitle}</h1><h2>${longTitle}</h2><p>x</p>`);
+
+    for (const section of result.sections) {
+      expect(section.title.length).toBeLessThanOrEqual(200);
+      expect((section.description ?? "").length).toBeLessThanOrEqual(2000);
+      for (const lesson of section.lessons) {
+        expect(lesson.title.length).toBeLessThanOrEqual(200);
+      }
+    }
+  });
+
   test("content before any heading lands in an Introduction section", () => {
     const result = splitCourseDocument(`<p>Preamble</p><h1>Networking</h1><h2>TCP</h2><p>x</p>`);
 
