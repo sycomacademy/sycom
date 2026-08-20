@@ -5,10 +5,10 @@ import { buildImageUrl } from "@sycom/ui/image/cdn";
 
 const logoSrc = buildImageUrl(BRAND.LOGO_PNG);
 
-export function BrandMark({ align = "center" }: { align?: "center" | "flex-start" }) {
+export function BrandMark({ width = 68 }: { width?: number }) {
   return (
-    <View style={{ width: "100%", alignItems: align, marginBottom: 16 }}>
-      <Image src={logoSrc} style={{ width: 112, height: 88, objectFit: "contain" }} />
+    <View style={{ alignItems: "flex-start" }}>
+      <Image src={logoSrc} style={{ width, height: width * 0.78, objectFit: "contain" }} />
     </View>
   );
 }

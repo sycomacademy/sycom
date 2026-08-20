@@ -56,31 +56,31 @@ type EnrollmentListResult = AppRouterOutputs["enrollment"]["listByCourse"];
 type PersistedCertificateDesign =
   AppRouterInputs["course"]["updateCertificateSettings"]["certificateSettings"];
 
-const CERT_DEFAULT_HEADLINE = "Certificate of completion";
+const CERT_DEFAULT_ACADEMY_TITLE = "Sycom Academy";
 const CERT_DEFAULT_CERTIFY_PHRASE = "This is to certify that";
-const CERT_DEFAULT_ISSUER = "Sycom Solutions";
+const CERT_DEFAULT_SIGNATORY_NAME = "Abdulrahman Akanbi";
+const CERT_DEFAULT_SIGNATORY_TITLE = "Chief Executive Officer";
 
 const PERSIST_DEBOUNCE_MS = 550;
 
+type CertificateDesignFields = {
+  awardHeadline: string;
+  certifyPhrase: string;
+  signatoryName: string;
+  signatoryTitle: string;
+  footnoteLine: string;
+};
+
 function buildPersistableCertificateSettings(
   templateId: CertificateTemplateId,
-  awardHeadline: string,
-  certifyPhrase: string,
-  issuerLine: string,
-  footnoteLine: string,
+  fields: CertificateDesignFields,
 ): PersistedCertificateDesign {
   const keywords: NonNullable<PersistedCertificateDesign["keywords"]> = {};
-  if (awardHeadline.trim()) {
-    keywords.awardHeadline = awardHeadline.trim();
-  }
-  if (certifyPhrase.trim()) {
-    keywords.certifyPhrase = certifyPhrase.trim();
-  }
-  if (issuerLine.trim()) {
-    keywords.issuerLine = issuerLine.trim();
-  }
-  if (footnoteLine.trim()) {
-    keywords.footnoteLine = footnoteLine.trim();
+  for (const key of Object.keys(fields) as (keyof CertificateDesignFields)[]) {
+    const value = fields[key].trim();
+    if (value) {
+      keywords[key] = value;
+    }
   }
   return Object.keys(keywords).length > 0 ? { templateId, keywords } : { templateId };
 }
@@ -223,9 +223,10 @@ function CourseCertificatesPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<CertificateTemplateId>(
     CERTIFICATE_TEMPLATE_IDS[0],
   );
-  const [awardHeadline, setAwardHeadline] = useState(CERT_DEFAULT_HEADLINE);
+  const [awardHeadline, setAwardHeadline] = useState(CERT_DEFAULT_ACADEMY_TITLE);
   const [certifyPhrase, setCertifyPhrase] = useState(CERT_DEFAULT_CERTIFY_PHRASE);
-  const [issuerLine, setIssuerLine] = useState(CERT_DEFAULT_ISSUER);
+  const [signatoryName, setSignatoryName] = useState(CERT_DEFAULT_SIGNATORY_NAME);
+  const [signatoryTitle, setSignatoryTitle] = useState(CERT_DEFAULT_SIGNATORY_TITLE);
   const [footnoteLine, setFootnoteLine] = useState("");
   const [previewRecipientName, setPreviewRecipientName] = useState("Sample Learner");
   const [previewCourseTitle, setPreviewCourseTitle] = useState(() => course.title);
@@ -279,31 +280,33 @@ function CourseCertificatesPage() {
   useLayoutEffect(() => {
     const parsed = parseCourseCertificateSettings(course.certificateSettings);
     const templateId = parsed?.templateId ?? CERTIFICATE_TEMPLATE_IDS[0];
+    const fields: CertificateDesignFields = {
+      awardHeadline: parsed?.keywords?.awardHeadline ?? CERT_DEFAULT_ACADEMY_TITLE,
+      certifyPhrase: parsed?.keywords?.certifyPhrase ?? CERT_DEFAULT_CERTIFY_PHRASE,
+      signatoryName: parsed?.keywords?.signatoryName ?? CERT_DEFAULT_SIGNATORY_NAME,
+      signatoryTitle: parsed?.keywords?.signatoryTitle ?? CERT_DEFAULT_SIGNATORY_TITLE,
+      footnoteLine: parsed?.keywords?.footnoteLine ?? "",
+    };
     setSelectedTemplate(templateId);
-    setAwardHeadline(parsed?.keywords?.awardHeadline ?? CERT_DEFAULT_HEADLINE);
-    setCertifyPhrase(parsed?.keywords?.certifyPhrase ?? CERT_DEFAULT_CERTIFY_PHRASE);
-    setIssuerLine(parsed?.keywords?.issuerLine ?? CERT_DEFAULT_ISSUER);
-    setFootnoteLine(parsed?.keywords?.footnoteLine ?? "");
+    setAwardHeadline(fields.awardHeadline);
+    setCertifyPhrase(fields.certifyPhrase);
+    setSignatoryName(fields.signatoryName);
+    setSignatoryTitle(fields.signatoryTitle);
+    setFootnoteLine(fields.footnoteLine);
     setPreviewCourseTitle(course.title);
     persistedDesignBaselineRef.current = JSON.stringify(
-      buildPersistableCertificateSettings(
-        templateId,
-        parsed?.keywords?.awardHeadline ?? CERT_DEFAULT_HEADLINE,
-        parsed?.keywords?.certifyPhrase ?? CERT_DEFAULT_CERTIFY_PHRASE,
-        parsed?.keywords?.issuerLine ?? CERT_DEFAULT_ISSUER,
-        parsed?.keywords?.footnoteLine ?? "",
-      ),
+      buildPersistableCertificateSettings(templateId, fields),
     );
   }, [course.certificateSettings, course.title, courseId]);
 
   useEffect(() => {
-    const persistable = buildPersistableCertificateSettings(
-      selectedTemplate,
+    const persistable = buildPersistableCertificateSettings(selectedTemplate, {
       awardHeadline,
       certifyPhrase,
-      issuerLine,
+      signatoryName,
+      signatoryTitle,
       footnoteLine,
-    );
+    });
     const sig = JSON.stringify(persistable);
     if (sig === persistedDesignBaselineRef.current) {
       return;
@@ -335,9 +338,10 @@ function CourseCertificatesPage() {
     certifyPhrase,
     courseId,
     footnoteLine,
-    issuerLine,
     saveCertificateDesign,
     selectedTemplate,
+    signatoryName,
+    signatoryTitle,
   ]);
 
   const previewSignature = useMemo(() => {
@@ -345,7 +349,8 @@ function CourseCertificatesPage() {
       templateId: selectedTemplate,
       awardHeadline,
       certifyPhrase,
-      issuerLine,
+      signatoryName,
+      signatoryTitle,
       footnoteLine,
       recipientName: previewRecipientName,
       courseTitle: previewCourseTitle,
@@ -356,7 +361,8 @@ function CourseCertificatesPage() {
     selectedTemplate,
     awardHeadline,
     certifyPhrase,
-    issuerLine,
+    signatoryName,
+    signatoryTitle,
     footnoteLine,
     previewRecipientName,
     previewCourseTitle,
@@ -372,7 +378,8 @@ function CourseCertificatesPage() {
       issuedAt: parseDateInputValue(previewIssuedDate),
       awardHeadline: awardHeadline.trim() ? awardHeadline : undefined,
       certifyPhrase: certifyPhrase.trim() ? certifyPhrase : undefined,
-      issuerLine: issuerLine.trim() ? issuerLine : undefined,
+      signatoryName: signatoryName.trim() ? signatoryName : undefined,
+      signatoryTitle: signatoryTitle.trim() ? signatoryTitle : undefined,
       footnoteLine: footnoteLine.trim() ? footnoteLine : undefined,
     };
     return { templateId: selectedTemplate, payload };
@@ -381,7 +388,8 @@ function CourseCertificatesPage() {
     awardHeadline,
     certifyPhrase,
     footnoteLine,
-    issuerLine,
+    signatoryName,
+    signatoryTitle,
     previewRecipientName,
     previewCourseTitle,
     previewCertificateNumber,
@@ -513,13 +521,13 @@ function CourseCertificatesPage() {
                 <div className="grid gap-6 sm:grid-cols-2">
                   <Field className="gap-2">
                     <FieldLabel className="text-xs" htmlFor={`cert-headline-${courseId}`}>
-                      Award headline
+                      Academy title
                     </FieldLabel>
                     <Input
                       id={`cert-headline-${courseId}`}
                       autoComplete="off"
                       onChange={(e) => setAwardHeadline(e.target.value)}
-                      placeholder="Certificate of completion"
+                      placeholder={CERT_DEFAULT_ACADEMY_TITLE}
                       value={awardHeadline}
                     />
                   </Field>
@@ -536,16 +544,27 @@ function CourseCertificatesPage() {
                     />
                   </Field>
                   <Field className="gap-2">
-                    <FieldLabel className="text-xs" htmlFor={`cert-issuer-${courseId}`}>
-                      Issued by{" "}
-                      <span className="font-normal text-muted-foreground">(optional)</span>
+                    <FieldLabel className="text-xs" htmlFor={`cert-signatory-${courseId}`}>
+                      Signatory name
                     </FieldLabel>
                     <Input
-                      id={`cert-issuer-${courseId}`}
-                      autoComplete="organization"
-                      onChange={(e) => setIssuerLine(e.target.value)}
-                      placeholder="Organization or signatory"
-                      value={issuerLine}
+                      id={`cert-signatory-${courseId}`}
+                      autoComplete="name"
+                      onChange={(e) => setSignatoryName(e.target.value)}
+                      placeholder={CERT_DEFAULT_SIGNATORY_NAME}
+                      value={signatoryName}
+                    />
+                  </Field>
+                  <Field className="gap-2">
+                    <FieldLabel className="text-xs" htmlFor={`cert-signatory-title-${courseId}`}>
+                      Signatory title
+                    </FieldLabel>
+                    <Input
+                      id={`cert-signatory-title-${courseId}`}
+                      autoComplete="organization-title"
+                      onChange={(e) => setSignatoryTitle(e.target.value)}
+                      placeholder={CERT_DEFAULT_SIGNATORY_TITLE}
+                      value={signatoryTitle}
                     />
                   </Field>
                   <Field className="gap-2">

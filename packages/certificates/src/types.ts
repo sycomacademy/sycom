@@ -6,12 +6,16 @@ export type CertificatePdfPayload = {
   courseTitle: string;
   certificateNumber: string;
   issuedAt: Date;
-  /** Top kicker in uppercase spacing (default: Certificate of completion) */
+  /** Academy/organisation title printed beside the logo (default: Sycom Academy) */
   awardHeadline?: string;
-  /** Bold line before learner name (default: This is to certify that) */
+  /** Line before the learner name (default: This is to certify that) */
   certifyPhrase?: string;
-  /** Printed near the signature area, e.g. organization or platform name */
+  /** Name printed under the signature rule */
+  signatoryName?: string;
+  /** Role printed under the signatory name (default: Chief Executive Officer) */
+  signatoryTitle?: string;
+  /** Legacy field kept so pre-existing course settings still parse; not rendered */
   issuerLine?: string;
-  /** Optional note above footer details */
+  /** Small print at the foot of the certificate */
   footnoteLine?: string;
 };

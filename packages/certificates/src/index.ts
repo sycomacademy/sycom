@@ -4,6 +4,8 @@ export {
   certificateTemplateLabels,
   type CertificateTemplateId,
   isCertificateTemplateId,
+  isLegacyCertificateTemplateId,
+  LEGACY_CERTIFICATE_TEMPLATE_IDS,
 } from "./meta";
 export { certificateTemplates } from "./registry";
 export type {
@@ -14,4 +16,4 @@ export type {
 export { mergeCertificatePdfPayload, parseCourseCertificateSettings } from "./course-settings";
 export type { CertificatePdfPayload } from "./types";
 export { renderCertificatePdf } from "./render-certificate-pdf";
-export { MinimalCertificate } from "./templates/minimal";
+export { SycomDefaultCertificate } from "./templates/sycom-default";

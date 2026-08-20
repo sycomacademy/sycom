@@ -4,12 +4,10 @@ import {
   isCertificateTemplateId,
 } from "./meta";
 import type { CertificateTemplateComponent } from "./templates/types";
-import { MinimalCertificate } from "./templates/minimal";
-import { DefaultCertificate } from "./templates/default";
+import { SycomDefaultCertificate } from "./templates/sycom-default";
 
 export const certificateTemplates: Record<CertificateTemplateId, CertificateTemplateComponent> = {
-  minimal: MinimalCertificate,
-  default: DefaultCertificate,
+  "sycom-default": SycomDefaultCertificate,
 };
 
 export { CERTIFICATE_TEMPLATE_IDS, type CertificateTemplateId, isCertificateTemplateId };

@@ -7,7 +7,7 @@
  * Requires CLOUDINARY_* in apps/server/.env (or exported in the shell).
  */
 
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import dotenv from "dotenv";
 import { v2 as cloudinary } from "cloudinary";
@@ -37,11 +37,18 @@ cloudinary.config({
 
 const BRAND_TAGS = ["brand", "static", "marketing", "logo"] as const;
 
-const UPLOADS: { file: string; publicId: string }[] = [
+/**
+ * `optional: true` entries are skipped when the file is absent, so the script
+ * stays runnable before the certificate seal/signature artwork lands. After
+ * adding one, flip the matching flag in `packages/certificates/src/assets.ts`.
+ */
+const UPLOADS: { file: string; publicId: string; optional?: boolean }[] = [
   { file: "sycom-logo.jpg", publicId: "brand/sycom-logo-jpg" },
   { file: "sycom-logo.png", publicId: "brand/sycom-logo-png" },
   { file: "sycom-logo-icon.jpg", publicId: "brand/sycom-logo-icon-jpg" },
   { file: "favicon.ico", publicId: "brand/favicon" },
+  { file: "certificate-stamp.png", publicId: "brand/certificate-stamp", optional: true },
+  { file: "certificate-signature.png", publicId: "brand/certificate-signature", optional: true },
 ];
 
 async function uploadBrandAsset(file: string, publicId: string) {
@@ -70,7 +77,11 @@ console.log(
   "Prod dashboard must be built with the same VITE_CLOUDINARY_CLOUD_NAME (GitHub production var).\n",
 );
 
-for (const { file, publicId } of UPLOADS) {
+for (const { file, publicId, optional } of UPLOADS) {
+  if (optional && !existsSync(join(LOGOS_DIR, file))) {
+    console.log(`SKIP ${publicId}  (${file} not present)`);
+    continue;
+  }
   await uploadBrandAsset(file, publicId);
 }
 

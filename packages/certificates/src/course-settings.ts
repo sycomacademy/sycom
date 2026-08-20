@@ -2,12 +2,15 @@ import {
   CERTIFICATE_TEMPLATE_IDS,
   type CertificateTemplateId,
   isCertificateTemplateId,
+  isLegacyCertificateTemplateId,
 } from "./meta";
 import type { CertificatePdfPayload } from "./types";
 
 export type CourseCertificateKeywords = {
   awardHeadline?: string;
   certifyPhrase?: string;
+  signatoryName?: string;
+  signatoryTitle?: string;
   issuerLine?: string;
   footnoteLine?: string;
 };
@@ -30,7 +33,16 @@ export function parseCourseCertificateSettings(raw: unknown): CourseCertificateS
 
   const o = raw as Record<string, unknown>;
   const templ = o.templateId;
-  if (typeof templ !== "string" || !isCertificateTemplateId(templ)) {
+  if (typeof templ !== "string") {
+    return null;
+  }
+
+  let templateId: CertificateTemplateId;
+  if (isCertificateTemplateId(templ)) {
+    templateId = templ;
+  } else if (isLegacyCertificateTemplateId(templ)) {
+    templateId = CERTIFICATE_TEMPLATE_IDS[0];
+  } else {
     return null;
   }
 
@@ -47,6 +59,8 @@ export function parseCourseCertificateSettings(raw: unknown): CourseCertificateS
     };
     assign("awardHeadline");
     assign("certifyPhrase");
+    assign("signatoryName");
+    assign("signatoryTitle");
     assign("issuerLine");
     assign("footnoteLine");
     if (Object.keys(next).length > 0) {
@@ -54,7 +68,7 @@ export function parseCourseCertificateSettings(raw: unknown): CourseCertificateS
     }
   }
 
-  return { templateId: templ, keywords };
+  return { templateId, keywords };
 }
 
 /**
@@ -74,6 +88,8 @@ export function mergeCertificatePdfPayload(
       ...issue,
       awardHeadline: k?.awardHeadline,
       certifyPhrase: k?.certifyPhrase,
+      signatoryName: k?.signatoryName,
+      signatoryTitle: k?.signatoryTitle,
       issuerLine: k?.issuerLine,
       footnoteLine: k?.footnoteLine,
     },

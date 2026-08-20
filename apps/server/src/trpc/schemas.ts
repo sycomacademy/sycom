@@ -1256,6 +1256,9 @@ const courseCertificateTemplateIdSchema = z.enum(
 export const courseCertificateKeywordsSchema = z.object({
   awardHeadline: z.string().trim().max(320).optional(),
   certifyPhrase: z.string().trim().max(320).optional(),
+  signatoryName: z.string().trim().max(160).optional(),
+  signatoryTitle: z.string().trim().max(160).optional(),
+  /** Retired in favour of the signatory fields; accepted so older payloads still validate. */
   issuerLine: z.string().trim().max(320).optional(),
   footnoteLine: z.string().trim().max(500).optional(),
 });
