@@ -3,6 +3,8 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    // `vite/client` supplies the `?url` asset-import declarations (see lib/docx/render-docx.ts).
+    "types": ["bun", "vite/client"],
     "paths": {
       "@sycom/ui/*": ["./src/*"],
       "@sycom/components/*": ["./src/components/*"],

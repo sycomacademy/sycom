@@ -8,2210 +8,2292 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as HealthRouteImport } from "./routes/health";
-import { Route as AcceptInviteRouteImport } from "./routes/accept-invite";
-import { Route as AuthRouteImport } from "./routes/_auth";
-import { Route as SplatRouteImport } from "./routes/$";
-import { Route as OnboardingRouteRouteImport } from "./routes/onboarding/route";
-import { Route as LearnRouteRouteImport } from "./routes/learn/route";
-import { Route as DashboardRouteRouteImport } from "./routes/dashboard/route";
-import { Route as IndexRouteImport } from "./routes/index";
-import { Route as OnboardingIndexRouteImport } from "./routes/onboarding/index";
-import { Route as DashboardIndexRouteImport } from "./routes/dashboard/index";
-import { Route as OnboardingOrganizationRouteImport } from "./routes/onboarding/organization";
-import { Route as DashboardSplatRouteImport } from "./routes/dashboard/$";
-import { Route as AuthVerifyEmailRouteImport } from "./routes/_auth/verify-email";
-import { Route as AuthTwoFactorRouteImport } from "./routes/_auth/two-factor";
-import { Route as AuthSignUpRouteImport } from "./routes/_auth/sign-up";
-import { Route as AuthSignInRouteImport } from "./routes/_auth/sign-in";
-import { Route as AuthResetPasswordRouteImport } from "./routes/_auth/reset-password";
-import { Route as AuthForgotPasswordRouteImport } from "./routes/_auth/forgot-password";
-import { Route as AuthCheckEmailRouteImport } from "./routes/_auth/check-email";
-import { Route as LearnCourseIdRouteRouteImport } from "./routes/learn/$courseId/route";
-import { Route as DashboardSupportRouteRouteImport } from "./routes/dashboard/support/route";
-import { Route as DashboardSettingsRouteRouteImport } from "./routes/dashboard/settings/route";
-import { Route as DashboardOrgRouteRouteImport } from "./routes/dashboard/org/route";
-import { Route as DashboardCourseRouteRouteImport } from "./routes/dashboard/course/route";
-import { Route as DashboardCatalogRouteRouteImport } from "./routes/dashboard/catalog/route";
-import { Route as DashboardAdminRouteRouteImport } from "./routes/dashboard/admin/route";
-import { Route as LearnCourseIdIndexRouteImport } from "./routes/learn/$courseId/index";
-import { Route as DashboardSupportIndexRouteImport } from "./routes/dashboard/support/index";
-import { Route as DashboardSettingsIndexRouteImport } from "./routes/dashboard/settings/index";
-import { Route as DashboardOrgIndexRouteImport } from "./routes/dashboard/org/index";
-import { Route as DashboardLibraryIndexRouteImport } from "./routes/dashboard/library/index";
-import { Route as DashboardCourseIndexRouteImport } from "./routes/dashboard/course/index";
-import { Route as DashboardCatalogIndexRouteImport } from "./routes/dashboard/catalog/index";
-import { Route as DashboardAdminIndexRouteImport } from "./routes/dashboard/admin/index";
-import { Route as LearnCourseIdLessonIdRouteImport } from "./routes/learn/$courseId/$lessonId";
-import { Route as DashboardSupportReportIssueRouteImport } from "./routes/dashboard/support/report-issue";
-import { Route as DashboardSupportFaqsRouteImport } from "./routes/dashboard/support/faqs";
-import { Route as DashboardSupportContactRouteImport } from "./routes/dashboard/support/contact";
-import { Route as DashboardSettingsSecurityRouteImport } from "./routes/dashboard/settings/security";
-import { Route as DashboardSettingsPreferencesRouteImport } from "./routes/dashboard/settings/preferences";
-import { Route as DashboardSettingsGeneralRouteImport } from "./routes/dashboard/settings/general";
-import { Route as DashboardOrgMembersRouteImport } from "./routes/dashboard/org/members";
-import { Route as DashboardCourseGenerateRouteImport } from "./routes/dashboard/course/generate";
-import { Route as DashboardCourseCategoriesRouteImport } from "./routes/dashboard/course/categories";
-import { Route as DashboardOrgUsersRouteRouteImport } from "./routes/dashboard/org/users/route";
-import { Route as DashboardOrgSupportRouteRouteImport } from "./routes/dashboard/org/support/route";
-import { Route as DashboardOrgSettingsRouteRouteImport } from "./routes/dashboard/org/settings/route";
-import { Route as DashboardOrgOrganizationRouteRouteImport } from "./routes/dashboard/org/organization/route";
-import { Route as DashboardOrgCoursesRouteRouteImport } from "./routes/dashboard/org/courses/route";
-import { Route as DashboardOrgCohortsRouteRouteImport } from "./routes/dashboard/org/cohorts/route";
-import { Route as DashboardCourseCourseIdRouteRouteImport } from "./routes/dashboard/course/$courseId/route";
-import { Route as DashboardAdminUsersRouteRouteImport } from "./routes/dashboard/admin/users/route";
-import { Route as DashboardAdminOrganizationsRouteRouteImport } from "./routes/dashboard/admin/organizations/route";
-import { Route as DashboardAdminLogsAnalyticsRouteRouteImport } from "./routes/dashboard/admin/logs-analytics/route";
-import { Route as DashboardOrgUsersIndexRouteImport } from "./routes/dashboard/org/users/index";
-import { Route as DashboardOrgSupportIndexRouteImport } from "./routes/dashboard/org/support/index";
-import { Route as DashboardOrgSettingsIndexRouteImport } from "./routes/dashboard/org/settings/index";
-import { Route as DashboardOrgOrganizationIndexRouteImport } from "./routes/dashboard/org/organization/index";
-import { Route as DashboardOrgLibraryIndexRouteImport } from "./routes/dashboard/org/library/index";
-import { Route as DashboardOrgCoursesIndexRouteImport } from "./routes/dashboard/org/courses/index";
-import { Route as DashboardOrgCohortsIndexRouteImport } from "./routes/dashboard/org/cohorts/index";
-import { Route as DashboardCourseCourseIdIndexRouteImport } from "./routes/dashboard/course/$courseId/index";
-import { Route as DashboardCatalogCourseIdIndexRouteImport } from "./routes/dashboard/catalog/$courseId/index";
-import { Route as DashboardAdminUsersIndexRouteImport } from "./routes/dashboard/admin/users/index";
-import { Route as DashboardAdminOrganizationsIndexRouteImport } from "./routes/dashboard/admin/organizations/index";
-import { Route as DashboardAdminLogsAnalyticsIndexRouteImport } from "./routes/dashboard/admin/logs-analytics/index";
-import { Route as DashboardOrgUsersInvitesRouteImport } from "./routes/dashboard/org/users/invites";
-import { Route as DashboardOrgSupportReportIssueRouteImport } from "./routes/dashboard/org/support/report-issue";
-import { Route as DashboardOrgSupportFaqsRouteImport } from "./routes/dashboard/org/support/faqs";
-import { Route as DashboardOrgSupportContactRouteImport } from "./routes/dashboard/org/support/contact";
-import { Route as DashboardOrgSettingsSecurityRouteImport } from "./routes/dashboard/org/settings/security";
-import { Route as DashboardOrgSettingsPreferencesRouteImport } from "./routes/dashboard/org/settings/preferences";
-import { Route as DashboardOrgSettingsGeneralRouteImport } from "./routes/dashboard/org/settings/general";
-import { Route as DashboardOrgOrganizationRulesRouteImport } from "./routes/dashboard/org/organization/rules";
-import { Route as DashboardOrgOrganizationIntegrationsRouteImport } from "./routes/dashboard/org/organization/integrations";
-import { Route as DashboardCourseCourseIdMembersRouteImport } from "./routes/dashboard/course/$courseId/members";
-import { Route as DashboardCourseCourseIdCertificatesRouteImport } from "./routes/dashboard/course/$courseId/certificates";
-import { Route as DashboardCourseCourseIdAnnouncementsRouteImport } from "./routes/dashboard/course/$courseId/announcements";
-import { Route as DashboardCourseCourseIdAnalyticsRouteImport } from "./routes/dashboard/course/$courseId/analytics";
-import { Route as DashboardCatalogCourseIdPayRouteImport } from "./routes/dashboard/catalog/$courseId/pay";
-import { Route as DashboardAdminUsersPublicInvitesRouteImport } from "./routes/dashboard/admin/users/public-invites";
-import { Route as DashboardAdminOrganizationsInvitesRouteImport } from "./routes/dashboard/admin/organizations/invites";
-import { Route as DashboardAdminLogsAnalyticsReportsRouteImport } from "./routes/dashboard/admin/logs-analytics/reports";
-import { Route as DashboardAdminLogsAnalyticsFeedbackRouteImport } from "./routes/dashboard/admin/logs-analytics/feedback";
-import { Route as DashboardOrgCoursesCourseIdRouteRouteImport } from "./routes/dashboard/org/courses/$courseId/route";
-import { Route as DashboardOrgCohortsCohortIdRouteRouteImport } from "./routes/dashboard/org/cohorts/$cohortId/route";
-import { Route as DashboardOrgCoursesCourseIdIndexRouteImport } from "./routes/dashboard/org/courses/$courseId/index";
-import { Route as DashboardOrgCohortsCohortIdIndexRouteImport } from "./routes/dashboard/org/cohorts/$cohortId/index";
-import { Route as DashboardCourseCourseIdCurriculumIndexRouteImport } from "./routes/dashboard/course/$courseId/curriculum/index";
-import { Route as DashboardOrgCoursesCourseIdMembersRouteImport } from "./routes/dashboard/org/courses/$courseId/members";
-import { Route as DashboardOrgCoursesCourseIdAnnouncementsRouteImport } from "./routes/dashboard/org/courses/$courseId/announcements";
-import { Route as DashboardOrgCoursesCourseIdAnalyticsRouteImport } from "./routes/dashboard/org/courses/$courseId/analytics";
-import { Route as DashboardOrgCohortsCohortIdMembersRouteImport } from "./routes/dashboard/org/cohorts/$cohortId/members";
-import { Route as DashboardOrgCohortsCohortIdCoursesRouteImport } from "./routes/dashboard/org/cohorts/$cohortId/courses";
-import { Route as DashboardOrgCoursesCourseIdCurriculumIndexRouteImport } from "./routes/dashboard/org/courses/$courseId/curriculum/index";
-import { Route as DashboardCourseCourseIdCurriculumLessonIdViewRouteImport } from "./routes/dashboard/course/$courseId/curriculum/$lessonId/view";
-import { Route as DashboardCourseCourseIdCurriculumLessonIdEditRouteImport } from "./routes/dashboard/course/$courseId/curriculum/$lessonId/edit";
-import { Route as DashboardOrgCoursesCourseIdCurriculumLessonIdViewRouteImport } from "./routes/dashboard/org/courses/$courseId/curriculum/$lessonId/view";
-import { Route as DashboardOrgCoursesCourseIdCurriculumLessonIdEditRouteImport } from "./routes/dashboard/org/courses/$courseId/curriculum/$lessonId/edit";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as HealthRouteImport } from './routes/health'
+import { Route as AcceptInviteRouteImport } from './routes/accept-invite'
+import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as SplatRouteImport } from './routes/$'
+import { Route as OnboardingRouteRouteImport } from './routes/onboarding/route'
+import { Route as LearnRouteRouteImport } from './routes/learn/route'
+import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as OnboardingIndexRouteImport } from './routes/onboarding/index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as OnboardingOrganizationRouteImport } from './routes/onboarding/organization'
+import { Route as DashboardSplatRouteImport } from './routes/dashboard/$'
+import { Route as AuthVerifyEmailRouteImport } from './routes/_auth/verify-email'
+import { Route as AuthTwoFactorRouteImport } from './routes/_auth/two-factor'
+import { Route as AuthSignUpRouteImport } from './routes/_auth/sign-up'
+import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
+import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-password'
+import { Route as AuthForgotPasswordRouteImport } from './routes/_auth/forgot-password'
+import { Route as AuthCheckEmailRouteImport } from './routes/_auth/check-email'
+import { Route as LearnCourseIdRouteRouteImport } from './routes/learn/$courseId/route'
+import { Route as DashboardSupportRouteRouteImport } from './routes/dashboard/support/route'
+import { Route as DashboardSettingsRouteRouteImport } from './routes/dashboard/settings/route'
+import { Route as DashboardOrgRouteRouteImport } from './routes/dashboard/org/route'
+import { Route as DashboardCourseRouteRouteImport } from './routes/dashboard/course/route'
+import { Route as DashboardCatalogRouteRouteImport } from './routes/dashboard/catalog/route'
+import { Route as DashboardAdminRouteRouteImport } from './routes/dashboard/admin/route'
+import { Route as LearnCourseIdIndexRouteImport } from './routes/learn/$courseId/index'
+import { Route as DashboardSupportIndexRouteImport } from './routes/dashboard/support/index'
+import { Route as DashboardSettingsIndexRouteImport } from './routes/dashboard/settings/index'
+import { Route as DashboardOrgIndexRouteImport } from './routes/dashboard/org/index'
+import { Route as DashboardLibraryIndexRouteImport } from './routes/dashboard/library/index'
+import { Route as DashboardCourseIndexRouteImport } from './routes/dashboard/course/index'
+import { Route as DashboardCatalogIndexRouteImport } from './routes/dashboard/catalog/index'
+import { Route as DashboardAdminIndexRouteImport } from './routes/dashboard/admin/index'
+import { Route as LearnCourseIdLessonIdRouteImport } from './routes/learn/$courseId/$lessonId'
+import { Route as DashboardSupportReportIssueRouteImport } from './routes/dashboard/support/report-issue'
+import { Route as DashboardSupportFaqsRouteImport } from './routes/dashboard/support/faqs'
+import { Route as DashboardSupportContactRouteImport } from './routes/dashboard/support/contact'
+import { Route as DashboardSettingsSecurityRouteImport } from './routes/dashboard/settings/security'
+import { Route as DashboardSettingsPreferencesRouteImport } from './routes/dashboard/settings/preferences'
+import { Route as DashboardSettingsGeneralRouteImport } from './routes/dashboard/settings/general'
+import { Route as DashboardOrgMembersRouteImport } from './routes/dashboard/org/members'
+import { Route as DashboardCourseGenerateRouteImport } from './routes/dashboard/course/generate'
+import { Route as DashboardCourseCategoriesRouteImport } from './routes/dashboard/course/categories'
+import { Route as DashboardOrgUsersRouteRouteImport } from './routes/dashboard/org/users/route'
+import { Route as DashboardOrgSupportRouteRouteImport } from './routes/dashboard/org/support/route'
+import { Route as DashboardOrgSettingsRouteRouteImport } from './routes/dashboard/org/settings/route'
+import { Route as DashboardOrgOrganizationRouteRouteImport } from './routes/dashboard/org/organization/route'
+import { Route as DashboardOrgCoursesRouteRouteImport } from './routes/dashboard/org/courses/route'
+import { Route as DashboardOrgCohortsRouteRouteImport } from './routes/dashboard/org/cohorts/route'
+import { Route as DashboardCourseCourseIdRouteRouteImport } from './routes/dashboard/course/$courseId/route'
+import { Route as DashboardAdminUsersRouteRouteImport } from './routes/dashboard/admin/users/route'
+import { Route as DashboardAdminOrganizationsRouteRouteImport } from './routes/dashboard/admin/organizations/route'
+import { Route as DashboardAdminLogsAnalyticsRouteRouteImport } from './routes/dashboard/admin/logs-analytics/route'
+import { Route as DashboardOrgUsersIndexRouteImport } from './routes/dashboard/org/users/index'
+import { Route as DashboardOrgSupportIndexRouteImport } from './routes/dashboard/org/support/index'
+import { Route as DashboardOrgSettingsIndexRouteImport } from './routes/dashboard/org/settings/index'
+import { Route as DashboardOrgOrganizationIndexRouteImport } from './routes/dashboard/org/organization/index'
+import { Route as DashboardOrgLibraryIndexRouteImport } from './routes/dashboard/org/library/index'
+import { Route as DashboardOrgCoursesIndexRouteImport } from './routes/dashboard/org/courses/index'
+import { Route as DashboardOrgCohortsIndexRouteImport } from './routes/dashboard/org/cohorts/index'
+import { Route as DashboardCourseCourseIdIndexRouteImport } from './routes/dashboard/course/$courseId/index'
+import { Route as DashboardCatalogCourseIdIndexRouteImport } from './routes/dashboard/catalog/$courseId/index'
+import { Route as DashboardAdminUsersIndexRouteImport } from './routes/dashboard/admin/users/index'
+import { Route as DashboardAdminOrganizationsIndexRouteImport } from './routes/dashboard/admin/organizations/index'
+import { Route as DashboardAdminLogsAnalyticsIndexRouteImport } from './routes/dashboard/admin/logs-analytics/index'
+import { Route as DashboardOrgUsersInvitesRouteImport } from './routes/dashboard/org/users/invites'
+import { Route as DashboardOrgSupportReportIssueRouteImport } from './routes/dashboard/org/support/report-issue'
+import { Route as DashboardOrgSupportFaqsRouteImport } from './routes/dashboard/org/support/faqs'
+import { Route as DashboardOrgSupportContactRouteImport } from './routes/dashboard/org/support/contact'
+import { Route as DashboardOrgSettingsSecurityRouteImport } from './routes/dashboard/org/settings/security'
+import { Route as DashboardOrgSettingsPreferencesRouteImport } from './routes/dashboard/org/settings/preferences'
+import { Route as DashboardOrgSettingsGeneralRouteImport } from './routes/dashboard/org/settings/general'
+import { Route as DashboardOrgOrganizationRulesRouteImport } from './routes/dashboard/org/organization/rules'
+import { Route as DashboardOrgOrganizationIntegrationsRouteImport } from './routes/dashboard/org/organization/integrations'
+import { Route as DashboardCourseCourseIdMembersRouteImport } from './routes/dashboard/course/$courseId/members'
+import { Route as DashboardCourseCourseIdCertificatesRouteImport } from './routes/dashboard/course/$courseId/certificates'
+import { Route as DashboardCourseCourseIdAnnouncementsRouteImport } from './routes/dashboard/course/$courseId/announcements'
+import { Route as DashboardCourseCourseIdAnalyticsRouteImport } from './routes/dashboard/course/$courseId/analytics'
+import { Route as DashboardCatalogCourseIdPayRouteImport } from './routes/dashboard/catalog/$courseId/pay'
+import { Route as DashboardAdminUsersPublicInvitesRouteImport } from './routes/dashboard/admin/users/public-invites'
+import { Route as DashboardAdminOrganizationsInvitesRouteImport } from './routes/dashboard/admin/organizations/invites'
+import { Route as DashboardAdminLogsAnalyticsReportsRouteImport } from './routes/dashboard/admin/logs-analytics/reports'
+import { Route as DashboardAdminLogsAnalyticsFeedbackRouteImport } from './routes/dashboard/admin/logs-analytics/feedback'
+import { Route as DashboardOrgCoursesCourseIdRouteRouteImport } from './routes/dashboard/org/courses/$courseId/route'
+import { Route as DashboardOrgCohortsCohortIdRouteRouteImport } from './routes/dashboard/org/cohorts/$cohortId/route'
+import { Route as DashboardOrgCoursesCourseIdIndexRouteImport } from './routes/dashboard/org/courses/$courseId/index'
+import { Route as DashboardOrgCohortsCohortIdIndexRouteImport } from './routes/dashboard/org/cohorts/$cohortId/index'
+import { Route as DashboardCourseCourseIdCurriculumIndexRouteImport } from './routes/dashboard/course/$courseId/curriculum/index'
+import { Route as DashboardOrgCoursesCourseIdMembersRouteImport } from './routes/dashboard/org/courses/$courseId/members'
+import { Route as DashboardOrgCoursesCourseIdAnnouncementsRouteImport } from './routes/dashboard/org/courses/$courseId/announcements'
+import { Route as DashboardOrgCoursesCourseIdAnalyticsRouteImport } from './routes/dashboard/org/courses/$courseId/analytics'
+import { Route as DashboardOrgCohortsCohortIdMembersRouteImport } from './routes/dashboard/org/cohorts/$cohortId/members'
+import { Route as DashboardOrgCohortsCohortIdCoursesRouteImport } from './routes/dashboard/org/cohorts/$cohortId/courses'
+import { Route as DashboardOrgCoursesCourseIdCurriculumIndexRouteImport } from './routes/dashboard/org/courses/$courseId/curriculum/index'
+import { Route as DashboardCourseCourseIdCurriculumLessonIdViewRouteImport } from './routes/dashboard/course/$courseId/curriculum/$lessonId/view'
+import { Route as DashboardCourseCourseIdCurriculumLessonIdEditRouteImport } from './routes/dashboard/course/$courseId/curriculum/$lessonId/edit'
+import { Route as DashboardOrgCoursesCourseIdCurriculumLessonIdViewRouteImport } from './routes/dashboard/org/courses/$courseId/curriculum/$lessonId/view'
+import { Route as DashboardOrgCoursesCourseIdCurriculumLessonIdEditRouteImport } from './routes/dashboard/org/courses/$courseId/curriculum/$lessonId/edit'
 
 const HealthRoute = HealthRouteImport.update({
-  id: "/health",
-  path: "/health",
+  id: '/health',
+  path: '/health',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AcceptInviteRoute = AcceptInviteRouteImport.update({
-  id: "/accept-invite",
-  path: "/accept-invite",
+  id: '/accept-invite',
+  path: '/accept-invite',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AuthRoute = AuthRouteImport.update({
-  id: "/_auth",
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const SplatRoute = SplatRouteImport.update({
-  id: "/$",
-  path: "/$",
+  id: '/$',
+  path: '/$',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const OnboardingRouteRoute = OnboardingRouteRouteImport.update({
-  id: "/onboarding",
-  path: "/onboarding",
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const LearnRouteRoute = LearnRouteRouteImport.update({
-  id: "/learn",
-  path: "/learn",
+  id: '/learn',
+  path: '/learn',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const DashboardRouteRoute = DashboardRouteRouteImport.update({
-  id: "/dashboard",
-  path: "/dashboard",
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const OnboardingIndexRoute = OnboardingIndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => OnboardingRouteRoute,
-} as any);
+} as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => DashboardRouteRoute,
-} as any);
+} as any)
 const OnboardingOrganizationRoute = OnboardingOrganizationRouteImport.update({
-  id: "/organization",
-  path: "/organization",
+  id: '/organization',
+  path: '/organization',
   getParentRoute: () => OnboardingRouteRoute,
-} as any);
+} as any)
 const DashboardSplatRoute = DashboardSplatRouteImport.update({
-  id: "/$",
-  path: "/$",
+  id: '/$',
+  path: '/$',
   getParentRoute: () => DashboardRouteRoute,
-} as any);
+} as any)
 const AuthVerifyEmailRoute = AuthVerifyEmailRouteImport.update({
-  id: "/verify-email",
-  path: "/verify-email",
+  id: '/verify-email',
+  path: '/verify-email',
   getParentRoute: () => AuthRoute,
-} as any);
+} as any)
 const AuthTwoFactorRoute = AuthTwoFactorRouteImport.update({
-  id: "/two-factor",
-  path: "/two-factor",
+  id: '/two-factor',
+  path: '/two-factor',
   getParentRoute: () => AuthRoute,
-} as any);
+} as any)
 const AuthSignUpRoute = AuthSignUpRouteImport.update({
-  id: "/sign-up",
-  path: "/sign-up",
+  id: '/sign-up',
+  path: '/sign-up',
   getParentRoute: () => AuthRoute,
-} as any);
+} as any)
 const AuthSignInRoute = AuthSignInRouteImport.update({
-  id: "/sign-in",
-  path: "/sign-in",
+  id: '/sign-in',
+  path: '/sign-in',
   getParentRoute: () => AuthRoute,
-} as any);
+} as any)
 const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
-  id: "/reset-password",
-  path: "/reset-password",
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => AuthRoute,
-} as any);
+} as any)
 const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
-  id: "/forgot-password",
-  path: "/forgot-password",
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => AuthRoute,
-} as any);
+} as any)
 const AuthCheckEmailRoute = AuthCheckEmailRouteImport.update({
-  id: "/check-email",
-  path: "/check-email",
+  id: '/check-email',
+  path: '/check-email',
   getParentRoute: () => AuthRoute,
-} as any);
+} as any)
 const LearnCourseIdRouteRoute = LearnCourseIdRouteRouteImport.update({
-  id: "/$courseId",
-  path: "/$courseId",
+  id: '/$courseId',
+  path: '/$courseId',
   getParentRoute: () => LearnRouteRoute,
-} as any);
+} as any)
 const DashboardSupportRouteRoute = DashboardSupportRouteRouteImport.update({
-  id: "/support",
-  path: "/support",
+  id: '/support',
+  path: '/support',
   getParentRoute: () => DashboardRouteRoute,
-} as any);
+} as any)
 const DashboardSettingsRouteRoute = DashboardSettingsRouteRouteImport.update({
-  id: "/settings",
-  path: "/settings",
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => DashboardRouteRoute,
-} as any);
+} as any)
 const DashboardOrgRouteRoute = DashboardOrgRouteRouteImport.update({
-  id: "/org",
-  path: "/org",
+  id: '/org',
+  path: '/org',
   getParentRoute: () => DashboardRouteRoute,
-} as any);
+} as any)
 const DashboardCourseRouteRoute = DashboardCourseRouteRouteImport.update({
-  id: "/course",
-  path: "/course",
+  id: '/course',
+  path: '/course',
   getParentRoute: () => DashboardRouteRoute,
-} as any);
+} as any)
 const DashboardCatalogRouteRoute = DashboardCatalogRouteRouteImport.update({
-  id: "/catalog",
-  path: "/catalog",
+  id: '/catalog',
+  path: '/catalog',
   getParentRoute: () => DashboardRouteRoute,
-} as any);
+} as any)
 const DashboardAdminRouteRoute = DashboardAdminRouteRouteImport.update({
-  id: "/admin",
-  path: "/admin",
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => DashboardRouteRoute,
-} as any);
+} as any)
 const LearnCourseIdIndexRoute = LearnCourseIdIndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => LearnCourseIdRouteRoute,
-} as any);
+} as any)
 const DashboardSupportIndexRoute = DashboardSupportIndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => DashboardSupportRouteRoute,
-} as any);
+} as any)
 const DashboardSettingsIndexRoute = DashboardSettingsIndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => DashboardSettingsRouteRoute,
-} as any);
+} as any)
 const DashboardOrgIndexRoute = DashboardOrgIndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => DashboardOrgRouteRoute,
-} as any);
+} as any)
 const DashboardLibraryIndexRoute = DashboardLibraryIndexRouteImport.update({
-  id: "/library/",
-  path: "/library/",
+  id: '/library/',
+  path: '/library/',
   getParentRoute: () => DashboardRouteRoute,
-} as any);
+} as any)
 const DashboardCourseIndexRoute = DashboardCourseIndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => DashboardCourseRouteRoute,
-} as any);
+} as any)
 const DashboardCatalogIndexRoute = DashboardCatalogIndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => DashboardCatalogRouteRoute,
-} as any);
+} as any)
 const DashboardAdminIndexRoute = DashboardAdminIndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => DashboardAdminRouteRoute,
-} as any);
+} as any)
 const LearnCourseIdLessonIdRoute = LearnCourseIdLessonIdRouteImport.update({
-  id: "/$lessonId",
-  path: "/$lessonId",
+  id: '/$lessonId',
+  path: '/$lessonId',
   getParentRoute: () => LearnCourseIdRouteRoute,
-} as any);
-const DashboardSupportReportIssueRoute = DashboardSupportReportIssueRouteImport.update({
-  id: "/report-issue",
-  path: "/report-issue",
-  getParentRoute: () => DashboardSupportRouteRoute,
-} as any);
+} as any)
+const DashboardSupportReportIssueRoute =
+  DashboardSupportReportIssueRouteImport.update({
+    id: '/report-issue',
+    path: '/report-issue',
+    getParentRoute: () => DashboardSupportRouteRoute,
+  } as any)
 const DashboardSupportFaqsRoute = DashboardSupportFaqsRouteImport.update({
-  id: "/faqs",
-  path: "/faqs",
+  id: '/faqs',
+  path: '/faqs',
   getParentRoute: () => DashboardSupportRouteRoute,
-} as any);
+} as any)
 const DashboardSupportContactRoute = DashboardSupportContactRouteImport.update({
-  id: "/contact",
-  path: "/contact",
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => DashboardSupportRouteRoute,
-} as any);
-const DashboardSettingsSecurityRoute = DashboardSettingsSecurityRouteImport.update({
-  id: "/security",
-  path: "/security",
-  getParentRoute: () => DashboardSettingsRouteRoute,
-} as any);
-const DashboardSettingsPreferencesRoute = DashboardSettingsPreferencesRouteImport.update({
-  id: "/preferences",
-  path: "/preferences",
-  getParentRoute: () => DashboardSettingsRouteRoute,
-} as any);
-const DashboardSettingsGeneralRoute = DashboardSettingsGeneralRouteImport.update({
-  id: "/general",
-  path: "/general",
-  getParentRoute: () => DashboardSettingsRouteRoute,
-} as any);
+} as any)
+const DashboardSettingsSecurityRoute =
+  DashboardSettingsSecurityRouteImport.update({
+    id: '/security',
+    path: '/security',
+    getParentRoute: () => DashboardSettingsRouteRoute,
+  } as any)
+const DashboardSettingsPreferencesRoute =
+  DashboardSettingsPreferencesRouteImport.update({
+    id: '/preferences',
+    path: '/preferences',
+    getParentRoute: () => DashboardSettingsRouteRoute,
+  } as any)
+const DashboardSettingsGeneralRoute =
+  DashboardSettingsGeneralRouteImport.update({
+    id: '/general',
+    path: '/general',
+    getParentRoute: () => DashboardSettingsRouteRoute,
+  } as any)
 const DashboardOrgMembersRoute = DashboardOrgMembersRouteImport.update({
-  id: "/members",
-  path: "/members",
+  id: '/members',
+  path: '/members',
   getParentRoute: () => DashboardOrgRouteRoute,
-} as any);
+} as any)
 const DashboardCourseGenerateRoute = DashboardCourseGenerateRouteImport.update({
-  id: "/generate",
-  path: "/generate",
+  id: '/generate',
+  path: '/generate',
   getParentRoute: () => DashboardCourseRouteRoute,
-} as any);
-const DashboardCourseCategoriesRoute = DashboardCourseCategoriesRouteImport.update({
-  id: "/categories",
-  path: "/categories",
-  getParentRoute: () => DashboardCourseRouteRoute,
-} as any);
+} as any)
+const DashboardCourseCategoriesRoute =
+  DashboardCourseCategoriesRouteImport.update({
+    id: '/categories',
+    path: '/categories',
+    getParentRoute: () => DashboardCourseRouteRoute,
+  } as any)
 const DashboardOrgUsersRouteRoute = DashboardOrgUsersRouteRouteImport.update({
-  id: "/users",
-  path: "/users",
+  id: '/users',
+  path: '/users',
   getParentRoute: () => DashboardOrgRouteRoute,
-} as any);
-const DashboardOrgSupportRouteRoute = DashboardOrgSupportRouteRouteImport.update({
-  id: "/support",
-  path: "/support",
-  getParentRoute: () => DashboardOrgRouteRoute,
-} as any);
-const DashboardOrgSettingsRouteRoute = DashboardOrgSettingsRouteRouteImport.update({
-  id: "/settings",
-  path: "/settings",
-  getParentRoute: () => DashboardOrgRouteRoute,
-} as any);
-const DashboardOrgOrganizationRouteRoute = DashboardOrgOrganizationRouteRouteImport.update({
-  id: "/organization",
-  path: "/organization",
-  getParentRoute: () => DashboardOrgRouteRoute,
-} as any);
-const DashboardOrgCoursesRouteRoute = DashboardOrgCoursesRouteRouteImport.update({
-  id: "/courses",
-  path: "/courses",
-  getParentRoute: () => DashboardOrgRouteRoute,
-} as any);
-const DashboardOrgCohortsRouteRoute = DashboardOrgCohortsRouteRouteImport.update({
-  id: "/cohorts",
-  path: "/cohorts",
-  getParentRoute: () => DashboardOrgRouteRoute,
-} as any);
-const DashboardCourseCourseIdRouteRoute = DashboardCourseCourseIdRouteRouteImport.update({
-  id: "/$courseId",
-  path: "/$courseId",
-  getParentRoute: () => DashboardCourseRouteRoute,
-} as any);
-const DashboardAdminUsersRouteRoute = DashboardAdminUsersRouteRouteImport.update({
-  id: "/users",
-  path: "/users",
-  getParentRoute: () => DashboardAdminRouteRoute,
-} as any);
-const DashboardAdminOrganizationsRouteRoute = DashboardAdminOrganizationsRouteRouteImport.update({
-  id: "/organizations",
-  path: "/organizations",
-  getParentRoute: () => DashboardAdminRouteRoute,
-} as any);
-const DashboardAdminLogsAnalyticsRouteRoute = DashboardAdminLogsAnalyticsRouteRouteImport.update({
-  id: "/logs-analytics",
-  path: "/logs-analytics",
-  getParentRoute: () => DashboardAdminRouteRoute,
-} as any);
+} as any)
+const DashboardOrgSupportRouteRoute =
+  DashboardOrgSupportRouteRouteImport.update({
+    id: '/support',
+    path: '/support',
+    getParentRoute: () => DashboardOrgRouteRoute,
+  } as any)
+const DashboardOrgSettingsRouteRoute =
+  DashboardOrgSettingsRouteRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => DashboardOrgRouteRoute,
+  } as any)
+const DashboardOrgOrganizationRouteRoute =
+  DashboardOrgOrganizationRouteRouteImport.update({
+    id: '/organization',
+    path: '/organization',
+    getParentRoute: () => DashboardOrgRouteRoute,
+  } as any)
+const DashboardOrgCoursesRouteRoute =
+  DashboardOrgCoursesRouteRouteImport.update({
+    id: '/courses',
+    path: '/courses',
+    getParentRoute: () => DashboardOrgRouteRoute,
+  } as any)
+const DashboardOrgCohortsRouteRoute =
+  DashboardOrgCohortsRouteRouteImport.update({
+    id: '/cohorts',
+    path: '/cohorts',
+    getParentRoute: () => DashboardOrgRouteRoute,
+  } as any)
+const DashboardCourseCourseIdRouteRoute =
+  DashboardCourseCourseIdRouteRouteImport.update({
+    id: '/$courseId',
+    path: '/$courseId',
+    getParentRoute: () => DashboardCourseRouteRoute,
+  } as any)
+const DashboardAdminUsersRouteRoute =
+  DashboardAdminUsersRouteRouteImport.update({
+    id: '/users',
+    path: '/users',
+    getParentRoute: () => DashboardAdminRouteRoute,
+  } as any)
+const DashboardAdminOrganizationsRouteRoute =
+  DashboardAdminOrganizationsRouteRouteImport.update({
+    id: '/organizations',
+    path: '/organizations',
+    getParentRoute: () => DashboardAdminRouteRoute,
+  } as any)
+const DashboardAdminLogsAnalyticsRouteRoute =
+  DashboardAdminLogsAnalyticsRouteRouteImport.update({
+    id: '/logs-analytics',
+    path: '/logs-analytics',
+    getParentRoute: () => DashboardAdminRouteRoute,
+  } as any)
 const DashboardOrgUsersIndexRoute = DashboardOrgUsersIndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => DashboardOrgUsersRouteRoute,
-} as any);
-const DashboardOrgSupportIndexRoute = DashboardOrgSupportIndexRouteImport.update({
-  id: "/",
-  path: "/",
-  getParentRoute: () => DashboardOrgSupportRouteRoute,
-} as any);
-const DashboardOrgSettingsIndexRoute = DashboardOrgSettingsIndexRouteImport.update({
-  id: "/",
-  path: "/",
-  getParentRoute: () => DashboardOrgSettingsRouteRoute,
-} as any);
-const DashboardOrgOrganizationIndexRoute = DashboardOrgOrganizationIndexRouteImport.update({
-  id: "/",
-  path: "/",
-  getParentRoute: () => DashboardOrgOrganizationRouteRoute,
-} as any);
-const DashboardOrgLibraryIndexRoute = DashboardOrgLibraryIndexRouteImport.update({
-  id: "/library/",
-  path: "/library/",
-  getParentRoute: () => DashboardOrgRouteRoute,
-} as any);
-const DashboardOrgCoursesIndexRoute = DashboardOrgCoursesIndexRouteImport.update({
-  id: "/",
-  path: "/",
-  getParentRoute: () => DashboardOrgCoursesRouteRoute,
-} as any);
-const DashboardOrgCohortsIndexRoute = DashboardOrgCohortsIndexRouteImport.update({
-  id: "/",
-  path: "/",
-  getParentRoute: () => DashboardOrgCohortsRouteRoute,
-} as any);
-const DashboardCourseCourseIdIndexRoute = DashboardCourseCourseIdIndexRouteImport.update({
-  id: "/",
-  path: "/",
-  getParentRoute: () => DashboardCourseCourseIdRouteRoute,
-} as any);
-const DashboardCatalogCourseIdIndexRoute = DashboardCatalogCourseIdIndexRouteImport.update({
-  id: "/$courseId/",
-  path: "/$courseId/",
-  getParentRoute: () => DashboardCatalogRouteRoute,
-} as any);
-const DashboardAdminUsersIndexRoute = DashboardAdminUsersIndexRouteImport.update({
-  id: "/",
-  path: "/",
-  getParentRoute: () => DashboardAdminUsersRouteRoute,
-} as any);
-const DashboardAdminOrganizationsIndexRoute = DashboardAdminOrganizationsIndexRouteImport.update({
-  id: "/",
-  path: "/",
-  getParentRoute: () => DashboardAdminOrganizationsRouteRoute,
-} as any);
-const DashboardAdminLogsAnalyticsIndexRoute = DashboardAdminLogsAnalyticsIndexRouteImport.update({
-  id: "/",
-  path: "/",
-  getParentRoute: () => DashboardAdminLogsAnalyticsRouteRoute,
-} as any);
-const DashboardOrgUsersInvitesRoute = DashboardOrgUsersInvitesRouteImport.update({
-  id: "/invites",
-  path: "/invites",
-  getParentRoute: () => DashboardOrgUsersRouteRoute,
-} as any);
-const DashboardOrgSupportReportIssueRoute = DashboardOrgSupportReportIssueRouteImport.update({
-  id: "/report-issue",
-  path: "/report-issue",
-  getParentRoute: () => DashboardOrgSupportRouteRoute,
-} as any);
+} as any)
+const DashboardOrgSupportIndexRoute =
+  DashboardOrgSupportIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardOrgSupportRouteRoute,
+  } as any)
+const DashboardOrgSettingsIndexRoute =
+  DashboardOrgSettingsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardOrgSettingsRouteRoute,
+  } as any)
+const DashboardOrgOrganizationIndexRoute =
+  DashboardOrgOrganizationIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardOrgOrganizationRouteRoute,
+  } as any)
+const DashboardOrgLibraryIndexRoute =
+  DashboardOrgLibraryIndexRouteImport.update({
+    id: '/library/',
+    path: '/library/',
+    getParentRoute: () => DashboardOrgRouteRoute,
+  } as any)
+const DashboardOrgCoursesIndexRoute =
+  DashboardOrgCoursesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardOrgCoursesRouteRoute,
+  } as any)
+const DashboardOrgCohortsIndexRoute =
+  DashboardOrgCohortsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardOrgCohortsRouteRoute,
+  } as any)
+const DashboardCourseCourseIdIndexRoute =
+  DashboardCourseCourseIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardCourseCourseIdRouteRoute,
+  } as any)
+const DashboardCatalogCourseIdIndexRoute =
+  DashboardCatalogCourseIdIndexRouteImport.update({
+    id: '/$courseId/',
+    path: '/$courseId/',
+    getParentRoute: () => DashboardCatalogRouteRoute,
+  } as any)
+const DashboardAdminUsersIndexRoute =
+  DashboardAdminUsersIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardAdminUsersRouteRoute,
+  } as any)
+const DashboardAdminOrganizationsIndexRoute =
+  DashboardAdminOrganizationsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardAdminOrganizationsRouteRoute,
+  } as any)
+const DashboardAdminLogsAnalyticsIndexRoute =
+  DashboardAdminLogsAnalyticsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardAdminLogsAnalyticsRouteRoute,
+  } as any)
+const DashboardOrgUsersInvitesRoute =
+  DashboardOrgUsersInvitesRouteImport.update({
+    id: '/invites',
+    path: '/invites',
+    getParentRoute: () => DashboardOrgUsersRouteRoute,
+  } as any)
+const DashboardOrgSupportReportIssueRoute =
+  DashboardOrgSupportReportIssueRouteImport.update({
+    id: '/report-issue',
+    path: '/report-issue',
+    getParentRoute: () => DashboardOrgSupportRouteRoute,
+  } as any)
 const DashboardOrgSupportFaqsRoute = DashboardOrgSupportFaqsRouteImport.update({
-  id: "/faqs",
-  path: "/faqs",
+  id: '/faqs',
+  path: '/faqs',
   getParentRoute: () => DashboardOrgSupportRouteRoute,
-} as any);
-const DashboardOrgSupportContactRoute = DashboardOrgSupportContactRouteImport.update({
-  id: "/contact",
-  path: "/contact",
-  getParentRoute: () => DashboardOrgSupportRouteRoute,
-} as any);
-const DashboardOrgSettingsSecurityRoute = DashboardOrgSettingsSecurityRouteImport.update({
-  id: "/security",
-  path: "/security",
-  getParentRoute: () => DashboardOrgSettingsRouteRoute,
-} as any);
-const DashboardOrgSettingsPreferencesRoute = DashboardOrgSettingsPreferencesRouteImport.update({
-  id: "/preferences",
-  path: "/preferences",
-  getParentRoute: () => DashboardOrgSettingsRouteRoute,
-} as any);
-const DashboardOrgSettingsGeneralRoute = DashboardOrgSettingsGeneralRouteImport.update({
-  id: "/general",
-  path: "/general",
-  getParentRoute: () => DashboardOrgSettingsRouteRoute,
-} as any);
-const DashboardOrgOrganizationRulesRoute = DashboardOrgOrganizationRulesRouteImport.update({
-  id: "/rules",
-  path: "/rules",
-  getParentRoute: () => DashboardOrgOrganizationRouteRoute,
-} as any);
+} as any)
+const DashboardOrgSupportContactRoute =
+  DashboardOrgSupportContactRouteImport.update({
+    id: '/contact',
+    path: '/contact',
+    getParentRoute: () => DashboardOrgSupportRouteRoute,
+  } as any)
+const DashboardOrgSettingsSecurityRoute =
+  DashboardOrgSettingsSecurityRouteImport.update({
+    id: '/security',
+    path: '/security',
+    getParentRoute: () => DashboardOrgSettingsRouteRoute,
+  } as any)
+const DashboardOrgSettingsPreferencesRoute =
+  DashboardOrgSettingsPreferencesRouteImport.update({
+    id: '/preferences',
+    path: '/preferences',
+    getParentRoute: () => DashboardOrgSettingsRouteRoute,
+  } as any)
+const DashboardOrgSettingsGeneralRoute =
+  DashboardOrgSettingsGeneralRouteImport.update({
+    id: '/general',
+    path: '/general',
+    getParentRoute: () => DashboardOrgSettingsRouteRoute,
+  } as any)
+const DashboardOrgOrganizationRulesRoute =
+  DashboardOrgOrganizationRulesRouteImport.update({
+    id: '/rules',
+    path: '/rules',
+    getParentRoute: () => DashboardOrgOrganizationRouteRoute,
+  } as any)
 const DashboardOrgOrganizationIntegrationsRoute =
   DashboardOrgOrganizationIntegrationsRouteImport.update({
-    id: "/integrations",
-    path: "/integrations",
+    id: '/integrations',
+    path: '/integrations',
     getParentRoute: () => DashboardOrgOrganizationRouteRoute,
-  } as any);
-const DashboardCourseCourseIdMembersRoute = DashboardCourseCourseIdMembersRouteImport.update({
-  id: "/members",
-  path: "/members",
-  getParentRoute: () => DashboardCourseCourseIdRouteRoute,
-} as any);
+  } as any)
+const DashboardCourseCourseIdMembersRoute =
+  DashboardCourseCourseIdMembersRouteImport.update({
+    id: '/members',
+    path: '/members',
+    getParentRoute: () => DashboardCourseCourseIdRouteRoute,
+  } as any)
 const DashboardCourseCourseIdCertificatesRoute =
   DashboardCourseCourseIdCertificatesRouteImport.update({
-    id: "/certificates",
-    path: "/certificates",
+    id: '/certificates',
+    path: '/certificates',
     getParentRoute: () => DashboardCourseCourseIdRouteRoute,
-  } as any);
+  } as any)
 const DashboardCourseCourseIdAnnouncementsRoute =
   DashboardCourseCourseIdAnnouncementsRouteImport.update({
-    id: "/announcements",
-    path: "/announcements",
+    id: '/announcements',
+    path: '/announcements',
     getParentRoute: () => DashboardCourseCourseIdRouteRoute,
-  } as any);
-const DashboardCourseCourseIdAnalyticsRoute = DashboardCourseCourseIdAnalyticsRouteImport.update({
-  id: "/analytics",
-  path: "/analytics",
-  getParentRoute: () => DashboardCourseCourseIdRouteRoute,
-} as any);
-const DashboardCatalogCourseIdPayRoute = DashboardCatalogCourseIdPayRouteImport.update({
-  id: "/$courseId/pay",
-  path: "/$courseId/pay",
-  getParentRoute: () => DashboardCatalogRouteRoute,
-} as any);
-const DashboardAdminUsersPublicInvitesRoute = DashboardAdminUsersPublicInvitesRouteImport.update({
-  id: "/public-invites",
-  path: "/public-invites",
-  getParentRoute: () => DashboardAdminUsersRouteRoute,
-} as any);
+  } as any)
+const DashboardCourseCourseIdAnalyticsRoute =
+  DashboardCourseCourseIdAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
+    getParentRoute: () => DashboardCourseCourseIdRouteRoute,
+  } as any)
+const DashboardCatalogCourseIdPayRoute =
+  DashboardCatalogCourseIdPayRouteImport.update({
+    id: '/$courseId/pay',
+    path: '/$courseId/pay',
+    getParentRoute: () => DashboardCatalogRouteRoute,
+  } as any)
+const DashboardAdminUsersPublicInvitesRoute =
+  DashboardAdminUsersPublicInvitesRouteImport.update({
+    id: '/public-invites',
+    path: '/public-invites',
+    getParentRoute: () => DashboardAdminUsersRouteRoute,
+  } as any)
 const DashboardAdminOrganizationsInvitesRoute =
   DashboardAdminOrganizationsInvitesRouteImport.update({
-    id: "/invites",
-    path: "/invites",
+    id: '/invites',
+    path: '/invites',
     getParentRoute: () => DashboardAdminOrganizationsRouteRoute,
-  } as any);
+  } as any)
 const DashboardAdminLogsAnalyticsReportsRoute =
   DashboardAdminLogsAnalyticsReportsRouteImport.update({
-    id: "/reports",
-    path: "/reports",
+    id: '/reports',
+    path: '/reports',
     getParentRoute: () => DashboardAdminLogsAnalyticsRouteRoute,
-  } as any);
+  } as any)
 const DashboardAdminLogsAnalyticsFeedbackRoute =
   DashboardAdminLogsAnalyticsFeedbackRouteImport.update({
-    id: "/feedback",
-    path: "/feedback",
+    id: '/feedback',
+    path: '/feedback',
     getParentRoute: () => DashboardAdminLogsAnalyticsRouteRoute,
-  } as any);
-const DashboardOrgCoursesCourseIdRouteRoute = DashboardOrgCoursesCourseIdRouteRouteImport.update({
-  id: "/$courseId",
-  path: "/$courseId",
-  getParentRoute: () => DashboardOrgCoursesRouteRoute,
-} as any);
-const DashboardOrgCohortsCohortIdRouteRoute = DashboardOrgCohortsCohortIdRouteRouteImport.update({
-  id: "/$cohortId",
-  path: "/$cohortId",
-  getParentRoute: () => DashboardOrgCohortsRouteRoute,
-} as any);
-const DashboardOrgCoursesCourseIdIndexRoute = DashboardOrgCoursesCourseIdIndexRouteImport.update({
-  id: "/",
-  path: "/",
-  getParentRoute: () => DashboardOrgCoursesCourseIdRouteRoute,
-} as any);
-const DashboardOrgCohortsCohortIdIndexRoute = DashboardOrgCohortsCohortIdIndexRouteImport.update({
-  id: "/",
-  path: "/",
-  getParentRoute: () => DashboardOrgCohortsCohortIdRouteRoute,
-} as any);
+  } as any)
+const DashboardOrgCoursesCourseIdRouteRoute =
+  DashboardOrgCoursesCourseIdRouteRouteImport.update({
+    id: '/$courseId',
+    path: '/$courseId',
+    getParentRoute: () => DashboardOrgCoursesRouteRoute,
+  } as any)
+const DashboardOrgCohortsCohortIdRouteRoute =
+  DashboardOrgCohortsCohortIdRouteRouteImport.update({
+    id: '/$cohortId',
+    path: '/$cohortId',
+    getParentRoute: () => DashboardOrgCohortsRouteRoute,
+  } as any)
+const DashboardOrgCoursesCourseIdIndexRoute =
+  DashboardOrgCoursesCourseIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardOrgCoursesCourseIdRouteRoute,
+  } as any)
+const DashboardOrgCohortsCohortIdIndexRoute =
+  DashboardOrgCohortsCohortIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardOrgCohortsCohortIdRouteRoute,
+  } as any)
 const DashboardCourseCourseIdCurriculumIndexRoute =
   DashboardCourseCourseIdCurriculumIndexRouteImport.update({
-    id: "/curriculum/",
-    path: "/curriculum/",
+    id: '/curriculum/',
+    path: '/curriculum/',
     getParentRoute: () => DashboardCourseCourseIdRouteRoute,
-  } as any);
+  } as any)
 const DashboardOrgCoursesCourseIdMembersRoute =
   DashboardOrgCoursesCourseIdMembersRouteImport.update({
-    id: "/members",
-    path: "/members",
+    id: '/members',
+    path: '/members',
     getParentRoute: () => DashboardOrgCoursesCourseIdRouteRoute,
-  } as any);
+  } as any)
 const DashboardOrgCoursesCourseIdAnnouncementsRoute =
   DashboardOrgCoursesCourseIdAnnouncementsRouteImport.update({
-    id: "/announcements",
-    path: "/announcements",
+    id: '/announcements',
+    path: '/announcements',
     getParentRoute: () => DashboardOrgCoursesCourseIdRouteRoute,
-  } as any);
+  } as any)
 const DashboardOrgCoursesCourseIdAnalyticsRoute =
   DashboardOrgCoursesCourseIdAnalyticsRouteImport.update({
-    id: "/analytics",
-    path: "/analytics",
+    id: '/analytics',
+    path: '/analytics',
     getParentRoute: () => DashboardOrgCoursesCourseIdRouteRoute,
-  } as any);
+  } as any)
 const DashboardOrgCohortsCohortIdMembersRoute =
   DashboardOrgCohortsCohortIdMembersRouteImport.update({
-    id: "/members",
-    path: "/members",
+    id: '/members',
+    path: '/members',
     getParentRoute: () => DashboardOrgCohortsCohortIdRouteRoute,
-  } as any);
+  } as any)
 const DashboardOrgCohortsCohortIdCoursesRoute =
   DashboardOrgCohortsCohortIdCoursesRouteImport.update({
-    id: "/courses",
-    path: "/courses",
+    id: '/courses',
+    path: '/courses',
     getParentRoute: () => DashboardOrgCohortsCohortIdRouteRoute,
-  } as any);
+  } as any)
 const DashboardOrgCoursesCourseIdCurriculumIndexRoute =
   DashboardOrgCoursesCourseIdCurriculumIndexRouteImport.update({
-    id: "/curriculum/",
-    path: "/curriculum/",
+    id: '/curriculum/',
+    path: '/curriculum/',
     getParentRoute: () => DashboardOrgCoursesCourseIdRouteRoute,
-  } as any);
+  } as any)
 const DashboardCourseCourseIdCurriculumLessonIdViewRoute =
   DashboardCourseCourseIdCurriculumLessonIdViewRouteImport.update({
-    id: "/curriculum/$lessonId/view",
-    path: "/curriculum/$lessonId/view",
+    id: '/curriculum/$lessonId/view',
+    path: '/curriculum/$lessonId/view',
     getParentRoute: () => DashboardCourseCourseIdRouteRoute,
-  } as any);
+  } as any)
 const DashboardCourseCourseIdCurriculumLessonIdEditRoute =
   DashboardCourseCourseIdCurriculumLessonIdEditRouteImport.update({
-    id: "/curriculum/$lessonId/edit",
-    path: "/curriculum/$lessonId/edit",
+    id: '/curriculum/$lessonId/edit',
+    path: '/curriculum/$lessonId/edit',
     getParentRoute: () => DashboardCourseCourseIdRouteRoute,
-  } as any);
+  } as any)
 const DashboardOrgCoursesCourseIdCurriculumLessonIdViewRoute =
   DashboardOrgCoursesCourseIdCurriculumLessonIdViewRouteImport.update({
-    id: "/curriculum/$lessonId/view",
-    path: "/curriculum/$lessonId/view",
+    id: '/curriculum/$lessonId/view',
+    path: '/curriculum/$lessonId/view',
     getParentRoute: () => DashboardOrgCoursesCourseIdRouteRoute,
-  } as any);
+  } as any)
 const DashboardOrgCoursesCourseIdCurriculumLessonIdEditRoute =
   DashboardOrgCoursesCourseIdCurriculumLessonIdEditRouteImport.update({
-    id: "/curriculum/$lessonId/edit",
-    path: "/curriculum/$lessonId/edit",
+    id: '/curriculum/$lessonId/edit',
+    path: '/curriculum/$lessonId/edit',
     getParentRoute: () => DashboardOrgCoursesCourseIdRouteRoute,
-  } as any);
+  } as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
-  "/dashboard": typeof DashboardRouteRouteWithChildren;
-  "/learn": typeof LearnRouteRouteWithChildren;
-  "/onboarding": typeof OnboardingRouteRouteWithChildren;
-  "/$": typeof SplatRoute;
-  "/accept-invite": typeof AcceptInviteRoute;
-  "/health": typeof HealthRoute;
-  "/dashboard/admin": typeof DashboardAdminRouteRouteWithChildren;
-  "/dashboard/catalog": typeof DashboardCatalogRouteRouteWithChildren;
-  "/dashboard/course": typeof DashboardCourseRouteRouteWithChildren;
-  "/dashboard/org": typeof DashboardOrgRouteRouteWithChildren;
-  "/dashboard/settings": typeof DashboardSettingsRouteRouteWithChildren;
-  "/dashboard/support": typeof DashboardSupportRouteRouteWithChildren;
-  "/learn/$courseId": typeof LearnCourseIdRouteRouteWithChildren;
-  "/check-email": typeof AuthCheckEmailRoute;
-  "/forgot-password": typeof AuthForgotPasswordRoute;
-  "/reset-password": typeof AuthResetPasswordRoute;
-  "/sign-in": typeof AuthSignInRoute;
-  "/sign-up": typeof AuthSignUpRoute;
-  "/two-factor": typeof AuthTwoFactorRoute;
-  "/verify-email": typeof AuthVerifyEmailRoute;
-  "/dashboard/$": typeof DashboardSplatRoute;
-  "/onboarding/organization": typeof OnboardingOrganizationRoute;
-  "/dashboard/": typeof DashboardIndexRoute;
-  "/onboarding/": typeof OnboardingIndexRoute;
-  "/dashboard/admin/logs-analytics": typeof DashboardAdminLogsAnalyticsRouteRouteWithChildren;
-  "/dashboard/admin/organizations": typeof DashboardAdminOrganizationsRouteRouteWithChildren;
-  "/dashboard/admin/users": typeof DashboardAdminUsersRouteRouteWithChildren;
-  "/dashboard/course/$courseId": typeof DashboardCourseCourseIdRouteRouteWithChildren;
-  "/dashboard/org/cohorts": typeof DashboardOrgCohortsRouteRouteWithChildren;
-  "/dashboard/org/courses": typeof DashboardOrgCoursesRouteRouteWithChildren;
-  "/dashboard/org/organization": typeof DashboardOrgOrganizationRouteRouteWithChildren;
-  "/dashboard/org/settings": typeof DashboardOrgSettingsRouteRouteWithChildren;
-  "/dashboard/org/support": typeof DashboardOrgSupportRouteRouteWithChildren;
-  "/dashboard/org/users": typeof DashboardOrgUsersRouteRouteWithChildren;
-  "/dashboard/course/categories": typeof DashboardCourseCategoriesRoute;
-  "/dashboard/course/generate": typeof DashboardCourseGenerateRoute;
-  "/dashboard/org/members": typeof DashboardOrgMembersRoute;
-  "/dashboard/settings/general": typeof DashboardSettingsGeneralRoute;
-  "/dashboard/settings/preferences": typeof DashboardSettingsPreferencesRoute;
-  "/dashboard/settings/security": typeof DashboardSettingsSecurityRoute;
-  "/dashboard/support/contact": typeof DashboardSupportContactRoute;
-  "/dashboard/support/faqs": typeof DashboardSupportFaqsRoute;
-  "/dashboard/support/report-issue": typeof DashboardSupportReportIssueRoute;
-  "/learn/$courseId/$lessonId": typeof LearnCourseIdLessonIdRoute;
-  "/dashboard/admin/": typeof DashboardAdminIndexRoute;
-  "/dashboard/catalog/": typeof DashboardCatalogIndexRoute;
-  "/dashboard/course/": typeof DashboardCourseIndexRoute;
-  "/dashboard/library/": typeof DashboardLibraryIndexRoute;
-  "/dashboard/org/": typeof DashboardOrgIndexRoute;
-  "/dashboard/settings/": typeof DashboardSettingsIndexRoute;
-  "/dashboard/support/": typeof DashboardSupportIndexRoute;
-  "/learn/$courseId/": typeof LearnCourseIdIndexRoute;
-  "/dashboard/org/cohorts/$cohortId": typeof DashboardOrgCohortsCohortIdRouteRouteWithChildren;
-  "/dashboard/org/courses/$courseId": typeof DashboardOrgCoursesCourseIdRouteRouteWithChildren;
-  "/dashboard/admin/logs-analytics/feedback": typeof DashboardAdminLogsAnalyticsFeedbackRoute;
-  "/dashboard/admin/logs-analytics/reports": typeof DashboardAdminLogsAnalyticsReportsRoute;
-  "/dashboard/admin/organizations/invites": typeof DashboardAdminOrganizationsInvitesRoute;
-  "/dashboard/admin/users/public-invites": typeof DashboardAdminUsersPublicInvitesRoute;
-  "/dashboard/catalog/$courseId/pay": typeof DashboardCatalogCourseIdPayRoute;
-  "/dashboard/course/$courseId/analytics": typeof DashboardCourseCourseIdAnalyticsRoute;
-  "/dashboard/course/$courseId/announcements": typeof DashboardCourseCourseIdAnnouncementsRoute;
-  "/dashboard/course/$courseId/certificates": typeof DashboardCourseCourseIdCertificatesRoute;
-  "/dashboard/course/$courseId/members": typeof DashboardCourseCourseIdMembersRoute;
-  "/dashboard/org/organization/integrations": typeof DashboardOrgOrganizationIntegrationsRoute;
-  "/dashboard/org/organization/rules": typeof DashboardOrgOrganizationRulesRoute;
-  "/dashboard/org/settings/general": typeof DashboardOrgSettingsGeneralRoute;
-  "/dashboard/org/settings/preferences": typeof DashboardOrgSettingsPreferencesRoute;
-  "/dashboard/org/settings/security": typeof DashboardOrgSettingsSecurityRoute;
-  "/dashboard/org/support/contact": typeof DashboardOrgSupportContactRoute;
-  "/dashboard/org/support/faqs": typeof DashboardOrgSupportFaqsRoute;
-  "/dashboard/org/support/report-issue": typeof DashboardOrgSupportReportIssueRoute;
-  "/dashboard/org/users/invites": typeof DashboardOrgUsersInvitesRoute;
-  "/dashboard/admin/logs-analytics/": typeof DashboardAdminLogsAnalyticsIndexRoute;
-  "/dashboard/admin/organizations/": typeof DashboardAdminOrganizationsIndexRoute;
-  "/dashboard/admin/users/": typeof DashboardAdminUsersIndexRoute;
-  "/dashboard/catalog/$courseId/": typeof DashboardCatalogCourseIdIndexRoute;
-  "/dashboard/course/$courseId/": typeof DashboardCourseCourseIdIndexRoute;
-  "/dashboard/org/cohorts/": typeof DashboardOrgCohortsIndexRoute;
-  "/dashboard/org/courses/": typeof DashboardOrgCoursesIndexRoute;
-  "/dashboard/org/library/": typeof DashboardOrgLibraryIndexRoute;
-  "/dashboard/org/organization/": typeof DashboardOrgOrganizationIndexRoute;
-  "/dashboard/org/settings/": typeof DashboardOrgSettingsIndexRoute;
-  "/dashboard/org/support/": typeof DashboardOrgSupportIndexRoute;
-  "/dashboard/org/users/": typeof DashboardOrgUsersIndexRoute;
-  "/dashboard/org/cohorts/$cohortId/courses": typeof DashboardOrgCohortsCohortIdCoursesRoute;
-  "/dashboard/org/cohorts/$cohortId/members": typeof DashboardOrgCohortsCohortIdMembersRoute;
-  "/dashboard/org/courses/$courseId/analytics": typeof DashboardOrgCoursesCourseIdAnalyticsRoute;
-  "/dashboard/org/courses/$courseId/announcements": typeof DashboardOrgCoursesCourseIdAnnouncementsRoute;
-  "/dashboard/org/courses/$courseId/members": typeof DashboardOrgCoursesCourseIdMembersRoute;
-  "/dashboard/course/$courseId/curriculum/": typeof DashboardCourseCourseIdCurriculumIndexRoute;
-  "/dashboard/org/cohorts/$cohortId/": typeof DashboardOrgCohortsCohortIdIndexRoute;
-  "/dashboard/org/courses/$courseId/": typeof DashboardOrgCoursesCourseIdIndexRoute;
-  "/dashboard/course/$courseId/curriculum/$lessonId/edit": typeof DashboardCourseCourseIdCurriculumLessonIdEditRoute;
-  "/dashboard/course/$courseId/curriculum/$lessonId/view": typeof DashboardCourseCourseIdCurriculumLessonIdViewRoute;
-  "/dashboard/org/courses/$courseId/curriculum/": typeof DashboardOrgCoursesCourseIdCurriculumIndexRoute;
-  "/dashboard/org/courses/$courseId/curriculum/$lessonId/edit": typeof DashboardOrgCoursesCourseIdCurriculumLessonIdEditRoute;
-  "/dashboard/org/courses/$courseId/curriculum/$lessonId/view": typeof DashboardOrgCoursesCourseIdCurriculumLessonIdViewRoute;
+  '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRouteRouteWithChildren
+  '/learn': typeof LearnRouteRouteWithChildren
+  '/onboarding': typeof OnboardingRouteRouteWithChildren
+  '/$': typeof SplatRoute
+  '/accept-invite': typeof AcceptInviteRoute
+  '/health': typeof HealthRoute
+  '/dashboard/admin': typeof DashboardAdminRouteRouteWithChildren
+  '/dashboard/catalog': typeof DashboardCatalogRouteRouteWithChildren
+  '/dashboard/course': typeof DashboardCourseRouteRouteWithChildren
+  '/dashboard/org': typeof DashboardOrgRouteRouteWithChildren
+  '/dashboard/settings': typeof DashboardSettingsRouteRouteWithChildren
+  '/dashboard/support': typeof DashboardSupportRouteRouteWithChildren
+  '/learn/$courseId': typeof LearnCourseIdRouteRouteWithChildren
+  '/check-email': typeof AuthCheckEmailRoute
+  '/forgot-password': typeof AuthForgotPasswordRoute
+  '/reset-password': typeof AuthResetPasswordRoute
+  '/sign-in': typeof AuthSignInRoute
+  '/sign-up': typeof AuthSignUpRoute
+  '/two-factor': typeof AuthTwoFactorRoute
+  '/verify-email': typeof AuthVerifyEmailRoute
+  '/dashboard/$': typeof DashboardSplatRoute
+  '/onboarding/organization': typeof OnboardingOrganizationRoute
+  '/dashboard/': typeof DashboardIndexRoute
+  '/onboarding/': typeof OnboardingIndexRoute
+  '/dashboard/admin/logs-analytics': typeof DashboardAdminLogsAnalyticsRouteRouteWithChildren
+  '/dashboard/admin/organizations': typeof DashboardAdminOrganizationsRouteRouteWithChildren
+  '/dashboard/admin/users': typeof DashboardAdminUsersRouteRouteWithChildren
+  '/dashboard/course/$courseId': typeof DashboardCourseCourseIdRouteRouteWithChildren
+  '/dashboard/org/cohorts': typeof DashboardOrgCohortsRouteRouteWithChildren
+  '/dashboard/org/courses': typeof DashboardOrgCoursesRouteRouteWithChildren
+  '/dashboard/org/organization': typeof DashboardOrgOrganizationRouteRouteWithChildren
+  '/dashboard/org/settings': typeof DashboardOrgSettingsRouteRouteWithChildren
+  '/dashboard/org/support': typeof DashboardOrgSupportRouteRouteWithChildren
+  '/dashboard/org/users': typeof DashboardOrgUsersRouteRouteWithChildren
+  '/dashboard/course/categories': typeof DashboardCourseCategoriesRoute
+  '/dashboard/course/generate': typeof DashboardCourseGenerateRoute
+  '/dashboard/org/members': typeof DashboardOrgMembersRoute
+  '/dashboard/settings/general': typeof DashboardSettingsGeneralRoute
+  '/dashboard/settings/preferences': typeof DashboardSettingsPreferencesRoute
+  '/dashboard/settings/security': typeof DashboardSettingsSecurityRoute
+  '/dashboard/support/contact': typeof DashboardSupportContactRoute
+  '/dashboard/support/faqs': typeof DashboardSupportFaqsRoute
+  '/dashboard/support/report-issue': typeof DashboardSupportReportIssueRoute
+  '/learn/$courseId/$lessonId': typeof LearnCourseIdLessonIdRoute
+  '/dashboard/admin/': typeof DashboardAdminIndexRoute
+  '/dashboard/catalog/': typeof DashboardCatalogIndexRoute
+  '/dashboard/course/': typeof DashboardCourseIndexRoute
+  '/dashboard/library/': typeof DashboardLibraryIndexRoute
+  '/dashboard/org/': typeof DashboardOrgIndexRoute
+  '/dashboard/settings/': typeof DashboardSettingsIndexRoute
+  '/dashboard/support/': typeof DashboardSupportIndexRoute
+  '/learn/$courseId/': typeof LearnCourseIdIndexRoute
+  '/dashboard/org/cohorts/$cohortId': typeof DashboardOrgCohortsCohortIdRouteRouteWithChildren
+  '/dashboard/org/courses/$courseId': typeof DashboardOrgCoursesCourseIdRouteRouteWithChildren
+  '/dashboard/admin/logs-analytics/feedback': typeof DashboardAdminLogsAnalyticsFeedbackRoute
+  '/dashboard/admin/logs-analytics/reports': typeof DashboardAdminLogsAnalyticsReportsRoute
+  '/dashboard/admin/organizations/invites': typeof DashboardAdminOrganizationsInvitesRoute
+  '/dashboard/admin/users/public-invites': typeof DashboardAdminUsersPublicInvitesRoute
+  '/dashboard/catalog/$courseId/pay': typeof DashboardCatalogCourseIdPayRoute
+  '/dashboard/course/$courseId/analytics': typeof DashboardCourseCourseIdAnalyticsRoute
+  '/dashboard/course/$courseId/announcements': typeof DashboardCourseCourseIdAnnouncementsRoute
+  '/dashboard/course/$courseId/certificates': typeof DashboardCourseCourseIdCertificatesRoute
+  '/dashboard/course/$courseId/members': typeof DashboardCourseCourseIdMembersRoute
+  '/dashboard/org/organization/integrations': typeof DashboardOrgOrganizationIntegrationsRoute
+  '/dashboard/org/organization/rules': typeof DashboardOrgOrganizationRulesRoute
+  '/dashboard/org/settings/general': typeof DashboardOrgSettingsGeneralRoute
+  '/dashboard/org/settings/preferences': typeof DashboardOrgSettingsPreferencesRoute
+  '/dashboard/org/settings/security': typeof DashboardOrgSettingsSecurityRoute
+  '/dashboard/org/support/contact': typeof DashboardOrgSupportContactRoute
+  '/dashboard/org/support/faqs': typeof DashboardOrgSupportFaqsRoute
+  '/dashboard/org/support/report-issue': typeof DashboardOrgSupportReportIssueRoute
+  '/dashboard/org/users/invites': typeof DashboardOrgUsersInvitesRoute
+  '/dashboard/admin/logs-analytics/': typeof DashboardAdminLogsAnalyticsIndexRoute
+  '/dashboard/admin/organizations/': typeof DashboardAdminOrganizationsIndexRoute
+  '/dashboard/admin/users/': typeof DashboardAdminUsersIndexRoute
+  '/dashboard/catalog/$courseId/': typeof DashboardCatalogCourseIdIndexRoute
+  '/dashboard/course/$courseId/': typeof DashboardCourseCourseIdIndexRoute
+  '/dashboard/org/cohorts/': typeof DashboardOrgCohortsIndexRoute
+  '/dashboard/org/courses/': typeof DashboardOrgCoursesIndexRoute
+  '/dashboard/org/library/': typeof DashboardOrgLibraryIndexRoute
+  '/dashboard/org/organization/': typeof DashboardOrgOrganizationIndexRoute
+  '/dashboard/org/settings/': typeof DashboardOrgSettingsIndexRoute
+  '/dashboard/org/support/': typeof DashboardOrgSupportIndexRoute
+  '/dashboard/org/users/': typeof DashboardOrgUsersIndexRoute
+  '/dashboard/org/cohorts/$cohortId/courses': typeof DashboardOrgCohortsCohortIdCoursesRoute
+  '/dashboard/org/cohorts/$cohortId/members': typeof DashboardOrgCohortsCohortIdMembersRoute
+  '/dashboard/org/courses/$courseId/analytics': typeof DashboardOrgCoursesCourseIdAnalyticsRoute
+  '/dashboard/org/courses/$courseId/announcements': typeof DashboardOrgCoursesCourseIdAnnouncementsRoute
+  '/dashboard/org/courses/$courseId/members': typeof DashboardOrgCoursesCourseIdMembersRoute
+  '/dashboard/course/$courseId/curriculum/': typeof DashboardCourseCourseIdCurriculumIndexRoute
+  '/dashboard/org/cohorts/$cohortId/': typeof DashboardOrgCohortsCohortIdIndexRoute
+  '/dashboard/org/courses/$courseId/': typeof DashboardOrgCoursesCourseIdIndexRoute
+  '/dashboard/course/$courseId/curriculum/$lessonId/edit': typeof DashboardCourseCourseIdCurriculumLessonIdEditRoute
+  '/dashboard/course/$courseId/curriculum/$lessonId/view': typeof DashboardCourseCourseIdCurriculumLessonIdViewRoute
+  '/dashboard/org/courses/$courseId/curriculum/': typeof DashboardOrgCoursesCourseIdCurriculumIndexRoute
+  '/dashboard/org/courses/$courseId/curriculum/$lessonId/edit': typeof DashboardOrgCoursesCourseIdCurriculumLessonIdEditRoute
+  '/dashboard/org/courses/$courseId/curriculum/$lessonId/view': typeof DashboardOrgCoursesCourseIdCurriculumLessonIdViewRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
-  "/learn": typeof LearnRouteRouteWithChildren;
-  "/$": typeof SplatRoute;
-  "/accept-invite": typeof AcceptInviteRoute;
-  "/health": typeof HealthRoute;
-  "/check-email": typeof AuthCheckEmailRoute;
-  "/forgot-password": typeof AuthForgotPasswordRoute;
-  "/reset-password": typeof AuthResetPasswordRoute;
-  "/sign-in": typeof AuthSignInRoute;
-  "/sign-up": typeof AuthSignUpRoute;
-  "/two-factor": typeof AuthTwoFactorRoute;
-  "/verify-email": typeof AuthVerifyEmailRoute;
-  "/dashboard/$": typeof DashboardSplatRoute;
-  "/onboarding/organization": typeof OnboardingOrganizationRoute;
-  "/dashboard": typeof DashboardIndexRoute;
-  "/onboarding": typeof OnboardingIndexRoute;
-  "/dashboard/course/categories": typeof DashboardCourseCategoriesRoute;
-  "/dashboard/course/generate": typeof DashboardCourseGenerateRoute;
-  "/dashboard/org/members": typeof DashboardOrgMembersRoute;
-  "/dashboard/settings/general": typeof DashboardSettingsGeneralRoute;
-  "/dashboard/settings/preferences": typeof DashboardSettingsPreferencesRoute;
-  "/dashboard/settings/security": typeof DashboardSettingsSecurityRoute;
-  "/dashboard/support/contact": typeof DashboardSupportContactRoute;
-  "/dashboard/support/faqs": typeof DashboardSupportFaqsRoute;
-  "/dashboard/support/report-issue": typeof DashboardSupportReportIssueRoute;
-  "/learn/$courseId/$lessonId": typeof LearnCourseIdLessonIdRoute;
-  "/dashboard/admin": typeof DashboardAdminIndexRoute;
-  "/dashboard/catalog": typeof DashboardCatalogIndexRoute;
-  "/dashboard/course": typeof DashboardCourseIndexRoute;
-  "/dashboard/library": typeof DashboardLibraryIndexRoute;
-  "/dashboard/org": typeof DashboardOrgIndexRoute;
-  "/dashboard/settings": typeof DashboardSettingsIndexRoute;
-  "/dashboard/support": typeof DashboardSupportIndexRoute;
-  "/learn/$courseId": typeof LearnCourseIdIndexRoute;
-  "/dashboard/admin/logs-analytics/feedback": typeof DashboardAdminLogsAnalyticsFeedbackRoute;
-  "/dashboard/admin/logs-analytics/reports": typeof DashboardAdminLogsAnalyticsReportsRoute;
-  "/dashboard/admin/organizations/invites": typeof DashboardAdminOrganizationsInvitesRoute;
-  "/dashboard/admin/users/public-invites": typeof DashboardAdminUsersPublicInvitesRoute;
-  "/dashboard/catalog/$courseId/pay": typeof DashboardCatalogCourseIdPayRoute;
-  "/dashboard/course/$courseId/analytics": typeof DashboardCourseCourseIdAnalyticsRoute;
-  "/dashboard/course/$courseId/announcements": typeof DashboardCourseCourseIdAnnouncementsRoute;
-  "/dashboard/course/$courseId/certificates": typeof DashboardCourseCourseIdCertificatesRoute;
-  "/dashboard/course/$courseId/members": typeof DashboardCourseCourseIdMembersRoute;
-  "/dashboard/org/organization/integrations": typeof DashboardOrgOrganizationIntegrationsRoute;
-  "/dashboard/org/organization/rules": typeof DashboardOrgOrganizationRulesRoute;
-  "/dashboard/org/settings/general": typeof DashboardOrgSettingsGeneralRoute;
-  "/dashboard/org/settings/preferences": typeof DashboardOrgSettingsPreferencesRoute;
-  "/dashboard/org/settings/security": typeof DashboardOrgSettingsSecurityRoute;
-  "/dashboard/org/support/contact": typeof DashboardOrgSupportContactRoute;
-  "/dashboard/org/support/faqs": typeof DashboardOrgSupportFaqsRoute;
-  "/dashboard/org/support/report-issue": typeof DashboardOrgSupportReportIssueRoute;
-  "/dashboard/org/users/invites": typeof DashboardOrgUsersInvitesRoute;
-  "/dashboard/admin/logs-analytics": typeof DashboardAdminLogsAnalyticsIndexRoute;
-  "/dashboard/admin/organizations": typeof DashboardAdminOrganizationsIndexRoute;
-  "/dashboard/admin/users": typeof DashboardAdminUsersIndexRoute;
-  "/dashboard/catalog/$courseId": typeof DashboardCatalogCourseIdIndexRoute;
-  "/dashboard/course/$courseId": typeof DashboardCourseCourseIdIndexRoute;
-  "/dashboard/org/cohorts": typeof DashboardOrgCohortsIndexRoute;
-  "/dashboard/org/courses": typeof DashboardOrgCoursesIndexRoute;
-  "/dashboard/org/library": typeof DashboardOrgLibraryIndexRoute;
-  "/dashboard/org/organization": typeof DashboardOrgOrganizationIndexRoute;
-  "/dashboard/org/settings": typeof DashboardOrgSettingsIndexRoute;
-  "/dashboard/org/support": typeof DashboardOrgSupportIndexRoute;
-  "/dashboard/org/users": typeof DashboardOrgUsersIndexRoute;
-  "/dashboard/org/cohorts/$cohortId/courses": typeof DashboardOrgCohortsCohortIdCoursesRoute;
-  "/dashboard/org/cohorts/$cohortId/members": typeof DashboardOrgCohortsCohortIdMembersRoute;
-  "/dashboard/org/courses/$courseId/analytics": typeof DashboardOrgCoursesCourseIdAnalyticsRoute;
-  "/dashboard/org/courses/$courseId/announcements": typeof DashboardOrgCoursesCourseIdAnnouncementsRoute;
-  "/dashboard/org/courses/$courseId/members": typeof DashboardOrgCoursesCourseIdMembersRoute;
-  "/dashboard/course/$courseId/curriculum": typeof DashboardCourseCourseIdCurriculumIndexRoute;
-  "/dashboard/org/cohorts/$cohortId": typeof DashboardOrgCohortsCohortIdIndexRoute;
-  "/dashboard/org/courses/$courseId": typeof DashboardOrgCoursesCourseIdIndexRoute;
-  "/dashboard/course/$courseId/curriculum/$lessonId/edit": typeof DashboardCourseCourseIdCurriculumLessonIdEditRoute;
-  "/dashboard/course/$courseId/curriculum/$lessonId/view": typeof DashboardCourseCourseIdCurriculumLessonIdViewRoute;
-  "/dashboard/org/courses/$courseId/curriculum": typeof DashboardOrgCoursesCourseIdCurriculumIndexRoute;
-  "/dashboard/org/courses/$courseId/curriculum/$lessonId/edit": typeof DashboardOrgCoursesCourseIdCurriculumLessonIdEditRoute;
-  "/dashboard/org/courses/$courseId/curriculum/$lessonId/view": typeof DashboardOrgCoursesCourseIdCurriculumLessonIdViewRoute;
+  '/': typeof IndexRoute
+  '/learn': typeof LearnRouteRouteWithChildren
+  '/$': typeof SplatRoute
+  '/accept-invite': typeof AcceptInviteRoute
+  '/health': typeof HealthRoute
+  '/check-email': typeof AuthCheckEmailRoute
+  '/forgot-password': typeof AuthForgotPasswordRoute
+  '/reset-password': typeof AuthResetPasswordRoute
+  '/sign-in': typeof AuthSignInRoute
+  '/sign-up': typeof AuthSignUpRoute
+  '/two-factor': typeof AuthTwoFactorRoute
+  '/verify-email': typeof AuthVerifyEmailRoute
+  '/dashboard/$': typeof DashboardSplatRoute
+  '/onboarding/organization': typeof OnboardingOrganizationRoute
+  '/dashboard': typeof DashboardIndexRoute
+  '/onboarding': typeof OnboardingIndexRoute
+  '/dashboard/course/categories': typeof DashboardCourseCategoriesRoute
+  '/dashboard/course/generate': typeof DashboardCourseGenerateRoute
+  '/dashboard/org/members': typeof DashboardOrgMembersRoute
+  '/dashboard/settings/general': typeof DashboardSettingsGeneralRoute
+  '/dashboard/settings/preferences': typeof DashboardSettingsPreferencesRoute
+  '/dashboard/settings/security': typeof DashboardSettingsSecurityRoute
+  '/dashboard/support/contact': typeof DashboardSupportContactRoute
+  '/dashboard/support/faqs': typeof DashboardSupportFaqsRoute
+  '/dashboard/support/report-issue': typeof DashboardSupportReportIssueRoute
+  '/learn/$courseId/$lessonId': typeof LearnCourseIdLessonIdRoute
+  '/dashboard/admin': typeof DashboardAdminIndexRoute
+  '/dashboard/catalog': typeof DashboardCatalogIndexRoute
+  '/dashboard/course': typeof DashboardCourseIndexRoute
+  '/dashboard/library': typeof DashboardLibraryIndexRoute
+  '/dashboard/org': typeof DashboardOrgIndexRoute
+  '/dashboard/settings': typeof DashboardSettingsIndexRoute
+  '/dashboard/support': typeof DashboardSupportIndexRoute
+  '/learn/$courseId': typeof LearnCourseIdIndexRoute
+  '/dashboard/admin/logs-analytics/feedback': typeof DashboardAdminLogsAnalyticsFeedbackRoute
+  '/dashboard/admin/logs-analytics/reports': typeof DashboardAdminLogsAnalyticsReportsRoute
+  '/dashboard/admin/organizations/invites': typeof DashboardAdminOrganizationsInvitesRoute
+  '/dashboard/admin/users/public-invites': typeof DashboardAdminUsersPublicInvitesRoute
+  '/dashboard/catalog/$courseId/pay': typeof DashboardCatalogCourseIdPayRoute
+  '/dashboard/course/$courseId/analytics': typeof DashboardCourseCourseIdAnalyticsRoute
+  '/dashboard/course/$courseId/announcements': typeof DashboardCourseCourseIdAnnouncementsRoute
+  '/dashboard/course/$courseId/certificates': typeof DashboardCourseCourseIdCertificatesRoute
+  '/dashboard/course/$courseId/members': typeof DashboardCourseCourseIdMembersRoute
+  '/dashboard/org/organization/integrations': typeof DashboardOrgOrganizationIntegrationsRoute
+  '/dashboard/org/organization/rules': typeof DashboardOrgOrganizationRulesRoute
+  '/dashboard/org/settings/general': typeof DashboardOrgSettingsGeneralRoute
+  '/dashboard/org/settings/preferences': typeof DashboardOrgSettingsPreferencesRoute
+  '/dashboard/org/settings/security': typeof DashboardOrgSettingsSecurityRoute
+  '/dashboard/org/support/contact': typeof DashboardOrgSupportContactRoute
+  '/dashboard/org/support/faqs': typeof DashboardOrgSupportFaqsRoute
+  '/dashboard/org/support/report-issue': typeof DashboardOrgSupportReportIssueRoute
+  '/dashboard/org/users/invites': typeof DashboardOrgUsersInvitesRoute
+  '/dashboard/admin/logs-analytics': typeof DashboardAdminLogsAnalyticsIndexRoute
+  '/dashboard/admin/organizations': typeof DashboardAdminOrganizationsIndexRoute
+  '/dashboard/admin/users': typeof DashboardAdminUsersIndexRoute
+  '/dashboard/catalog/$courseId': typeof DashboardCatalogCourseIdIndexRoute
+  '/dashboard/course/$courseId': typeof DashboardCourseCourseIdIndexRoute
+  '/dashboard/org/cohorts': typeof DashboardOrgCohortsIndexRoute
+  '/dashboard/org/courses': typeof DashboardOrgCoursesIndexRoute
+  '/dashboard/org/library': typeof DashboardOrgLibraryIndexRoute
+  '/dashboard/org/organization': typeof DashboardOrgOrganizationIndexRoute
+  '/dashboard/org/settings': typeof DashboardOrgSettingsIndexRoute
+  '/dashboard/org/support': typeof DashboardOrgSupportIndexRoute
+  '/dashboard/org/users': typeof DashboardOrgUsersIndexRoute
+  '/dashboard/org/cohorts/$cohortId/courses': typeof DashboardOrgCohortsCohortIdCoursesRoute
+  '/dashboard/org/cohorts/$cohortId/members': typeof DashboardOrgCohortsCohortIdMembersRoute
+  '/dashboard/org/courses/$courseId/analytics': typeof DashboardOrgCoursesCourseIdAnalyticsRoute
+  '/dashboard/org/courses/$courseId/announcements': typeof DashboardOrgCoursesCourseIdAnnouncementsRoute
+  '/dashboard/org/courses/$courseId/members': typeof DashboardOrgCoursesCourseIdMembersRoute
+  '/dashboard/course/$courseId/curriculum': typeof DashboardCourseCourseIdCurriculumIndexRoute
+  '/dashboard/org/cohorts/$cohortId': typeof DashboardOrgCohortsCohortIdIndexRoute
+  '/dashboard/org/courses/$courseId': typeof DashboardOrgCoursesCourseIdIndexRoute
+  '/dashboard/course/$courseId/curriculum/$lessonId/edit': typeof DashboardCourseCourseIdCurriculumLessonIdEditRoute
+  '/dashboard/course/$courseId/curriculum/$lessonId/view': typeof DashboardCourseCourseIdCurriculumLessonIdViewRoute
+  '/dashboard/org/courses/$courseId/curriculum': typeof DashboardOrgCoursesCourseIdCurriculumIndexRoute
+  '/dashboard/org/courses/$courseId/curriculum/$lessonId/edit': typeof DashboardOrgCoursesCourseIdCurriculumLessonIdEditRoute
+  '/dashboard/org/courses/$courseId/curriculum/$lessonId/view': typeof DashboardOrgCoursesCourseIdCurriculumLessonIdViewRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/": typeof IndexRoute;
-  "/dashboard": typeof DashboardRouteRouteWithChildren;
-  "/learn": typeof LearnRouteRouteWithChildren;
-  "/onboarding": typeof OnboardingRouteRouteWithChildren;
-  "/$": typeof SplatRoute;
-  "/_auth": typeof AuthRouteWithChildren;
-  "/accept-invite": typeof AcceptInviteRoute;
-  "/health": typeof HealthRoute;
-  "/dashboard/admin": typeof DashboardAdminRouteRouteWithChildren;
-  "/dashboard/catalog": typeof DashboardCatalogRouteRouteWithChildren;
-  "/dashboard/course": typeof DashboardCourseRouteRouteWithChildren;
-  "/dashboard/org": typeof DashboardOrgRouteRouteWithChildren;
-  "/dashboard/settings": typeof DashboardSettingsRouteRouteWithChildren;
-  "/dashboard/support": typeof DashboardSupportRouteRouteWithChildren;
-  "/learn/$courseId": typeof LearnCourseIdRouteRouteWithChildren;
-  "/_auth/check-email": typeof AuthCheckEmailRoute;
-  "/_auth/forgot-password": typeof AuthForgotPasswordRoute;
-  "/_auth/reset-password": typeof AuthResetPasswordRoute;
-  "/_auth/sign-in": typeof AuthSignInRoute;
-  "/_auth/sign-up": typeof AuthSignUpRoute;
-  "/_auth/two-factor": typeof AuthTwoFactorRoute;
-  "/_auth/verify-email": typeof AuthVerifyEmailRoute;
-  "/dashboard/$": typeof DashboardSplatRoute;
-  "/onboarding/organization": typeof OnboardingOrganizationRoute;
-  "/dashboard/": typeof DashboardIndexRoute;
-  "/onboarding/": typeof OnboardingIndexRoute;
-  "/dashboard/admin/logs-analytics": typeof DashboardAdminLogsAnalyticsRouteRouteWithChildren;
-  "/dashboard/admin/organizations": typeof DashboardAdminOrganizationsRouteRouteWithChildren;
-  "/dashboard/admin/users": typeof DashboardAdminUsersRouteRouteWithChildren;
-  "/dashboard/course/$courseId": typeof DashboardCourseCourseIdRouteRouteWithChildren;
-  "/dashboard/org/cohorts": typeof DashboardOrgCohortsRouteRouteWithChildren;
-  "/dashboard/org/courses": typeof DashboardOrgCoursesRouteRouteWithChildren;
-  "/dashboard/org/organization": typeof DashboardOrgOrganizationRouteRouteWithChildren;
-  "/dashboard/org/settings": typeof DashboardOrgSettingsRouteRouteWithChildren;
-  "/dashboard/org/support": typeof DashboardOrgSupportRouteRouteWithChildren;
-  "/dashboard/org/users": typeof DashboardOrgUsersRouteRouteWithChildren;
-  "/dashboard/course/categories": typeof DashboardCourseCategoriesRoute;
-  "/dashboard/course/generate": typeof DashboardCourseGenerateRoute;
-  "/dashboard/org/members": typeof DashboardOrgMembersRoute;
-  "/dashboard/settings/general": typeof DashboardSettingsGeneralRoute;
-  "/dashboard/settings/preferences": typeof DashboardSettingsPreferencesRoute;
-  "/dashboard/settings/security": typeof DashboardSettingsSecurityRoute;
-  "/dashboard/support/contact": typeof DashboardSupportContactRoute;
-  "/dashboard/support/faqs": typeof DashboardSupportFaqsRoute;
-  "/dashboard/support/report-issue": typeof DashboardSupportReportIssueRoute;
-  "/learn/$courseId/$lessonId": typeof LearnCourseIdLessonIdRoute;
-  "/dashboard/admin/": typeof DashboardAdminIndexRoute;
-  "/dashboard/catalog/": typeof DashboardCatalogIndexRoute;
-  "/dashboard/course/": typeof DashboardCourseIndexRoute;
-  "/dashboard/library/": typeof DashboardLibraryIndexRoute;
-  "/dashboard/org/": typeof DashboardOrgIndexRoute;
-  "/dashboard/settings/": typeof DashboardSettingsIndexRoute;
-  "/dashboard/support/": typeof DashboardSupportIndexRoute;
-  "/learn/$courseId/": typeof LearnCourseIdIndexRoute;
-  "/dashboard/org/cohorts/$cohortId": typeof DashboardOrgCohortsCohortIdRouteRouteWithChildren;
-  "/dashboard/org/courses/$courseId": typeof DashboardOrgCoursesCourseIdRouteRouteWithChildren;
-  "/dashboard/admin/logs-analytics/feedback": typeof DashboardAdminLogsAnalyticsFeedbackRoute;
-  "/dashboard/admin/logs-analytics/reports": typeof DashboardAdminLogsAnalyticsReportsRoute;
-  "/dashboard/admin/organizations/invites": typeof DashboardAdminOrganizationsInvitesRoute;
-  "/dashboard/admin/users/public-invites": typeof DashboardAdminUsersPublicInvitesRoute;
-  "/dashboard/catalog/$courseId/pay": typeof DashboardCatalogCourseIdPayRoute;
-  "/dashboard/course/$courseId/analytics": typeof DashboardCourseCourseIdAnalyticsRoute;
-  "/dashboard/course/$courseId/announcements": typeof DashboardCourseCourseIdAnnouncementsRoute;
-  "/dashboard/course/$courseId/certificates": typeof DashboardCourseCourseIdCertificatesRoute;
-  "/dashboard/course/$courseId/members": typeof DashboardCourseCourseIdMembersRoute;
-  "/dashboard/org/organization/integrations": typeof DashboardOrgOrganizationIntegrationsRoute;
-  "/dashboard/org/organization/rules": typeof DashboardOrgOrganizationRulesRoute;
-  "/dashboard/org/settings/general": typeof DashboardOrgSettingsGeneralRoute;
-  "/dashboard/org/settings/preferences": typeof DashboardOrgSettingsPreferencesRoute;
-  "/dashboard/org/settings/security": typeof DashboardOrgSettingsSecurityRoute;
-  "/dashboard/org/support/contact": typeof DashboardOrgSupportContactRoute;
-  "/dashboard/org/support/faqs": typeof DashboardOrgSupportFaqsRoute;
-  "/dashboard/org/support/report-issue": typeof DashboardOrgSupportReportIssueRoute;
-  "/dashboard/org/users/invites": typeof DashboardOrgUsersInvitesRoute;
-  "/dashboard/admin/logs-analytics/": typeof DashboardAdminLogsAnalyticsIndexRoute;
-  "/dashboard/admin/organizations/": typeof DashboardAdminOrganizationsIndexRoute;
-  "/dashboard/admin/users/": typeof DashboardAdminUsersIndexRoute;
-  "/dashboard/catalog/$courseId/": typeof DashboardCatalogCourseIdIndexRoute;
-  "/dashboard/course/$courseId/": typeof DashboardCourseCourseIdIndexRoute;
-  "/dashboard/org/cohorts/": typeof DashboardOrgCohortsIndexRoute;
-  "/dashboard/org/courses/": typeof DashboardOrgCoursesIndexRoute;
-  "/dashboard/org/library/": typeof DashboardOrgLibraryIndexRoute;
-  "/dashboard/org/organization/": typeof DashboardOrgOrganizationIndexRoute;
-  "/dashboard/org/settings/": typeof DashboardOrgSettingsIndexRoute;
-  "/dashboard/org/support/": typeof DashboardOrgSupportIndexRoute;
-  "/dashboard/org/users/": typeof DashboardOrgUsersIndexRoute;
-  "/dashboard/org/cohorts/$cohortId/courses": typeof DashboardOrgCohortsCohortIdCoursesRoute;
-  "/dashboard/org/cohorts/$cohortId/members": typeof DashboardOrgCohortsCohortIdMembersRoute;
-  "/dashboard/org/courses/$courseId/analytics": typeof DashboardOrgCoursesCourseIdAnalyticsRoute;
-  "/dashboard/org/courses/$courseId/announcements": typeof DashboardOrgCoursesCourseIdAnnouncementsRoute;
-  "/dashboard/org/courses/$courseId/members": typeof DashboardOrgCoursesCourseIdMembersRoute;
-  "/dashboard/course/$courseId/curriculum/": typeof DashboardCourseCourseIdCurriculumIndexRoute;
-  "/dashboard/org/cohorts/$cohortId/": typeof DashboardOrgCohortsCohortIdIndexRoute;
-  "/dashboard/org/courses/$courseId/": typeof DashboardOrgCoursesCourseIdIndexRoute;
-  "/dashboard/course/$courseId/curriculum/$lessonId/edit": typeof DashboardCourseCourseIdCurriculumLessonIdEditRoute;
-  "/dashboard/course/$courseId/curriculum/$lessonId/view": typeof DashboardCourseCourseIdCurriculumLessonIdViewRoute;
-  "/dashboard/org/courses/$courseId/curriculum/": typeof DashboardOrgCoursesCourseIdCurriculumIndexRoute;
-  "/dashboard/org/courses/$courseId/curriculum/$lessonId/edit": typeof DashboardOrgCoursesCourseIdCurriculumLessonIdEditRoute;
-  "/dashboard/org/courses/$courseId/curriculum/$lessonId/view": typeof DashboardOrgCoursesCourseIdCurriculumLessonIdViewRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRouteRouteWithChildren
+  '/learn': typeof LearnRouteRouteWithChildren
+  '/onboarding': typeof OnboardingRouteRouteWithChildren
+  '/$': typeof SplatRoute
+  '/_auth': typeof AuthRouteWithChildren
+  '/accept-invite': typeof AcceptInviteRoute
+  '/health': typeof HealthRoute
+  '/dashboard/admin': typeof DashboardAdminRouteRouteWithChildren
+  '/dashboard/catalog': typeof DashboardCatalogRouteRouteWithChildren
+  '/dashboard/course': typeof DashboardCourseRouteRouteWithChildren
+  '/dashboard/org': typeof DashboardOrgRouteRouteWithChildren
+  '/dashboard/settings': typeof DashboardSettingsRouteRouteWithChildren
+  '/dashboard/support': typeof DashboardSupportRouteRouteWithChildren
+  '/learn/$courseId': typeof LearnCourseIdRouteRouteWithChildren
+  '/_auth/check-email': typeof AuthCheckEmailRoute
+  '/_auth/forgot-password': typeof AuthForgotPasswordRoute
+  '/_auth/reset-password': typeof AuthResetPasswordRoute
+  '/_auth/sign-in': typeof AuthSignInRoute
+  '/_auth/sign-up': typeof AuthSignUpRoute
+  '/_auth/two-factor': typeof AuthTwoFactorRoute
+  '/_auth/verify-email': typeof AuthVerifyEmailRoute
+  '/dashboard/$': typeof DashboardSplatRoute
+  '/onboarding/organization': typeof OnboardingOrganizationRoute
+  '/dashboard/': typeof DashboardIndexRoute
+  '/onboarding/': typeof OnboardingIndexRoute
+  '/dashboard/admin/logs-analytics': typeof DashboardAdminLogsAnalyticsRouteRouteWithChildren
+  '/dashboard/admin/organizations': typeof DashboardAdminOrganizationsRouteRouteWithChildren
+  '/dashboard/admin/users': typeof DashboardAdminUsersRouteRouteWithChildren
+  '/dashboard/course/$courseId': typeof DashboardCourseCourseIdRouteRouteWithChildren
+  '/dashboard/org/cohorts': typeof DashboardOrgCohortsRouteRouteWithChildren
+  '/dashboard/org/courses': typeof DashboardOrgCoursesRouteRouteWithChildren
+  '/dashboard/org/organization': typeof DashboardOrgOrganizationRouteRouteWithChildren
+  '/dashboard/org/settings': typeof DashboardOrgSettingsRouteRouteWithChildren
+  '/dashboard/org/support': typeof DashboardOrgSupportRouteRouteWithChildren
+  '/dashboard/org/users': typeof DashboardOrgUsersRouteRouteWithChildren
+  '/dashboard/course/categories': typeof DashboardCourseCategoriesRoute
+  '/dashboard/course/generate': typeof DashboardCourseGenerateRoute
+  '/dashboard/org/members': typeof DashboardOrgMembersRoute
+  '/dashboard/settings/general': typeof DashboardSettingsGeneralRoute
+  '/dashboard/settings/preferences': typeof DashboardSettingsPreferencesRoute
+  '/dashboard/settings/security': typeof DashboardSettingsSecurityRoute
+  '/dashboard/support/contact': typeof DashboardSupportContactRoute
+  '/dashboard/support/faqs': typeof DashboardSupportFaqsRoute
+  '/dashboard/support/report-issue': typeof DashboardSupportReportIssueRoute
+  '/learn/$courseId/$lessonId': typeof LearnCourseIdLessonIdRoute
+  '/dashboard/admin/': typeof DashboardAdminIndexRoute
+  '/dashboard/catalog/': typeof DashboardCatalogIndexRoute
+  '/dashboard/course/': typeof DashboardCourseIndexRoute
+  '/dashboard/library/': typeof DashboardLibraryIndexRoute
+  '/dashboard/org/': typeof DashboardOrgIndexRoute
+  '/dashboard/settings/': typeof DashboardSettingsIndexRoute
+  '/dashboard/support/': typeof DashboardSupportIndexRoute
+  '/learn/$courseId/': typeof LearnCourseIdIndexRoute
+  '/dashboard/org/cohorts/$cohortId': typeof DashboardOrgCohortsCohortIdRouteRouteWithChildren
+  '/dashboard/org/courses/$courseId': typeof DashboardOrgCoursesCourseIdRouteRouteWithChildren
+  '/dashboard/admin/logs-analytics/feedback': typeof DashboardAdminLogsAnalyticsFeedbackRoute
+  '/dashboard/admin/logs-analytics/reports': typeof DashboardAdminLogsAnalyticsReportsRoute
+  '/dashboard/admin/organizations/invites': typeof DashboardAdminOrganizationsInvitesRoute
+  '/dashboard/admin/users/public-invites': typeof DashboardAdminUsersPublicInvitesRoute
+  '/dashboard/catalog/$courseId/pay': typeof DashboardCatalogCourseIdPayRoute
+  '/dashboard/course/$courseId/analytics': typeof DashboardCourseCourseIdAnalyticsRoute
+  '/dashboard/course/$courseId/announcements': typeof DashboardCourseCourseIdAnnouncementsRoute
+  '/dashboard/course/$courseId/certificates': typeof DashboardCourseCourseIdCertificatesRoute
+  '/dashboard/course/$courseId/members': typeof DashboardCourseCourseIdMembersRoute
+  '/dashboard/org/organization/integrations': typeof DashboardOrgOrganizationIntegrationsRoute
+  '/dashboard/org/organization/rules': typeof DashboardOrgOrganizationRulesRoute
+  '/dashboard/org/settings/general': typeof DashboardOrgSettingsGeneralRoute
+  '/dashboard/org/settings/preferences': typeof DashboardOrgSettingsPreferencesRoute
+  '/dashboard/org/settings/security': typeof DashboardOrgSettingsSecurityRoute
+  '/dashboard/org/support/contact': typeof DashboardOrgSupportContactRoute
+  '/dashboard/org/support/faqs': typeof DashboardOrgSupportFaqsRoute
+  '/dashboard/org/support/report-issue': typeof DashboardOrgSupportReportIssueRoute
+  '/dashboard/org/users/invites': typeof DashboardOrgUsersInvitesRoute
+  '/dashboard/admin/logs-analytics/': typeof DashboardAdminLogsAnalyticsIndexRoute
+  '/dashboard/admin/organizations/': typeof DashboardAdminOrganizationsIndexRoute
+  '/dashboard/admin/users/': typeof DashboardAdminUsersIndexRoute
+  '/dashboard/catalog/$courseId/': typeof DashboardCatalogCourseIdIndexRoute
+  '/dashboard/course/$courseId/': typeof DashboardCourseCourseIdIndexRoute
+  '/dashboard/org/cohorts/': typeof DashboardOrgCohortsIndexRoute
+  '/dashboard/org/courses/': typeof DashboardOrgCoursesIndexRoute
+  '/dashboard/org/library/': typeof DashboardOrgLibraryIndexRoute
+  '/dashboard/org/organization/': typeof DashboardOrgOrganizationIndexRoute
+  '/dashboard/org/settings/': typeof DashboardOrgSettingsIndexRoute
+  '/dashboard/org/support/': typeof DashboardOrgSupportIndexRoute
+  '/dashboard/org/users/': typeof DashboardOrgUsersIndexRoute
+  '/dashboard/org/cohorts/$cohortId/courses': typeof DashboardOrgCohortsCohortIdCoursesRoute
+  '/dashboard/org/cohorts/$cohortId/members': typeof DashboardOrgCohortsCohortIdMembersRoute
+  '/dashboard/org/courses/$courseId/analytics': typeof DashboardOrgCoursesCourseIdAnalyticsRoute
+  '/dashboard/org/courses/$courseId/announcements': typeof DashboardOrgCoursesCourseIdAnnouncementsRoute
+  '/dashboard/org/courses/$courseId/members': typeof DashboardOrgCoursesCourseIdMembersRoute
+  '/dashboard/course/$courseId/curriculum/': typeof DashboardCourseCourseIdCurriculumIndexRoute
+  '/dashboard/org/cohorts/$cohortId/': typeof DashboardOrgCohortsCohortIdIndexRoute
+  '/dashboard/org/courses/$courseId/': typeof DashboardOrgCoursesCourseIdIndexRoute
+  '/dashboard/course/$courseId/curriculum/$lessonId/edit': typeof DashboardCourseCourseIdCurriculumLessonIdEditRoute
+  '/dashboard/course/$courseId/curriculum/$lessonId/view': typeof DashboardCourseCourseIdCurriculumLessonIdViewRoute
+  '/dashboard/org/courses/$courseId/curriculum/': typeof DashboardOrgCoursesCourseIdCurriculumIndexRoute
+  '/dashboard/org/courses/$courseId/curriculum/$lessonId/edit': typeof DashboardOrgCoursesCourseIdCurriculumLessonIdEditRoute
+  '/dashboard/org/courses/$courseId/curriculum/$lessonId/view': typeof DashboardOrgCoursesCourseIdCurriculumLessonIdViewRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | "/"
-    | "/dashboard"
-    | "/learn"
-    | "/onboarding"
-    | "/$"
-    | "/accept-invite"
-    | "/health"
-    | "/dashboard/admin"
-    | "/dashboard/catalog"
-    | "/dashboard/course"
-    | "/dashboard/org"
-    | "/dashboard/settings"
-    | "/dashboard/support"
-    | "/learn/$courseId"
-    | "/check-email"
-    | "/forgot-password"
-    | "/reset-password"
-    | "/sign-in"
-    | "/sign-up"
-    | "/two-factor"
-    | "/verify-email"
-    | "/dashboard/$"
-    | "/onboarding/organization"
-    | "/dashboard/"
-    | "/onboarding/"
-    | "/dashboard/admin/logs-analytics"
-    | "/dashboard/admin/organizations"
-    | "/dashboard/admin/users"
-    | "/dashboard/course/$courseId"
-    | "/dashboard/org/cohorts"
-    | "/dashboard/org/courses"
-    | "/dashboard/org/organization"
-    | "/dashboard/org/settings"
-    | "/dashboard/org/support"
-    | "/dashboard/org/users"
-    | "/dashboard/course/categories"
-    | "/dashboard/course/generate"
-    | "/dashboard/org/members"
-    | "/dashboard/settings/general"
-    | "/dashboard/settings/preferences"
-    | "/dashboard/settings/security"
-    | "/dashboard/support/contact"
-    | "/dashboard/support/faqs"
-    | "/dashboard/support/report-issue"
-    | "/learn/$courseId/$lessonId"
-    | "/dashboard/admin/"
-    | "/dashboard/catalog/"
-    | "/dashboard/course/"
-    | "/dashboard/library/"
-    | "/dashboard/org/"
-    | "/dashboard/settings/"
-    | "/dashboard/support/"
-    | "/learn/$courseId/"
-    | "/dashboard/org/cohorts/$cohortId"
-    | "/dashboard/org/courses/$courseId"
-    | "/dashboard/admin/logs-analytics/feedback"
-    | "/dashboard/admin/logs-analytics/reports"
-    | "/dashboard/admin/organizations/invites"
-    | "/dashboard/admin/users/public-invites"
-    | "/dashboard/catalog/$courseId/pay"
-    | "/dashboard/course/$courseId/analytics"
-    | "/dashboard/course/$courseId/announcements"
-    | "/dashboard/course/$courseId/certificates"
-    | "/dashboard/course/$courseId/members"
-    | "/dashboard/org/organization/integrations"
-    | "/dashboard/org/organization/rules"
-    | "/dashboard/org/settings/general"
-    | "/dashboard/org/settings/preferences"
-    | "/dashboard/org/settings/security"
-    | "/dashboard/org/support/contact"
-    | "/dashboard/org/support/faqs"
-    | "/dashboard/org/support/report-issue"
-    | "/dashboard/org/users/invites"
-    | "/dashboard/admin/logs-analytics/"
-    | "/dashboard/admin/organizations/"
-    | "/dashboard/admin/users/"
-    | "/dashboard/catalog/$courseId/"
-    | "/dashboard/course/$courseId/"
-    | "/dashboard/org/cohorts/"
-    | "/dashboard/org/courses/"
-    | "/dashboard/org/library/"
-    | "/dashboard/org/organization/"
-    | "/dashboard/org/settings/"
-    | "/dashboard/org/support/"
-    | "/dashboard/org/users/"
-    | "/dashboard/org/cohorts/$cohortId/courses"
-    | "/dashboard/org/cohorts/$cohortId/members"
-    | "/dashboard/org/courses/$courseId/analytics"
-    | "/dashboard/org/courses/$courseId/announcements"
-    | "/dashboard/org/courses/$courseId/members"
-    | "/dashboard/course/$courseId/curriculum/"
-    | "/dashboard/org/cohorts/$cohortId/"
-    | "/dashboard/org/courses/$courseId/"
-    | "/dashboard/course/$courseId/curriculum/$lessonId/edit"
-    | "/dashboard/course/$courseId/curriculum/$lessonId/view"
-    | "/dashboard/org/courses/$courseId/curriculum/"
-    | "/dashboard/org/courses/$courseId/curriculum/$lessonId/edit"
-    | "/dashboard/org/courses/$courseId/curriculum/$lessonId/view";
-  fileRoutesByTo: FileRoutesByTo;
+    | '/'
+    | '/dashboard'
+    | '/learn'
+    | '/onboarding'
+    | '/$'
+    | '/accept-invite'
+    | '/health'
+    | '/dashboard/admin'
+    | '/dashboard/catalog'
+    | '/dashboard/course'
+    | '/dashboard/org'
+    | '/dashboard/settings'
+    | '/dashboard/support'
+    | '/learn/$courseId'
+    | '/check-email'
+    | '/forgot-password'
+    | '/reset-password'
+    | '/sign-in'
+    | '/sign-up'
+    | '/two-factor'
+    | '/verify-email'
+    | '/dashboard/$'
+    | '/onboarding/organization'
+    | '/dashboard/'
+    | '/onboarding/'
+    | '/dashboard/admin/logs-analytics'
+    | '/dashboard/admin/organizations'
+    | '/dashboard/admin/users'
+    | '/dashboard/course/$courseId'
+    | '/dashboard/org/cohorts'
+    | '/dashboard/org/courses'
+    | '/dashboard/org/organization'
+    | '/dashboard/org/settings'
+    | '/dashboard/org/support'
+    | '/dashboard/org/users'
+    | '/dashboard/course/categories'
+    | '/dashboard/course/generate'
+    | '/dashboard/org/members'
+    | '/dashboard/settings/general'
+    | '/dashboard/settings/preferences'
+    | '/dashboard/settings/security'
+    | '/dashboard/support/contact'
+    | '/dashboard/support/faqs'
+    | '/dashboard/support/report-issue'
+    | '/learn/$courseId/$lessonId'
+    | '/dashboard/admin/'
+    | '/dashboard/catalog/'
+    | '/dashboard/course/'
+    | '/dashboard/library/'
+    | '/dashboard/org/'
+    | '/dashboard/settings/'
+    | '/dashboard/support/'
+    | '/learn/$courseId/'
+    | '/dashboard/org/cohorts/$cohortId'
+    | '/dashboard/org/courses/$courseId'
+    | '/dashboard/admin/logs-analytics/feedback'
+    | '/dashboard/admin/logs-analytics/reports'
+    | '/dashboard/admin/organizations/invites'
+    | '/dashboard/admin/users/public-invites'
+    | '/dashboard/catalog/$courseId/pay'
+    | '/dashboard/course/$courseId/analytics'
+    | '/dashboard/course/$courseId/announcements'
+    | '/dashboard/course/$courseId/certificates'
+    | '/dashboard/course/$courseId/members'
+    | '/dashboard/org/organization/integrations'
+    | '/dashboard/org/organization/rules'
+    | '/dashboard/org/settings/general'
+    | '/dashboard/org/settings/preferences'
+    | '/dashboard/org/settings/security'
+    | '/dashboard/org/support/contact'
+    | '/dashboard/org/support/faqs'
+    | '/dashboard/org/support/report-issue'
+    | '/dashboard/org/users/invites'
+    | '/dashboard/admin/logs-analytics/'
+    | '/dashboard/admin/organizations/'
+    | '/dashboard/admin/users/'
+    | '/dashboard/catalog/$courseId/'
+    | '/dashboard/course/$courseId/'
+    | '/dashboard/org/cohorts/'
+    | '/dashboard/org/courses/'
+    | '/dashboard/org/library/'
+    | '/dashboard/org/organization/'
+    | '/dashboard/org/settings/'
+    | '/dashboard/org/support/'
+    | '/dashboard/org/users/'
+    | '/dashboard/org/cohorts/$cohortId/courses'
+    | '/dashboard/org/cohorts/$cohortId/members'
+    | '/dashboard/org/courses/$courseId/analytics'
+    | '/dashboard/org/courses/$courseId/announcements'
+    | '/dashboard/org/courses/$courseId/members'
+    | '/dashboard/course/$courseId/curriculum/'
+    | '/dashboard/org/cohorts/$cohortId/'
+    | '/dashboard/org/courses/$courseId/'
+    | '/dashboard/course/$courseId/curriculum/$lessonId/edit'
+    | '/dashboard/course/$courseId/curriculum/$lessonId/view'
+    | '/dashboard/org/courses/$courseId/curriculum/'
+    | '/dashboard/org/courses/$courseId/curriculum/$lessonId/edit'
+    | '/dashboard/org/courses/$courseId/curriculum/$lessonId/view'
+  fileRoutesByTo: FileRoutesByTo
   to:
-    | "/"
-    | "/learn"
-    | "/$"
-    | "/accept-invite"
-    | "/health"
-    | "/check-email"
-    | "/forgot-password"
-    | "/reset-password"
-    | "/sign-in"
-    | "/sign-up"
-    | "/two-factor"
-    | "/verify-email"
-    | "/dashboard/$"
-    | "/onboarding/organization"
-    | "/dashboard"
-    | "/onboarding"
-    | "/dashboard/course/categories"
-    | "/dashboard/course/generate"
-    | "/dashboard/org/members"
-    | "/dashboard/settings/general"
-    | "/dashboard/settings/preferences"
-    | "/dashboard/settings/security"
-    | "/dashboard/support/contact"
-    | "/dashboard/support/faqs"
-    | "/dashboard/support/report-issue"
-    | "/learn/$courseId/$lessonId"
-    | "/dashboard/admin"
-    | "/dashboard/catalog"
-    | "/dashboard/course"
-    | "/dashboard/library"
-    | "/dashboard/org"
-    | "/dashboard/settings"
-    | "/dashboard/support"
-    | "/learn/$courseId"
-    | "/dashboard/admin/logs-analytics/feedback"
-    | "/dashboard/admin/logs-analytics/reports"
-    | "/dashboard/admin/organizations/invites"
-    | "/dashboard/admin/users/public-invites"
-    | "/dashboard/catalog/$courseId/pay"
-    | "/dashboard/course/$courseId/analytics"
-    | "/dashboard/course/$courseId/announcements"
-    | "/dashboard/course/$courseId/certificates"
-    | "/dashboard/course/$courseId/members"
-    | "/dashboard/org/organization/integrations"
-    | "/dashboard/org/organization/rules"
-    | "/dashboard/org/settings/general"
-    | "/dashboard/org/settings/preferences"
-    | "/dashboard/org/settings/security"
-    | "/dashboard/org/support/contact"
-    | "/dashboard/org/support/faqs"
-    | "/dashboard/org/support/report-issue"
-    | "/dashboard/org/users/invites"
-    | "/dashboard/admin/logs-analytics"
-    | "/dashboard/admin/organizations"
-    | "/dashboard/admin/users"
-    | "/dashboard/catalog/$courseId"
-    | "/dashboard/course/$courseId"
-    | "/dashboard/org/cohorts"
-    | "/dashboard/org/courses"
-    | "/dashboard/org/library"
-    | "/dashboard/org/organization"
-    | "/dashboard/org/settings"
-    | "/dashboard/org/support"
-    | "/dashboard/org/users"
-    | "/dashboard/org/cohorts/$cohortId/courses"
-    | "/dashboard/org/cohorts/$cohortId/members"
-    | "/dashboard/org/courses/$courseId/analytics"
-    | "/dashboard/org/courses/$courseId/announcements"
-    | "/dashboard/org/courses/$courseId/members"
-    | "/dashboard/course/$courseId/curriculum"
-    | "/dashboard/org/cohorts/$cohortId"
-    | "/dashboard/org/courses/$courseId"
-    | "/dashboard/course/$courseId/curriculum/$lessonId/edit"
-    | "/dashboard/course/$courseId/curriculum/$lessonId/view"
-    | "/dashboard/org/courses/$courseId/curriculum"
-    | "/dashboard/org/courses/$courseId/curriculum/$lessonId/edit"
-    | "/dashboard/org/courses/$courseId/curriculum/$lessonId/view";
+    | '/'
+    | '/learn'
+    | '/$'
+    | '/accept-invite'
+    | '/health'
+    | '/check-email'
+    | '/forgot-password'
+    | '/reset-password'
+    | '/sign-in'
+    | '/sign-up'
+    | '/two-factor'
+    | '/verify-email'
+    | '/dashboard/$'
+    | '/onboarding/organization'
+    | '/dashboard'
+    | '/onboarding'
+    | '/dashboard/course/categories'
+    | '/dashboard/course/generate'
+    | '/dashboard/org/members'
+    | '/dashboard/settings/general'
+    | '/dashboard/settings/preferences'
+    | '/dashboard/settings/security'
+    | '/dashboard/support/contact'
+    | '/dashboard/support/faqs'
+    | '/dashboard/support/report-issue'
+    | '/learn/$courseId/$lessonId'
+    | '/dashboard/admin'
+    | '/dashboard/catalog'
+    | '/dashboard/course'
+    | '/dashboard/library'
+    | '/dashboard/org'
+    | '/dashboard/settings'
+    | '/dashboard/support'
+    | '/learn/$courseId'
+    | '/dashboard/admin/logs-analytics/feedback'
+    | '/dashboard/admin/logs-analytics/reports'
+    | '/dashboard/admin/organizations/invites'
+    | '/dashboard/admin/users/public-invites'
+    | '/dashboard/catalog/$courseId/pay'
+    | '/dashboard/course/$courseId/analytics'
+    | '/dashboard/course/$courseId/announcements'
+    | '/dashboard/course/$courseId/certificates'
+    | '/dashboard/course/$courseId/members'
+    | '/dashboard/org/organization/integrations'
+    | '/dashboard/org/organization/rules'
+    | '/dashboard/org/settings/general'
+    | '/dashboard/org/settings/preferences'
+    | '/dashboard/org/settings/security'
+    | '/dashboard/org/support/contact'
+    | '/dashboard/org/support/faqs'
+    | '/dashboard/org/support/report-issue'
+    | '/dashboard/org/users/invites'
+    | '/dashboard/admin/logs-analytics'
+    | '/dashboard/admin/organizations'
+    | '/dashboard/admin/users'
+    | '/dashboard/catalog/$courseId'
+    | '/dashboard/course/$courseId'
+    | '/dashboard/org/cohorts'
+    | '/dashboard/org/courses'
+    | '/dashboard/org/library'
+    | '/dashboard/org/organization'
+    | '/dashboard/org/settings'
+    | '/dashboard/org/support'
+    | '/dashboard/org/users'
+    | '/dashboard/org/cohorts/$cohortId/courses'
+    | '/dashboard/org/cohorts/$cohortId/members'
+    | '/dashboard/org/courses/$courseId/analytics'
+    | '/dashboard/org/courses/$courseId/announcements'
+    | '/dashboard/org/courses/$courseId/members'
+    | '/dashboard/course/$courseId/curriculum'
+    | '/dashboard/org/cohorts/$cohortId'
+    | '/dashboard/org/courses/$courseId'
+    | '/dashboard/course/$courseId/curriculum/$lessonId/edit'
+    | '/dashboard/course/$courseId/curriculum/$lessonId/view'
+    | '/dashboard/org/courses/$courseId/curriculum'
+    | '/dashboard/org/courses/$courseId/curriculum/$lessonId/edit'
+    | '/dashboard/org/courses/$courseId/curriculum/$lessonId/view'
   id:
-    | "__root__"
-    | "/"
-    | "/dashboard"
-    | "/learn"
-    | "/onboarding"
-    | "/$"
-    | "/_auth"
-    | "/accept-invite"
-    | "/health"
-    | "/dashboard/admin"
-    | "/dashboard/catalog"
-    | "/dashboard/course"
-    | "/dashboard/org"
-    | "/dashboard/settings"
-    | "/dashboard/support"
-    | "/learn/$courseId"
-    | "/_auth/check-email"
-    | "/_auth/forgot-password"
-    | "/_auth/reset-password"
-    | "/_auth/sign-in"
-    | "/_auth/sign-up"
-    | "/_auth/two-factor"
-    | "/_auth/verify-email"
-    | "/dashboard/$"
-    | "/onboarding/organization"
-    | "/dashboard/"
-    | "/onboarding/"
-    | "/dashboard/admin/logs-analytics"
-    | "/dashboard/admin/organizations"
-    | "/dashboard/admin/users"
-    | "/dashboard/course/$courseId"
-    | "/dashboard/org/cohorts"
-    | "/dashboard/org/courses"
-    | "/dashboard/org/organization"
-    | "/dashboard/org/settings"
-    | "/dashboard/org/support"
-    | "/dashboard/org/users"
-    | "/dashboard/course/categories"
-    | "/dashboard/course/generate"
-    | "/dashboard/org/members"
-    | "/dashboard/settings/general"
-    | "/dashboard/settings/preferences"
-    | "/dashboard/settings/security"
-    | "/dashboard/support/contact"
-    | "/dashboard/support/faqs"
-    | "/dashboard/support/report-issue"
-    | "/learn/$courseId/$lessonId"
-    | "/dashboard/admin/"
-    | "/dashboard/catalog/"
-    | "/dashboard/course/"
-    | "/dashboard/library/"
-    | "/dashboard/org/"
-    | "/dashboard/settings/"
-    | "/dashboard/support/"
-    | "/learn/$courseId/"
-    | "/dashboard/org/cohorts/$cohortId"
-    | "/dashboard/org/courses/$courseId"
-    | "/dashboard/admin/logs-analytics/feedback"
-    | "/dashboard/admin/logs-analytics/reports"
-    | "/dashboard/admin/organizations/invites"
-    | "/dashboard/admin/users/public-invites"
-    | "/dashboard/catalog/$courseId/pay"
-    | "/dashboard/course/$courseId/analytics"
-    | "/dashboard/course/$courseId/announcements"
-    | "/dashboard/course/$courseId/certificates"
-    | "/dashboard/course/$courseId/members"
-    | "/dashboard/org/organization/integrations"
-    | "/dashboard/org/organization/rules"
-    | "/dashboard/org/settings/general"
-    | "/dashboard/org/settings/preferences"
-    | "/dashboard/org/settings/security"
-    | "/dashboard/org/support/contact"
-    | "/dashboard/org/support/faqs"
-    | "/dashboard/org/support/report-issue"
-    | "/dashboard/org/users/invites"
-    | "/dashboard/admin/logs-analytics/"
-    | "/dashboard/admin/organizations/"
-    | "/dashboard/admin/users/"
-    | "/dashboard/catalog/$courseId/"
-    | "/dashboard/course/$courseId/"
-    | "/dashboard/org/cohorts/"
-    | "/dashboard/org/courses/"
-    | "/dashboard/org/library/"
-    | "/dashboard/org/organization/"
-    | "/dashboard/org/settings/"
-    | "/dashboard/org/support/"
-    | "/dashboard/org/users/"
-    | "/dashboard/org/cohorts/$cohortId/courses"
-    | "/dashboard/org/cohorts/$cohortId/members"
-    | "/dashboard/org/courses/$courseId/analytics"
-    | "/dashboard/org/courses/$courseId/announcements"
-    | "/dashboard/org/courses/$courseId/members"
-    | "/dashboard/course/$courseId/curriculum/"
-    | "/dashboard/org/cohorts/$cohortId/"
-    | "/dashboard/org/courses/$courseId/"
-    | "/dashboard/course/$courseId/curriculum/$lessonId/edit"
-    | "/dashboard/course/$courseId/curriculum/$lessonId/view"
-    | "/dashboard/org/courses/$courseId/curriculum/"
-    | "/dashboard/org/courses/$courseId/curriculum/$lessonId/edit"
-    | "/dashboard/org/courses/$courseId/curriculum/$lessonId/view";
-  fileRoutesById: FileRoutesById;
+    | '__root__'
+    | '/'
+    | '/dashboard'
+    | '/learn'
+    | '/onboarding'
+    | '/$'
+    | '/_auth'
+    | '/accept-invite'
+    | '/health'
+    | '/dashboard/admin'
+    | '/dashboard/catalog'
+    | '/dashboard/course'
+    | '/dashboard/org'
+    | '/dashboard/settings'
+    | '/dashboard/support'
+    | '/learn/$courseId'
+    | '/_auth/check-email'
+    | '/_auth/forgot-password'
+    | '/_auth/reset-password'
+    | '/_auth/sign-in'
+    | '/_auth/sign-up'
+    | '/_auth/two-factor'
+    | '/_auth/verify-email'
+    | '/dashboard/$'
+    | '/onboarding/organization'
+    | '/dashboard/'
+    | '/onboarding/'
+    | '/dashboard/admin/logs-analytics'
+    | '/dashboard/admin/organizations'
+    | '/dashboard/admin/users'
+    | '/dashboard/course/$courseId'
+    | '/dashboard/org/cohorts'
+    | '/dashboard/org/courses'
+    | '/dashboard/org/organization'
+    | '/dashboard/org/settings'
+    | '/dashboard/org/support'
+    | '/dashboard/org/users'
+    | '/dashboard/course/categories'
+    | '/dashboard/course/generate'
+    | '/dashboard/org/members'
+    | '/dashboard/settings/general'
+    | '/dashboard/settings/preferences'
+    | '/dashboard/settings/security'
+    | '/dashboard/support/contact'
+    | '/dashboard/support/faqs'
+    | '/dashboard/support/report-issue'
+    | '/learn/$courseId/$lessonId'
+    | '/dashboard/admin/'
+    | '/dashboard/catalog/'
+    | '/dashboard/course/'
+    | '/dashboard/library/'
+    | '/dashboard/org/'
+    | '/dashboard/settings/'
+    | '/dashboard/support/'
+    | '/learn/$courseId/'
+    | '/dashboard/org/cohorts/$cohortId'
+    | '/dashboard/org/courses/$courseId'
+    | '/dashboard/admin/logs-analytics/feedback'
+    | '/dashboard/admin/logs-analytics/reports'
+    | '/dashboard/admin/organizations/invites'
+    | '/dashboard/admin/users/public-invites'
+    | '/dashboard/catalog/$courseId/pay'
+    | '/dashboard/course/$courseId/analytics'
+    | '/dashboard/course/$courseId/announcements'
+    | '/dashboard/course/$courseId/certificates'
+    | '/dashboard/course/$courseId/members'
+    | '/dashboard/org/organization/integrations'
+    | '/dashboard/org/organization/rules'
+    | '/dashboard/org/settings/general'
+    | '/dashboard/org/settings/preferences'
+    | '/dashboard/org/settings/security'
+    | '/dashboard/org/support/contact'
+    | '/dashboard/org/support/faqs'
+    | '/dashboard/org/support/report-issue'
+    | '/dashboard/org/users/invites'
+    | '/dashboard/admin/logs-analytics/'
+    | '/dashboard/admin/organizations/'
+    | '/dashboard/admin/users/'
+    | '/dashboard/catalog/$courseId/'
+    | '/dashboard/course/$courseId/'
+    | '/dashboard/org/cohorts/'
+    | '/dashboard/org/courses/'
+    | '/dashboard/org/library/'
+    | '/dashboard/org/organization/'
+    | '/dashboard/org/settings/'
+    | '/dashboard/org/support/'
+    | '/dashboard/org/users/'
+    | '/dashboard/org/cohorts/$cohortId/courses'
+    | '/dashboard/org/cohorts/$cohortId/members'
+    | '/dashboard/org/courses/$courseId/analytics'
+    | '/dashboard/org/courses/$courseId/announcements'
+    | '/dashboard/org/courses/$courseId/members'
+    | '/dashboard/course/$courseId/curriculum/'
+    | '/dashboard/org/cohorts/$cohortId/'
+    | '/dashboard/org/courses/$courseId/'
+    | '/dashboard/course/$courseId/curriculum/$lessonId/edit'
+    | '/dashboard/course/$courseId/curriculum/$lessonId/view'
+    | '/dashboard/org/courses/$courseId/curriculum/'
+    | '/dashboard/org/courses/$courseId/curriculum/$lessonId/edit'
+    | '/dashboard/org/courses/$courseId/curriculum/$lessonId/view'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  DashboardRouteRoute: typeof DashboardRouteRouteWithChildren;
-  LearnRouteRoute: typeof LearnRouteRouteWithChildren;
-  OnboardingRouteRoute: typeof OnboardingRouteRouteWithChildren;
-  SplatRoute: typeof SplatRoute;
-  AuthRoute: typeof AuthRouteWithChildren;
-  AcceptInviteRoute: typeof AcceptInviteRoute;
-  HealthRoute: typeof HealthRoute;
+  IndexRoute: typeof IndexRoute
+  DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
+  LearnRouteRoute: typeof LearnRouteRouteWithChildren
+  OnboardingRouteRoute: typeof OnboardingRouteRouteWithChildren
+  SplatRoute: typeof SplatRoute
+  AuthRoute: typeof AuthRouteWithChildren
+  AcceptInviteRoute: typeof AcceptInviteRoute
+  HealthRoute: typeof HealthRoute
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/health": {
-      id: "/health";
-      path: "/health";
-      fullPath: "/health";
-      preLoaderRoute: typeof HealthRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/accept-invite": {
-      id: "/accept-invite";
-      path: "/accept-invite";
-      fullPath: "/accept-invite";
-      preLoaderRoute: typeof AcceptInviteRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/_auth": {
-      id: "/_auth";
-      path: "";
-      fullPath: "/";
-      preLoaderRoute: typeof AuthRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/$": {
-      id: "/$";
-      path: "/$";
-      fullPath: "/$";
-      preLoaderRoute: typeof SplatRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/onboarding": {
-      id: "/onboarding";
-      path: "/onboarding";
-      fullPath: "/onboarding";
-      preLoaderRoute: typeof OnboardingRouteRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/learn": {
-      id: "/learn";
-      path: "/learn";
-      fullPath: "/learn";
-      preLoaderRoute: typeof LearnRouteRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/dashboard": {
-      id: "/dashboard";
-      path: "/dashboard";
-      fullPath: "/dashboard";
-      preLoaderRoute: typeof DashboardRouteRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/onboarding/": {
-      id: "/onboarding/";
-      path: "/";
-      fullPath: "/onboarding/";
-      preLoaderRoute: typeof OnboardingIndexRouteImport;
-      parentRoute: typeof OnboardingRouteRoute;
-    };
-    "/dashboard/": {
-      id: "/dashboard/";
-      path: "/";
-      fullPath: "/dashboard/";
-      preLoaderRoute: typeof DashboardIndexRouteImport;
-      parentRoute: typeof DashboardRouteRoute;
-    };
-    "/onboarding/organization": {
-      id: "/onboarding/organization";
-      path: "/organization";
-      fullPath: "/onboarding/organization";
-      preLoaderRoute: typeof OnboardingOrganizationRouteImport;
-      parentRoute: typeof OnboardingRouteRoute;
-    };
-    "/dashboard/$": {
-      id: "/dashboard/$";
-      path: "/$";
-      fullPath: "/dashboard/$";
-      preLoaderRoute: typeof DashboardSplatRouteImport;
-      parentRoute: typeof DashboardRouteRoute;
-    };
-    "/_auth/verify-email": {
-      id: "/_auth/verify-email";
-      path: "/verify-email";
-      fullPath: "/verify-email";
-      preLoaderRoute: typeof AuthVerifyEmailRouteImport;
-      parentRoute: typeof AuthRoute;
-    };
-    "/_auth/two-factor": {
-      id: "/_auth/two-factor";
-      path: "/two-factor";
-      fullPath: "/two-factor";
-      preLoaderRoute: typeof AuthTwoFactorRouteImport;
-      parentRoute: typeof AuthRoute;
-    };
-    "/_auth/sign-up": {
-      id: "/_auth/sign-up";
-      path: "/sign-up";
-      fullPath: "/sign-up";
-      preLoaderRoute: typeof AuthSignUpRouteImport;
-      parentRoute: typeof AuthRoute;
-    };
-    "/_auth/sign-in": {
-      id: "/_auth/sign-in";
-      path: "/sign-in";
-      fullPath: "/sign-in";
-      preLoaderRoute: typeof AuthSignInRouteImport;
-      parentRoute: typeof AuthRoute;
-    };
-    "/_auth/reset-password": {
-      id: "/_auth/reset-password";
-      path: "/reset-password";
-      fullPath: "/reset-password";
-      preLoaderRoute: typeof AuthResetPasswordRouteImport;
-      parentRoute: typeof AuthRoute;
-    };
-    "/_auth/forgot-password": {
-      id: "/_auth/forgot-password";
-      path: "/forgot-password";
-      fullPath: "/forgot-password";
-      preLoaderRoute: typeof AuthForgotPasswordRouteImport;
-      parentRoute: typeof AuthRoute;
-    };
-    "/_auth/check-email": {
-      id: "/_auth/check-email";
-      path: "/check-email";
-      fullPath: "/check-email";
-      preLoaderRoute: typeof AuthCheckEmailRouteImport;
-      parentRoute: typeof AuthRoute;
-    };
-    "/learn/$courseId": {
-      id: "/learn/$courseId";
-      path: "/$courseId";
-      fullPath: "/learn/$courseId";
-      preLoaderRoute: typeof LearnCourseIdRouteRouteImport;
-      parentRoute: typeof LearnRouteRoute;
-    };
-    "/dashboard/support": {
-      id: "/dashboard/support";
-      path: "/support";
-      fullPath: "/dashboard/support";
-      preLoaderRoute: typeof DashboardSupportRouteRouteImport;
-      parentRoute: typeof DashboardRouteRoute;
-    };
-    "/dashboard/settings": {
-      id: "/dashboard/settings";
-      path: "/settings";
-      fullPath: "/dashboard/settings";
-      preLoaderRoute: typeof DashboardSettingsRouteRouteImport;
-      parentRoute: typeof DashboardRouteRoute;
-    };
-    "/dashboard/org": {
-      id: "/dashboard/org";
-      path: "/org";
-      fullPath: "/dashboard/org";
-      preLoaderRoute: typeof DashboardOrgRouteRouteImport;
-      parentRoute: typeof DashboardRouteRoute;
-    };
-    "/dashboard/course": {
-      id: "/dashboard/course";
-      path: "/course";
-      fullPath: "/dashboard/course";
-      preLoaderRoute: typeof DashboardCourseRouteRouteImport;
-      parentRoute: typeof DashboardRouteRoute;
-    };
-    "/dashboard/catalog": {
-      id: "/dashboard/catalog";
-      path: "/catalog";
-      fullPath: "/dashboard/catalog";
-      preLoaderRoute: typeof DashboardCatalogRouteRouteImport;
-      parentRoute: typeof DashboardRouteRoute;
-    };
-    "/dashboard/admin": {
-      id: "/dashboard/admin";
-      path: "/admin";
-      fullPath: "/dashboard/admin";
-      preLoaderRoute: typeof DashboardAdminRouteRouteImport;
-      parentRoute: typeof DashboardRouteRoute;
-    };
-    "/learn/$courseId/": {
-      id: "/learn/$courseId/";
-      path: "/";
-      fullPath: "/learn/$courseId/";
-      preLoaderRoute: typeof LearnCourseIdIndexRouteImport;
-      parentRoute: typeof LearnCourseIdRouteRoute;
-    };
-    "/dashboard/support/": {
-      id: "/dashboard/support/";
-      path: "/";
-      fullPath: "/dashboard/support/";
-      preLoaderRoute: typeof DashboardSupportIndexRouteImport;
-      parentRoute: typeof DashboardSupportRouteRoute;
-    };
-    "/dashboard/settings/": {
-      id: "/dashboard/settings/";
-      path: "/";
-      fullPath: "/dashboard/settings/";
-      preLoaderRoute: typeof DashboardSettingsIndexRouteImport;
-      parentRoute: typeof DashboardSettingsRouteRoute;
-    };
-    "/dashboard/org/": {
-      id: "/dashboard/org/";
-      path: "/";
-      fullPath: "/dashboard/org/";
-      preLoaderRoute: typeof DashboardOrgIndexRouteImport;
-      parentRoute: typeof DashboardOrgRouteRoute;
-    };
-    "/dashboard/library/": {
-      id: "/dashboard/library/";
-      path: "/library";
-      fullPath: "/dashboard/library/";
-      preLoaderRoute: typeof DashboardLibraryIndexRouteImport;
-      parentRoute: typeof DashboardRouteRoute;
-    };
-    "/dashboard/course/": {
-      id: "/dashboard/course/";
-      path: "/";
-      fullPath: "/dashboard/course/";
-      preLoaderRoute: typeof DashboardCourseIndexRouteImport;
-      parentRoute: typeof DashboardCourseRouteRoute;
-    };
-    "/dashboard/catalog/": {
-      id: "/dashboard/catalog/";
-      path: "/";
-      fullPath: "/dashboard/catalog/";
-      preLoaderRoute: typeof DashboardCatalogIndexRouteImport;
-      parentRoute: typeof DashboardCatalogRouteRoute;
-    };
-    "/dashboard/admin/": {
-      id: "/dashboard/admin/";
-      path: "/";
-      fullPath: "/dashboard/admin/";
-      preLoaderRoute: typeof DashboardAdminIndexRouteImport;
-      parentRoute: typeof DashboardAdminRouteRoute;
-    };
-    "/learn/$courseId/$lessonId": {
-      id: "/learn/$courseId/$lessonId";
-      path: "/$lessonId";
-      fullPath: "/learn/$courseId/$lessonId";
-      preLoaderRoute: typeof LearnCourseIdLessonIdRouteImport;
-      parentRoute: typeof LearnCourseIdRouteRoute;
-    };
-    "/dashboard/support/report-issue": {
-      id: "/dashboard/support/report-issue";
-      path: "/report-issue";
-      fullPath: "/dashboard/support/report-issue";
-      preLoaderRoute: typeof DashboardSupportReportIssueRouteImport;
-      parentRoute: typeof DashboardSupportRouteRoute;
-    };
-    "/dashboard/support/faqs": {
-      id: "/dashboard/support/faqs";
-      path: "/faqs";
-      fullPath: "/dashboard/support/faqs";
-      preLoaderRoute: typeof DashboardSupportFaqsRouteImport;
-      parentRoute: typeof DashboardSupportRouteRoute;
-    };
-    "/dashboard/support/contact": {
-      id: "/dashboard/support/contact";
-      path: "/contact";
-      fullPath: "/dashboard/support/contact";
-      preLoaderRoute: typeof DashboardSupportContactRouteImport;
-      parentRoute: typeof DashboardSupportRouteRoute;
-    };
-    "/dashboard/settings/security": {
-      id: "/dashboard/settings/security";
-      path: "/security";
-      fullPath: "/dashboard/settings/security";
-      preLoaderRoute: typeof DashboardSettingsSecurityRouteImport;
-      parentRoute: typeof DashboardSettingsRouteRoute;
-    };
-    "/dashboard/settings/preferences": {
-      id: "/dashboard/settings/preferences";
-      path: "/preferences";
-      fullPath: "/dashboard/settings/preferences";
-      preLoaderRoute: typeof DashboardSettingsPreferencesRouteImport;
-      parentRoute: typeof DashboardSettingsRouteRoute;
-    };
-    "/dashboard/settings/general": {
-      id: "/dashboard/settings/general";
-      path: "/general";
-      fullPath: "/dashboard/settings/general";
-      preLoaderRoute: typeof DashboardSettingsGeneralRouteImport;
-      parentRoute: typeof DashboardSettingsRouteRoute;
-    };
-    "/dashboard/org/members": {
-      id: "/dashboard/org/members";
-      path: "/members";
-      fullPath: "/dashboard/org/members";
-      preLoaderRoute: typeof DashboardOrgMembersRouteImport;
-      parentRoute: typeof DashboardOrgRouteRoute;
-    };
-    "/dashboard/course/generate": {
-      id: "/dashboard/course/generate";
-      path: "/generate";
-      fullPath: "/dashboard/course/generate";
-      preLoaderRoute: typeof DashboardCourseGenerateRouteImport;
-      parentRoute: typeof DashboardCourseRouteRoute;
-    };
-    "/dashboard/course/categories": {
-      id: "/dashboard/course/categories";
-      path: "/categories";
-      fullPath: "/dashboard/course/categories";
-      preLoaderRoute: typeof DashboardCourseCategoriesRouteImport;
-      parentRoute: typeof DashboardCourseRouteRoute;
-    };
-    "/dashboard/org/users": {
-      id: "/dashboard/org/users";
-      path: "/users";
-      fullPath: "/dashboard/org/users";
-      preLoaderRoute: typeof DashboardOrgUsersRouteRouteImport;
-      parentRoute: typeof DashboardOrgRouteRoute;
-    };
-    "/dashboard/org/support": {
-      id: "/dashboard/org/support";
-      path: "/support";
-      fullPath: "/dashboard/org/support";
-      preLoaderRoute: typeof DashboardOrgSupportRouteRouteImport;
-      parentRoute: typeof DashboardOrgRouteRoute;
-    };
-    "/dashboard/org/settings": {
-      id: "/dashboard/org/settings";
-      path: "/settings";
-      fullPath: "/dashboard/org/settings";
-      preLoaderRoute: typeof DashboardOrgSettingsRouteRouteImport;
-      parentRoute: typeof DashboardOrgRouteRoute;
-    };
-    "/dashboard/org/organization": {
-      id: "/dashboard/org/organization";
-      path: "/organization";
-      fullPath: "/dashboard/org/organization";
-      preLoaderRoute: typeof DashboardOrgOrganizationRouteRouteImport;
-      parentRoute: typeof DashboardOrgRouteRoute;
-    };
-    "/dashboard/org/courses": {
-      id: "/dashboard/org/courses";
-      path: "/courses";
-      fullPath: "/dashboard/org/courses";
-      preLoaderRoute: typeof DashboardOrgCoursesRouteRouteImport;
-      parentRoute: typeof DashboardOrgRouteRoute;
-    };
-    "/dashboard/org/cohorts": {
-      id: "/dashboard/org/cohorts";
-      path: "/cohorts";
-      fullPath: "/dashboard/org/cohorts";
-      preLoaderRoute: typeof DashboardOrgCohortsRouteRouteImport;
-      parentRoute: typeof DashboardOrgRouteRoute;
-    };
-    "/dashboard/course/$courseId": {
-      id: "/dashboard/course/$courseId";
-      path: "/$courseId";
-      fullPath: "/dashboard/course/$courseId";
-      preLoaderRoute: typeof DashboardCourseCourseIdRouteRouteImport;
-      parentRoute: typeof DashboardCourseRouteRoute;
-    };
-    "/dashboard/admin/users": {
-      id: "/dashboard/admin/users";
-      path: "/users";
-      fullPath: "/dashboard/admin/users";
-      preLoaderRoute: typeof DashboardAdminUsersRouteRouteImport;
-      parentRoute: typeof DashboardAdminRouteRoute;
-    };
-    "/dashboard/admin/organizations": {
-      id: "/dashboard/admin/organizations";
-      path: "/organizations";
-      fullPath: "/dashboard/admin/organizations";
-      preLoaderRoute: typeof DashboardAdminOrganizationsRouteRouteImport;
-      parentRoute: typeof DashboardAdminRouteRoute;
-    };
-    "/dashboard/admin/logs-analytics": {
-      id: "/dashboard/admin/logs-analytics";
-      path: "/logs-analytics";
-      fullPath: "/dashboard/admin/logs-analytics";
-      preLoaderRoute: typeof DashboardAdminLogsAnalyticsRouteRouteImport;
-      parentRoute: typeof DashboardAdminRouteRoute;
-    };
-    "/dashboard/org/users/": {
-      id: "/dashboard/org/users/";
-      path: "/";
-      fullPath: "/dashboard/org/users/";
-      preLoaderRoute: typeof DashboardOrgUsersIndexRouteImport;
-      parentRoute: typeof DashboardOrgUsersRouteRoute;
-    };
-    "/dashboard/org/support/": {
-      id: "/dashboard/org/support/";
-      path: "/";
-      fullPath: "/dashboard/org/support/";
-      preLoaderRoute: typeof DashboardOrgSupportIndexRouteImport;
-      parentRoute: typeof DashboardOrgSupportRouteRoute;
-    };
-    "/dashboard/org/settings/": {
-      id: "/dashboard/org/settings/";
-      path: "/";
-      fullPath: "/dashboard/org/settings/";
-      preLoaderRoute: typeof DashboardOrgSettingsIndexRouteImport;
-      parentRoute: typeof DashboardOrgSettingsRouteRoute;
-    };
-    "/dashboard/org/organization/": {
-      id: "/dashboard/org/organization/";
-      path: "/";
-      fullPath: "/dashboard/org/organization/";
-      preLoaderRoute: typeof DashboardOrgOrganizationIndexRouteImport;
-      parentRoute: typeof DashboardOrgOrganizationRouteRoute;
-    };
-    "/dashboard/org/library/": {
-      id: "/dashboard/org/library/";
-      path: "/library";
-      fullPath: "/dashboard/org/library/";
-      preLoaderRoute: typeof DashboardOrgLibraryIndexRouteImport;
-      parentRoute: typeof DashboardOrgRouteRoute;
-    };
-    "/dashboard/org/courses/": {
-      id: "/dashboard/org/courses/";
-      path: "/";
-      fullPath: "/dashboard/org/courses/";
-      preLoaderRoute: typeof DashboardOrgCoursesIndexRouteImport;
-      parentRoute: typeof DashboardOrgCoursesRouteRoute;
-    };
-    "/dashboard/org/cohorts/": {
-      id: "/dashboard/org/cohorts/";
-      path: "/";
-      fullPath: "/dashboard/org/cohorts/";
-      preLoaderRoute: typeof DashboardOrgCohortsIndexRouteImport;
-      parentRoute: typeof DashboardOrgCohortsRouteRoute;
-    };
-    "/dashboard/course/$courseId/": {
-      id: "/dashboard/course/$courseId/";
-      path: "/";
-      fullPath: "/dashboard/course/$courseId/";
-      preLoaderRoute: typeof DashboardCourseCourseIdIndexRouteImport;
-      parentRoute: typeof DashboardCourseCourseIdRouteRoute;
-    };
-    "/dashboard/catalog/$courseId/": {
-      id: "/dashboard/catalog/$courseId/";
-      path: "/$courseId";
-      fullPath: "/dashboard/catalog/$courseId/";
-      preLoaderRoute: typeof DashboardCatalogCourseIdIndexRouteImport;
-      parentRoute: typeof DashboardCatalogRouteRoute;
-    };
-    "/dashboard/admin/users/": {
-      id: "/dashboard/admin/users/";
-      path: "/";
-      fullPath: "/dashboard/admin/users/";
-      preLoaderRoute: typeof DashboardAdminUsersIndexRouteImport;
-      parentRoute: typeof DashboardAdminUsersRouteRoute;
-    };
-    "/dashboard/admin/organizations/": {
-      id: "/dashboard/admin/organizations/";
-      path: "/";
-      fullPath: "/dashboard/admin/organizations/";
-      preLoaderRoute: typeof DashboardAdminOrganizationsIndexRouteImport;
-      parentRoute: typeof DashboardAdminOrganizationsRouteRoute;
-    };
-    "/dashboard/admin/logs-analytics/": {
-      id: "/dashboard/admin/logs-analytics/";
-      path: "/";
-      fullPath: "/dashboard/admin/logs-analytics/";
-      preLoaderRoute: typeof DashboardAdminLogsAnalyticsIndexRouteImport;
-      parentRoute: typeof DashboardAdminLogsAnalyticsRouteRoute;
-    };
-    "/dashboard/org/users/invites": {
-      id: "/dashboard/org/users/invites";
-      path: "/invites";
-      fullPath: "/dashboard/org/users/invites";
-      preLoaderRoute: typeof DashboardOrgUsersInvitesRouteImport;
-      parentRoute: typeof DashboardOrgUsersRouteRoute;
-    };
-    "/dashboard/org/support/report-issue": {
-      id: "/dashboard/org/support/report-issue";
-      path: "/report-issue";
-      fullPath: "/dashboard/org/support/report-issue";
-      preLoaderRoute: typeof DashboardOrgSupportReportIssueRouteImport;
-      parentRoute: typeof DashboardOrgSupportRouteRoute;
-    };
-    "/dashboard/org/support/faqs": {
-      id: "/dashboard/org/support/faqs";
-      path: "/faqs";
-      fullPath: "/dashboard/org/support/faqs";
-      preLoaderRoute: typeof DashboardOrgSupportFaqsRouteImport;
-      parentRoute: typeof DashboardOrgSupportRouteRoute;
-    };
-    "/dashboard/org/support/contact": {
-      id: "/dashboard/org/support/contact";
-      path: "/contact";
-      fullPath: "/dashboard/org/support/contact";
-      preLoaderRoute: typeof DashboardOrgSupportContactRouteImport;
-      parentRoute: typeof DashboardOrgSupportRouteRoute;
-    };
-    "/dashboard/org/settings/security": {
-      id: "/dashboard/org/settings/security";
-      path: "/security";
-      fullPath: "/dashboard/org/settings/security";
-      preLoaderRoute: typeof DashboardOrgSettingsSecurityRouteImport;
-      parentRoute: typeof DashboardOrgSettingsRouteRoute;
-    };
-    "/dashboard/org/settings/preferences": {
-      id: "/dashboard/org/settings/preferences";
-      path: "/preferences";
-      fullPath: "/dashboard/org/settings/preferences";
-      preLoaderRoute: typeof DashboardOrgSettingsPreferencesRouteImport;
-      parentRoute: typeof DashboardOrgSettingsRouteRoute;
-    };
-    "/dashboard/org/settings/general": {
-      id: "/dashboard/org/settings/general";
-      path: "/general";
-      fullPath: "/dashboard/org/settings/general";
-      preLoaderRoute: typeof DashboardOrgSettingsGeneralRouteImport;
-      parentRoute: typeof DashboardOrgSettingsRouteRoute;
-    };
-    "/dashboard/org/organization/rules": {
-      id: "/dashboard/org/organization/rules";
-      path: "/rules";
-      fullPath: "/dashboard/org/organization/rules";
-      preLoaderRoute: typeof DashboardOrgOrganizationRulesRouteImport;
-      parentRoute: typeof DashboardOrgOrganizationRouteRoute;
-    };
-    "/dashboard/org/organization/integrations": {
-      id: "/dashboard/org/organization/integrations";
-      path: "/integrations";
-      fullPath: "/dashboard/org/organization/integrations";
-      preLoaderRoute: typeof DashboardOrgOrganizationIntegrationsRouteImport;
-      parentRoute: typeof DashboardOrgOrganizationRouteRoute;
-    };
-    "/dashboard/course/$courseId/members": {
-      id: "/dashboard/course/$courseId/members";
-      path: "/members";
-      fullPath: "/dashboard/course/$courseId/members";
-      preLoaderRoute: typeof DashboardCourseCourseIdMembersRouteImport;
-      parentRoute: typeof DashboardCourseCourseIdRouteRoute;
-    };
-    "/dashboard/course/$courseId/certificates": {
-      id: "/dashboard/course/$courseId/certificates";
-      path: "/certificates";
-      fullPath: "/dashboard/course/$courseId/certificates";
-      preLoaderRoute: typeof DashboardCourseCourseIdCertificatesRouteImport;
-      parentRoute: typeof DashboardCourseCourseIdRouteRoute;
-    };
-    "/dashboard/course/$courseId/announcements": {
-      id: "/dashboard/course/$courseId/announcements";
-      path: "/announcements";
-      fullPath: "/dashboard/course/$courseId/announcements";
-      preLoaderRoute: typeof DashboardCourseCourseIdAnnouncementsRouteImport;
-      parentRoute: typeof DashboardCourseCourseIdRouteRoute;
-    };
-    "/dashboard/course/$courseId/analytics": {
-      id: "/dashboard/course/$courseId/analytics";
-      path: "/analytics";
-      fullPath: "/dashboard/course/$courseId/analytics";
-      preLoaderRoute: typeof DashboardCourseCourseIdAnalyticsRouteImport;
-      parentRoute: typeof DashboardCourseCourseIdRouteRoute;
-    };
-    "/dashboard/catalog/$courseId/pay": {
-      id: "/dashboard/catalog/$courseId/pay";
-      path: "/$courseId/pay";
-      fullPath: "/dashboard/catalog/$courseId/pay";
-      preLoaderRoute: typeof DashboardCatalogCourseIdPayRouteImport;
-      parentRoute: typeof DashboardCatalogRouteRoute;
-    };
-    "/dashboard/admin/users/public-invites": {
-      id: "/dashboard/admin/users/public-invites";
-      path: "/public-invites";
-      fullPath: "/dashboard/admin/users/public-invites";
-      preLoaderRoute: typeof DashboardAdminUsersPublicInvitesRouteImport;
-      parentRoute: typeof DashboardAdminUsersRouteRoute;
-    };
-    "/dashboard/admin/organizations/invites": {
-      id: "/dashboard/admin/organizations/invites";
-      path: "/invites";
-      fullPath: "/dashboard/admin/organizations/invites";
-      preLoaderRoute: typeof DashboardAdminOrganizationsInvitesRouteImport;
-      parentRoute: typeof DashboardAdminOrganizationsRouteRoute;
-    };
-    "/dashboard/admin/logs-analytics/reports": {
-      id: "/dashboard/admin/logs-analytics/reports";
-      path: "/reports";
-      fullPath: "/dashboard/admin/logs-analytics/reports";
-      preLoaderRoute: typeof DashboardAdminLogsAnalyticsReportsRouteImport;
-      parentRoute: typeof DashboardAdminLogsAnalyticsRouteRoute;
-    };
-    "/dashboard/admin/logs-analytics/feedback": {
-      id: "/dashboard/admin/logs-analytics/feedback";
-      path: "/feedback";
-      fullPath: "/dashboard/admin/logs-analytics/feedback";
-      preLoaderRoute: typeof DashboardAdminLogsAnalyticsFeedbackRouteImport;
-      parentRoute: typeof DashboardAdminLogsAnalyticsRouteRoute;
-    };
-    "/dashboard/org/courses/$courseId": {
-      id: "/dashboard/org/courses/$courseId";
-      path: "/$courseId";
-      fullPath: "/dashboard/org/courses/$courseId";
-      preLoaderRoute: typeof DashboardOrgCoursesCourseIdRouteRouteImport;
-      parentRoute: typeof DashboardOrgCoursesRouteRoute;
-    };
-    "/dashboard/org/cohorts/$cohortId": {
-      id: "/dashboard/org/cohorts/$cohortId";
-      path: "/$cohortId";
-      fullPath: "/dashboard/org/cohorts/$cohortId";
-      preLoaderRoute: typeof DashboardOrgCohortsCohortIdRouteRouteImport;
-      parentRoute: typeof DashboardOrgCohortsRouteRoute;
-    };
-    "/dashboard/org/courses/$courseId/": {
-      id: "/dashboard/org/courses/$courseId/";
-      path: "/";
-      fullPath: "/dashboard/org/courses/$courseId/";
-      preLoaderRoute: typeof DashboardOrgCoursesCourseIdIndexRouteImport;
-      parentRoute: typeof DashboardOrgCoursesCourseIdRouteRoute;
-    };
-    "/dashboard/org/cohorts/$cohortId/": {
-      id: "/dashboard/org/cohorts/$cohortId/";
-      path: "/";
-      fullPath: "/dashboard/org/cohorts/$cohortId/";
-      preLoaderRoute: typeof DashboardOrgCohortsCohortIdIndexRouteImport;
-      parentRoute: typeof DashboardOrgCohortsCohortIdRouteRoute;
-    };
-    "/dashboard/course/$courseId/curriculum/": {
-      id: "/dashboard/course/$courseId/curriculum/";
-      path: "/curriculum";
-      fullPath: "/dashboard/course/$courseId/curriculum/";
-      preLoaderRoute: typeof DashboardCourseCourseIdCurriculumIndexRouteImport;
-      parentRoute: typeof DashboardCourseCourseIdRouteRoute;
-    };
-    "/dashboard/org/courses/$courseId/members": {
-      id: "/dashboard/org/courses/$courseId/members";
-      path: "/members";
-      fullPath: "/dashboard/org/courses/$courseId/members";
-      preLoaderRoute: typeof DashboardOrgCoursesCourseIdMembersRouteImport;
-      parentRoute: typeof DashboardOrgCoursesCourseIdRouteRoute;
-    };
-    "/dashboard/org/courses/$courseId/announcements": {
-      id: "/dashboard/org/courses/$courseId/announcements";
-      path: "/announcements";
-      fullPath: "/dashboard/org/courses/$courseId/announcements";
-      preLoaderRoute: typeof DashboardOrgCoursesCourseIdAnnouncementsRouteImport;
-      parentRoute: typeof DashboardOrgCoursesCourseIdRouteRoute;
-    };
-    "/dashboard/org/courses/$courseId/analytics": {
-      id: "/dashboard/org/courses/$courseId/analytics";
-      path: "/analytics";
-      fullPath: "/dashboard/org/courses/$courseId/analytics";
-      preLoaderRoute: typeof DashboardOrgCoursesCourseIdAnalyticsRouteImport;
-      parentRoute: typeof DashboardOrgCoursesCourseIdRouteRoute;
-    };
-    "/dashboard/org/cohorts/$cohortId/members": {
-      id: "/dashboard/org/cohorts/$cohortId/members";
-      path: "/members";
-      fullPath: "/dashboard/org/cohorts/$cohortId/members";
-      preLoaderRoute: typeof DashboardOrgCohortsCohortIdMembersRouteImport;
-      parentRoute: typeof DashboardOrgCohortsCohortIdRouteRoute;
-    };
-    "/dashboard/org/cohorts/$cohortId/courses": {
-      id: "/dashboard/org/cohorts/$cohortId/courses";
-      path: "/courses";
-      fullPath: "/dashboard/org/cohorts/$cohortId/courses";
-      preLoaderRoute: typeof DashboardOrgCohortsCohortIdCoursesRouteImport;
-      parentRoute: typeof DashboardOrgCohortsCohortIdRouteRoute;
-    };
-    "/dashboard/org/courses/$courseId/curriculum/": {
-      id: "/dashboard/org/courses/$courseId/curriculum/";
-      path: "/curriculum";
-      fullPath: "/dashboard/org/courses/$courseId/curriculum/";
-      preLoaderRoute: typeof DashboardOrgCoursesCourseIdCurriculumIndexRouteImport;
-      parentRoute: typeof DashboardOrgCoursesCourseIdRouteRoute;
-    };
-    "/dashboard/course/$courseId/curriculum/$lessonId/view": {
-      id: "/dashboard/course/$courseId/curriculum/$lessonId/view";
-      path: "/curriculum/$lessonId/view";
-      fullPath: "/dashboard/course/$courseId/curriculum/$lessonId/view";
-      preLoaderRoute: typeof DashboardCourseCourseIdCurriculumLessonIdViewRouteImport;
-      parentRoute: typeof DashboardCourseCourseIdRouteRoute;
-    };
-    "/dashboard/course/$courseId/curriculum/$lessonId/edit": {
-      id: "/dashboard/course/$courseId/curriculum/$lessonId/edit";
-      path: "/curriculum/$lessonId/edit";
-      fullPath: "/dashboard/course/$courseId/curriculum/$lessonId/edit";
-      preLoaderRoute: typeof DashboardCourseCourseIdCurriculumLessonIdEditRouteImport;
-      parentRoute: typeof DashboardCourseCourseIdRouteRoute;
-    };
-    "/dashboard/org/courses/$courseId/curriculum/$lessonId/view": {
-      id: "/dashboard/org/courses/$courseId/curriculum/$lessonId/view";
-      path: "/curriculum/$lessonId/view";
-      fullPath: "/dashboard/org/courses/$courseId/curriculum/$lessonId/view";
-      preLoaderRoute: typeof DashboardOrgCoursesCourseIdCurriculumLessonIdViewRouteImport;
-      parentRoute: typeof DashboardOrgCoursesCourseIdRouteRoute;
-    };
-    "/dashboard/org/courses/$courseId/curriculum/$lessonId/edit": {
-      id: "/dashboard/org/courses/$courseId/curriculum/$lessonId/edit";
-      path: "/curriculum/$lessonId/edit";
-      fullPath: "/dashboard/org/courses/$courseId/curriculum/$lessonId/edit";
-      preLoaderRoute: typeof DashboardOrgCoursesCourseIdCurriculumLessonIdEditRouteImport;
-      parentRoute: typeof DashboardOrgCoursesCourseIdRouteRoute;
-    };
+    '/health': {
+      id: '/health'
+      path: '/health'
+      fullPath: '/health'
+      preLoaderRoute: typeof HealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accept-invite': {
+      id: '/accept-invite'
+      path: '/accept-invite'
+      fullPath: '/accept-invite'
+      preLoaderRoute: typeof AcceptInviteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$': {
+      id: '/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof SplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn': {
+      id: '/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof LearnRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding/': {
+      id: '/onboarding/'
+      path: '/'
+      fullPath: '/onboarding/'
+      preLoaderRoute: typeof OnboardingIndexRouteImport
+      parentRoute: typeof OnboardingRouteRoute
+    }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/onboarding/organization': {
+      id: '/onboarding/organization'
+      path: '/organization'
+      fullPath: '/onboarding/organization'
+      preLoaderRoute: typeof OnboardingOrganizationRouteImport
+      parentRoute: typeof OnboardingRouteRoute
+    }
+    '/dashboard/$': {
+      id: '/dashboard/$'
+      path: '/$'
+      fullPath: '/dashboard/$'
+      preLoaderRoute: typeof DashboardSplatRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/_auth/verify-email': {
+      id: '/_auth/verify-email'
+      path: '/verify-email'
+      fullPath: '/verify-email'
+      preLoaderRoute: typeof AuthVerifyEmailRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/two-factor': {
+      id: '/_auth/two-factor'
+      path: '/two-factor'
+      fullPath: '/two-factor'
+      preLoaderRoute: typeof AuthTwoFactorRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/sign-up': {
+      id: '/_auth/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof AuthSignUpRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/sign-in': {
+      id: '/_auth/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof AuthSignInRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/reset-password': {
+      id: '/_auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/forgot-password': {
+      id: '/_auth/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/check-email': {
+      id: '/_auth/check-email'
+      path: '/check-email'
+      fullPath: '/check-email'
+      preLoaderRoute: typeof AuthCheckEmailRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/learn/$courseId': {
+      id: '/learn/$courseId'
+      path: '/$courseId'
+      fullPath: '/learn/$courseId'
+      preLoaderRoute: typeof LearnCourseIdRouteRouteImport
+      parentRoute: typeof LearnRouteRoute
+    }
+    '/dashboard/support': {
+      id: '/dashboard/support'
+      path: '/support'
+      fullPath: '/dashboard/support'
+      preLoaderRoute: typeof DashboardSupportRouteRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/settings': {
+      id: '/dashboard/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof DashboardSettingsRouteRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/org': {
+      id: '/dashboard/org'
+      path: '/org'
+      fullPath: '/dashboard/org'
+      preLoaderRoute: typeof DashboardOrgRouteRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/course': {
+      id: '/dashboard/course'
+      path: '/course'
+      fullPath: '/dashboard/course'
+      preLoaderRoute: typeof DashboardCourseRouteRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/catalog': {
+      id: '/dashboard/catalog'
+      path: '/catalog'
+      fullPath: '/dashboard/catalog'
+      preLoaderRoute: typeof DashboardCatalogRouteRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/admin': {
+      id: '/dashboard/admin'
+      path: '/admin'
+      fullPath: '/dashboard/admin'
+      preLoaderRoute: typeof DashboardAdminRouteRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/learn/$courseId/': {
+      id: '/learn/$courseId/'
+      path: '/'
+      fullPath: '/learn/$courseId/'
+      preLoaderRoute: typeof LearnCourseIdIndexRouteImport
+      parentRoute: typeof LearnCourseIdRouteRoute
+    }
+    '/dashboard/support/': {
+      id: '/dashboard/support/'
+      path: '/'
+      fullPath: '/dashboard/support/'
+      preLoaderRoute: typeof DashboardSupportIndexRouteImport
+      parentRoute: typeof DashboardSupportRouteRoute
+    }
+    '/dashboard/settings/': {
+      id: '/dashboard/settings/'
+      path: '/'
+      fullPath: '/dashboard/settings/'
+      preLoaderRoute: typeof DashboardSettingsIndexRouteImport
+      parentRoute: typeof DashboardSettingsRouteRoute
+    }
+    '/dashboard/org/': {
+      id: '/dashboard/org/'
+      path: '/'
+      fullPath: '/dashboard/org/'
+      preLoaderRoute: typeof DashboardOrgIndexRouteImport
+      parentRoute: typeof DashboardOrgRouteRoute
+    }
+    '/dashboard/library/': {
+      id: '/dashboard/library/'
+      path: '/library'
+      fullPath: '/dashboard/library/'
+      preLoaderRoute: typeof DashboardLibraryIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/course/': {
+      id: '/dashboard/course/'
+      path: '/'
+      fullPath: '/dashboard/course/'
+      preLoaderRoute: typeof DashboardCourseIndexRouteImport
+      parentRoute: typeof DashboardCourseRouteRoute
+    }
+    '/dashboard/catalog/': {
+      id: '/dashboard/catalog/'
+      path: '/'
+      fullPath: '/dashboard/catalog/'
+      preLoaderRoute: typeof DashboardCatalogIndexRouteImport
+      parentRoute: typeof DashboardCatalogRouteRoute
+    }
+    '/dashboard/admin/': {
+      id: '/dashboard/admin/'
+      path: '/'
+      fullPath: '/dashboard/admin/'
+      preLoaderRoute: typeof DashboardAdminIndexRouteImport
+      parentRoute: typeof DashboardAdminRouteRoute
+    }
+    '/learn/$courseId/$lessonId': {
+      id: '/learn/$courseId/$lessonId'
+      path: '/$lessonId'
+      fullPath: '/learn/$courseId/$lessonId'
+      preLoaderRoute: typeof LearnCourseIdLessonIdRouteImport
+      parentRoute: typeof LearnCourseIdRouteRoute
+    }
+    '/dashboard/support/report-issue': {
+      id: '/dashboard/support/report-issue'
+      path: '/report-issue'
+      fullPath: '/dashboard/support/report-issue'
+      preLoaderRoute: typeof DashboardSupportReportIssueRouteImport
+      parentRoute: typeof DashboardSupportRouteRoute
+    }
+    '/dashboard/support/faqs': {
+      id: '/dashboard/support/faqs'
+      path: '/faqs'
+      fullPath: '/dashboard/support/faqs'
+      preLoaderRoute: typeof DashboardSupportFaqsRouteImport
+      parentRoute: typeof DashboardSupportRouteRoute
+    }
+    '/dashboard/support/contact': {
+      id: '/dashboard/support/contact'
+      path: '/contact'
+      fullPath: '/dashboard/support/contact'
+      preLoaderRoute: typeof DashboardSupportContactRouteImport
+      parentRoute: typeof DashboardSupportRouteRoute
+    }
+    '/dashboard/settings/security': {
+      id: '/dashboard/settings/security'
+      path: '/security'
+      fullPath: '/dashboard/settings/security'
+      preLoaderRoute: typeof DashboardSettingsSecurityRouteImport
+      parentRoute: typeof DashboardSettingsRouteRoute
+    }
+    '/dashboard/settings/preferences': {
+      id: '/dashboard/settings/preferences'
+      path: '/preferences'
+      fullPath: '/dashboard/settings/preferences'
+      preLoaderRoute: typeof DashboardSettingsPreferencesRouteImport
+      parentRoute: typeof DashboardSettingsRouteRoute
+    }
+    '/dashboard/settings/general': {
+      id: '/dashboard/settings/general'
+      path: '/general'
+      fullPath: '/dashboard/settings/general'
+      preLoaderRoute: typeof DashboardSettingsGeneralRouteImport
+      parentRoute: typeof DashboardSettingsRouteRoute
+    }
+    '/dashboard/org/members': {
+      id: '/dashboard/org/members'
+      path: '/members'
+      fullPath: '/dashboard/org/members'
+      preLoaderRoute: typeof DashboardOrgMembersRouteImport
+      parentRoute: typeof DashboardOrgRouteRoute
+    }
+    '/dashboard/course/generate': {
+      id: '/dashboard/course/generate'
+      path: '/generate'
+      fullPath: '/dashboard/course/generate'
+      preLoaderRoute: typeof DashboardCourseGenerateRouteImport
+      parentRoute: typeof DashboardCourseRouteRoute
+    }
+    '/dashboard/course/categories': {
+      id: '/dashboard/course/categories'
+      path: '/categories'
+      fullPath: '/dashboard/course/categories'
+      preLoaderRoute: typeof DashboardCourseCategoriesRouteImport
+      parentRoute: typeof DashboardCourseRouteRoute
+    }
+    '/dashboard/org/users': {
+      id: '/dashboard/org/users'
+      path: '/users'
+      fullPath: '/dashboard/org/users'
+      preLoaderRoute: typeof DashboardOrgUsersRouteRouteImport
+      parentRoute: typeof DashboardOrgRouteRoute
+    }
+    '/dashboard/org/support': {
+      id: '/dashboard/org/support'
+      path: '/support'
+      fullPath: '/dashboard/org/support'
+      preLoaderRoute: typeof DashboardOrgSupportRouteRouteImport
+      parentRoute: typeof DashboardOrgRouteRoute
+    }
+    '/dashboard/org/settings': {
+      id: '/dashboard/org/settings'
+      path: '/settings'
+      fullPath: '/dashboard/org/settings'
+      preLoaderRoute: typeof DashboardOrgSettingsRouteRouteImport
+      parentRoute: typeof DashboardOrgRouteRoute
+    }
+    '/dashboard/org/organization': {
+      id: '/dashboard/org/organization'
+      path: '/organization'
+      fullPath: '/dashboard/org/organization'
+      preLoaderRoute: typeof DashboardOrgOrganizationRouteRouteImport
+      parentRoute: typeof DashboardOrgRouteRoute
+    }
+    '/dashboard/org/courses': {
+      id: '/dashboard/org/courses'
+      path: '/courses'
+      fullPath: '/dashboard/org/courses'
+      preLoaderRoute: typeof DashboardOrgCoursesRouteRouteImport
+      parentRoute: typeof DashboardOrgRouteRoute
+    }
+    '/dashboard/org/cohorts': {
+      id: '/dashboard/org/cohorts'
+      path: '/cohorts'
+      fullPath: '/dashboard/org/cohorts'
+      preLoaderRoute: typeof DashboardOrgCohortsRouteRouteImport
+      parentRoute: typeof DashboardOrgRouteRoute
+    }
+    '/dashboard/course/$courseId': {
+      id: '/dashboard/course/$courseId'
+      path: '/$courseId'
+      fullPath: '/dashboard/course/$courseId'
+      preLoaderRoute: typeof DashboardCourseCourseIdRouteRouteImport
+      parentRoute: typeof DashboardCourseRouteRoute
+    }
+    '/dashboard/admin/users': {
+      id: '/dashboard/admin/users'
+      path: '/users'
+      fullPath: '/dashboard/admin/users'
+      preLoaderRoute: typeof DashboardAdminUsersRouteRouteImport
+      parentRoute: typeof DashboardAdminRouteRoute
+    }
+    '/dashboard/admin/organizations': {
+      id: '/dashboard/admin/organizations'
+      path: '/organizations'
+      fullPath: '/dashboard/admin/organizations'
+      preLoaderRoute: typeof DashboardAdminOrganizationsRouteRouteImport
+      parentRoute: typeof DashboardAdminRouteRoute
+    }
+    '/dashboard/admin/logs-analytics': {
+      id: '/dashboard/admin/logs-analytics'
+      path: '/logs-analytics'
+      fullPath: '/dashboard/admin/logs-analytics'
+      preLoaderRoute: typeof DashboardAdminLogsAnalyticsRouteRouteImport
+      parentRoute: typeof DashboardAdminRouteRoute
+    }
+    '/dashboard/org/users/': {
+      id: '/dashboard/org/users/'
+      path: '/'
+      fullPath: '/dashboard/org/users/'
+      preLoaderRoute: typeof DashboardOrgUsersIndexRouteImport
+      parentRoute: typeof DashboardOrgUsersRouteRoute
+    }
+    '/dashboard/org/support/': {
+      id: '/dashboard/org/support/'
+      path: '/'
+      fullPath: '/dashboard/org/support/'
+      preLoaderRoute: typeof DashboardOrgSupportIndexRouteImport
+      parentRoute: typeof DashboardOrgSupportRouteRoute
+    }
+    '/dashboard/org/settings/': {
+      id: '/dashboard/org/settings/'
+      path: '/'
+      fullPath: '/dashboard/org/settings/'
+      preLoaderRoute: typeof DashboardOrgSettingsIndexRouteImport
+      parentRoute: typeof DashboardOrgSettingsRouteRoute
+    }
+    '/dashboard/org/organization/': {
+      id: '/dashboard/org/organization/'
+      path: '/'
+      fullPath: '/dashboard/org/organization/'
+      preLoaderRoute: typeof DashboardOrgOrganizationIndexRouteImport
+      parentRoute: typeof DashboardOrgOrganizationRouteRoute
+    }
+    '/dashboard/org/library/': {
+      id: '/dashboard/org/library/'
+      path: '/library'
+      fullPath: '/dashboard/org/library/'
+      preLoaderRoute: typeof DashboardOrgLibraryIndexRouteImport
+      parentRoute: typeof DashboardOrgRouteRoute
+    }
+    '/dashboard/org/courses/': {
+      id: '/dashboard/org/courses/'
+      path: '/'
+      fullPath: '/dashboard/org/courses/'
+      preLoaderRoute: typeof DashboardOrgCoursesIndexRouteImport
+      parentRoute: typeof DashboardOrgCoursesRouteRoute
+    }
+    '/dashboard/org/cohorts/': {
+      id: '/dashboard/org/cohorts/'
+      path: '/'
+      fullPath: '/dashboard/org/cohorts/'
+      preLoaderRoute: typeof DashboardOrgCohortsIndexRouteImport
+      parentRoute: typeof DashboardOrgCohortsRouteRoute
+    }
+    '/dashboard/course/$courseId/': {
+      id: '/dashboard/course/$courseId/'
+      path: '/'
+      fullPath: '/dashboard/course/$courseId/'
+      preLoaderRoute: typeof DashboardCourseCourseIdIndexRouteImport
+      parentRoute: typeof DashboardCourseCourseIdRouteRoute
+    }
+    '/dashboard/catalog/$courseId/': {
+      id: '/dashboard/catalog/$courseId/'
+      path: '/$courseId'
+      fullPath: '/dashboard/catalog/$courseId/'
+      preLoaderRoute: typeof DashboardCatalogCourseIdIndexRouteImport
+      parentRoute: typeof DashboardCatalogRouteRoute
+    }
+    '/dashboard/admin/users/': {
+      id: '/dashboard/admin/users/'
+      path: '/'
+      fullPath: '/dashboard/admin/users/'
+      preLoaderRoute: typeof DashboardAdminUsersIndexRouteImport
+      parentRoute: typeof DashboardAdminUsersRouteRoute
+    }
+    '/dashboard/admin/organizations/': {
+      id: '/dashboard/admin/organizations/'
+      path: '/'
+      fullPath: '/dashboard/admin/organizations/'
+      preLoaderRoute: typeof DashboardAdminOrganizationsIndexRouteImport
+      parentRoute: typeof DashboardAdminOrganizationsRouteRoute
+    }
+    '/dashboard/admin/logs-analytics/': {
+      id: '/dashboard/admin/logs-analytics/'
+      path: '/'
+      fullPath: '/dashboard/admin/logs-analytics/'
+      preLoaderRoute: typeof DashboardAdminLogsAnalyticsIndexRouteImport
+      parentRoute: typeof DashboardAdminLogsAnalyticsRouteRoute
+    }
+    '/dashboard/org/users/invites': {
+      id: '/dashboard/org/users/invites'
+      path: '/invites'
+      fullPath: '/dashboard/org/users/invites'
+      preLoaderRoute: typeof DashboardOrgUsersInvitesRouteImport
+      parentRoute: typeof DashboardOrgUsersRouteRoute
+    }
+    '/dashboard/org/support/report-issue': {
+      id: '/dashboard/org/support/report-issue'
+      path: '/report-issue'
+      fullPath: '/dashboard/org/support/report-issue'
+      preLoaderRoute: typeof DashboardOrgSupportReportIssueRouteImport
+      parentRoute: typeof DashboardOrgSupportRouteRoute
+    }
+    '/dashboard/org/support/faqs': {
+      id: '/dashboard/org/support/faqs'
+      path: '/faqs'
+      fullPath: '/dashboard/org/support/faqs'
+      preLoaderRoute: typeof DashboardOrgSupportFaqsRouteImport
+      parentRoute: typeof DashboardOrgSupportRouteRoute
+    }
+    '/dashboard/org/support/contact': {
+      id: '/dashboard/org/support/contact'
+      path: '/contact'
+      fullPath: '/dashboard/org/support/contact'
+      preLoaderRoute: typeof DashboardOrgSupportContactRouteImport
+      parentRoute: typeof DashboardOrgSupportRouteRoute
+    }
+    '/dashboard/org/settings/security': {
+      id: '/dashboard/org/settings/security'
+      path: '/security'
+      fullPath: '/dashboard/org/settings/security'
+      preLoaderRoute: typeof DashboardOrgSettingsSecurityRouteImport
+      parentRoute: typeof DashboardOrgSettingsRouteRoute
+    }
+    '/dashboard/org/settings/preferences': {
+      id: '/dashboard/org/settings/preferences'
+      path: '/preferences'
+      fullPath: '/dashboard/org/settings/preferences'
+      preLoaderRoute: typeof DashboardOrgSettingsPreferencesRouteImport
+      parentRoute: typeof DashboardOrgSettingsRouteRoute
+    }
+    '/dashboard/org/settings/general': {
+      id: '/dashboard/org/settings/general'
+      path: '/general'
+      fullPath: '/dashboard/org/settings/general'
+      preLoaderRoute: typeof DashboardOrgSettingsGeneralRouteImport
+      parentRoute: typeof DashboardOrgSettingsRouteRoute
+    }
+    '/dashboard/org/organization/rules': {
+      id: '/dashboard/org/organization/rules'
+      path: '/rules'
+      fullPath: '/dashboard/org/organization/rules'
+      preLoaderRoute: typeof DashboardOrgOrganizationRulesRouteImport
+      parentRoute: typeof DashboardOrgOrganizationRouteRoute
+    }
+    '/dashboard/org/organization/integrations': {
+      id: '/dashboard/org/organization/integrations'
+      path: '/integrations'
+      fullPath: '/dashboard/org/organization/integrations'
+      preLoaderRoute: typeof DashboardOrgOrganizationIntegrationsRouteImport
+      parentRoute: typeof DashboardOrgOrganizationRouteRoute
+    }
+    '/dashboard/course/$courseId/members': {
+      id: '/dashboard/course/$courseId/members'
+      path: '/members'
+      fullPath: '/dashboard/course/$courseId/members'
+      preLoaderRoute: typeof DashboardCourseCourseIdMembersRouteImport
+      parentRoute: typeof DashboardCourseCourseIdRouteRoute
+    }
+    '/dashboard/course/$courseId/certificates': {
+      id: '/dashboard/course/$courseId/certificates'
+      path: '/certificates'
+      fullPath: '/dashboard/course/$courseId/certificates'
+      preLoaderRoute: typeof DashboardCourseCourseIdCertificatesRouteImport
+      parentRoute: typeof DashboardCourseCourseIdRouteRoute
+    }
+    '/dashboard/course/$courseId/announcements': {
+      id: '/dashboard/course/$courseId/announcements'
+      path: '/announcements'
+      fullPath: '/dashboard/course/$courseId/announcements'
+      preLoaderRoute: typeof DashboardCourseCourseIdAnnouncementsRouteImport
+      parentRoute: typeof DashboardCourseCourseIdRouteRoute
+    }
+    '/dashboard/course/$courseId/analytics': {
+      id: '/dashboard/course/$courseId/analytics'
+      path: '/analytics'
+      fullPath: '/dashboard/course/$courseId/analytics'
+      preLoaderRoute: typeof DashboardCourseCourseIdAnalyticsRouteImport
+      parentRoute: typeof DashboardCourseCourseIdRouteRoute
+    }
+    '/dashboard/catalog/$courseId/pay': {
+      id: '/dashboard/catalog/$courseId/pay'
+      path: '/$courseId/pay'
+      fullPath: '/dashboard/catalog/$courseId/pay'
+      preLoaderRoute: typeof DashboardCatalogCourseIdPayRouteImport
+      parentRoute: typeof DashboardCatalogRouteRoute
+    }
+    '/dashboard/admin/users/public-invites': {
+      id: '/dashboard/admin/users/public-invites'
+      path: '/public-invites'
+      fullPath: '/dashboard/admin/users/public-invites'
+      preLoaderRoute: typeof DashboardAdminUsersPublicInvitesRouteImport
+      parentRoute: typeof DashboardAdminUsersRouteRoute
+    }
+    '/dashboard/admin/organizations/invites': {
+      id: '/dashboard/admin/organizations/invites'
+      path: '/invites'
+      fullPath: '/dashboard/admin/organizations/invites'
+      preLoaderRoute: typeof DashboardAdminOrganizationsInvitesRouteImport
+      parentRoute: typeof DashboardAdminOrganizationsRouteRoute
+    }
+    '/dashboard/admin/logs-analytics/reports': {
+      id: '/dashboard/admin/logs-analytics/reports'
+      path: '/reports'
+      fullPath: '/dashboard/admin/logs-analytics/reports'
+      preLoaderRoute: typeof DashboardAdminLogsAnalyticsReportsRouteImport
+      parentRoute: typeof DashboardAdminLogsAnalyticsRouteRoute
+    }
+    '/dashboard/admin/logs-analytics/feedback': {
+      id: '/dashboard/admin/logs-analytics/feedback'
+      path: '/feedback'
+      fullPath: '/dashboard/admin/logs-analytics/feedback'
+      preLoaderRoute: typeof DashboardAdminLogsAnalyticsFeedbackRouteImport
+      parentRoute: typeof DashboardAdminLogsAnalyticsRouteRoute
+    }
+    '/dashboard/org/courses/$courseId': {
+      id: '/dashboard/org/courses/$courseId'
+      path: '/$courseId'
+      fullPath: '/dashboard/org/courses/$courseId'
+      preLoaderRoute: typeof DashboardOrgCoursesCourseIdRouteRouteImport
+      parentRoute: typeof DashboardOrgCoursesRouteRoute
+    }
+    '/dashboard/org/cohorts/$cohortId': {
+      id: '/dashboard/org/cohorts/$cohortId'
+      path: '/$cohortId'
+      fullPath: '/dashboard/org/cohorts/$cohortId'
+      preLoaderRoute: typeof DashboardOrgCohortsCohortIdRouteRouteImport
+      parentRoute: typeof DashboardOrgCohortsRouteRoute
+    }
+    '/dashboard/org/courses/$courseId/': {
+      id: '/dashboard/org/courses/$courseId/'
+      path: '/'
+      fullPath: '/dashboard/org/courses/$courseId/'
+      preLoaderRoute: typeof DashboardOrgCoursesCourseIdIndexRouteImport
+      parentRoute: typeof DashboardOrgCoursesCourseIdRouteRoute
+    }
+    '/dashboard/org/cohorts/$cohortId/': {
+      id: '/dashboard/org/cohorts/$cohortId/'
+      path: '/'
+      fullPath: '/dashboard/org/cohorts/$cohortId/'
+      preLoaderRoute: typeof DashboardOrgCohortsCohortIdIndexRouteImport
+      parentRoute: typeof DashboardOrgCohortsCohortIdRouteRoute
+    }
+    '/dashboard/course/$courseId/curriculum/': {
+      id: '/dashboard/course/$courseId/curriculum/'
+      path: '/curriculum'
+      fullPath: '/dashboard/course/$courseId/curriculum/'
+      preLoaderRoute: typeof DashboardCourseCourseIdCurriculumIndexRouteImport
+      parentRoute: typeof DashboardCourseCourseIdRouteRoute
+    }
+    '/dashboard/org/courses/$courseId/members': {
+      id: '/dashboard/org/courses/$courseId/members'
+      path: '/members'
+      fullPath: '/dashboard/org/courses/$courseId/members'
+      preLoaderRoute: typeof DashboardOrgCoursesCourseIdMembersRouteImport
+      parentRoute: typeof DashboardOrgCoursesCourseIdRouteRoute
+    }
+    '/dashboard/org/courses/$courseId/announcements': {
+      id: '/dashboard/org/courses/$courseId/announcements'
+      path: '/announcements'
+      fullPath: '/dashboard/org/courses/$courseId/announcements'
+      preLoaderRoute: typeof DashboardOrgCoursesCourseIdAnnouncementsRouteImport
+      parentRoute: typeof DashboardOrgCoursesCourseIdRouteRoute
+    }
+    '/dashboard/org/courses/$courseId/analytics': {
+      id: '/dashboard/org/courses/$courseId/analytics'
+      path: '/analytics'
+      fullPath: '/dashboard/org/courses/$courseId/analytics'
+      preLoaderRoute: typeof DashboardOrgCoursesCourseIdAnalyticsRouteImport
+      parentRoute: typeof DashboardOrgCoursesCourseIdRouteRoute
+    }
+    '/dashboard/org/cohorts/$cohortId/members': {
+      id: '/dashboard/org/cohorts/$cohortId/members'
+      path: '/members'
+      fullPath: '/dashboard/org/cohorts/$cohortId/members'
+      preLoaderRoute: typeof DashboardOrgCohortsCohortIdMembersRouteImport
+      parentRoute: typeof DashboardOrgCohortsCohortIdRouteRoute
+    }
+    '/dashboard/org/cohorts/$cohortId/courses': {
+      id: '/dashboard/org/cohorts/$cohortId/courses'
+      path: '/courses'
+      fullPath: '/dashboard/org/cohorts/$cohortId/courses'
+      preLoaderRoute: typeof DashboardOrgCohortsCohortIdCoursesRouteImport
+      parentRoute: typeof DashboardOrgCohortsCohortIdRouteRoute
+    }
+    '/dashboard/org/courses/$courseId/curriculum/': {
+      id: '/dashboard/org/courses/$courseId/curriculum/'
+      path: '/curriculum'
+      fullPath: '/dashboard/org/courses/$courseId/curriculum/'
+      preLoaderRoute: typeof DashboardOrgCoursesCourseIdCurriculumIndexRouteImport
+      parentRoute: typeof DashboardOrgCoursesCourseIdRouteRoute
+    }
+    '/dashboard/course/$courseId/curriculum/$lessonId/view': {
+      id: '/dashboard/course/$courseId/curriculum/$lessonId/view'
+      path: '/curriculum/$lessonId/view'
+      fullPath: '/dashboard/course/$courseId/curriculum/$lessonId/view'
+      preLoaderRoute: typeof DashboardCourseCourseIdCurriculumLessonIdViewRouteImport
+      parentRoute: typeof DashboardCourseCourseIdRouteRoute
+    }
+    '/dashboard/course/$courseId/curriculum/$lessonId/edit': {
+      id: '/dashboard/course/$courseId/curriculum/$lessonId/edit'
+      path: '/curriculum/$lessonId/edit'
+      fullPath: '/dashboard/course/$courseId/curriculum/$lessonId/edit'
+      preLoaderRoute: typeof DashboardCourseCourseIdCurriculumLessonIdEditRouteImport
+      parentRoute: typeof DashboardCourseCourseIdRouteRoute
+    }
+    '/dashboard/org/courses/$courseId/curriculum/$lessonId/view': {
+      id: '/dashboard/org/courses/$courseId/curriculum/$lessonId/view'
+      path: '/curriculum/$lessonId/view'
+      fullPath: '/dashboard/org/courses/$courseId/curriculum/$lessonId/view'
+      preLoaderRoute: typeof DashboardOrgCoursesCourseIdCurriculumLessonIdViewRouteImport
+      parentRoute: typeof DashboardOrgCoursesCourseIdRouteRoute
+    }
+    '/dashboard/org/courses/$courseId/curriculum/$lessonId/edit': {
+      id: '/dashboard/org/courses/$courseId/curriculum/$lessonId/edit'
+      path: '/curriculum/$lessonId/edit'
+      fullPath: '/dashboard/org/courses/$courseId/curriculum/$lessonId/edit'
+      preLoaderRoute: typeof DashboardOrgCoursesCourseIdCurriculumLessonIdEditRouteImport
+      parentRoute: typeof DashboardOrgCoursesCourseIdRouteRoute
+    }
   }
 }
 
 interface DashboardAdminLogsAnalyticsRouteRouteChildren {
-  DashboardAdminLogsAnalyticsFeedbackRoute: typeof DashboardAdminLogsAnalyticsFeedbackRoute;
-  DashboardAdminLogsAnalyticsReportsRoute: typeof DashboardAdminLogsAnalyticsReportsRoute;
-  DashboardAdminLogsAnalyticsIndexRoute: typeof DashboardAdminLogsAnalyticsIndexRoute;
+  DashboardAdminLogsAnalyticsFeedbackRoute: typeof DashboardAdminLogsAnalyticsFeedbackRoute
+  DashboardAdminLogsAnalyticsReportsRoute: typeof DashboardAdminLogsAnalyticsReportsRoute
+  DashboardAdminLogsAnalyticsIndexRoute: typeof DashboardAdminLogsAnalyticsIndexRoute
 }
 
 const DashboardAdminLogsAnalyticsRouteRouteChildren: DashboardAdminLogsAnalyticsRouteRouteChildren =
   {
-    DashboardAdminLogsAnalyticsFeedbackRoute: DashboardAdminLogsAnalyticsFeedbackRoute,
-    DashboardAdminLogsAnalyticsReportsRoute: DashboardAdminLogsAnalyticsReportsRoute,
-    DashboardAdminLogsAnalyticsIndexRoute: DashboardAdminLogsAnalyticsIndexRoute,
-  };
+    DashboardAdminLogsAnalyticsFeedbackRoute:
+      DashboardAdminLogsAnalyticsFeedbackRoute,
+    DashboardAdminLogsAnalyticsReportsRoute:
+      DashboardAdminLogsAnalyticsReportsRoute,
+    DashboardAdminLogsAnalyticsIndexRoute:
+      DashboardAdminLogsAnalyticsIndexRoute,
+  }
 
 const DashboardAdminLogsAnalyticsRouteRouteWithChildren =
   DashboardAdminLogsAnalyticsRouteRoute._addFileChildren(
     DashboardAdminLogsAnalyticsRouteRouteChildren,
-  );
+  )
 
 interface DashboardAdminOrganizationsRouteRouteChildren {
-  DashboardAdminOrganizationsInvitesRoute: typeof DashboardAdminOrganizationsInvitesRoute;
-  DashboardAdminOrganizationsIndexRoute: typeof DashboardAdminOrganizationsIndexRoute;
+  DashboardAdminOrganizationsInvitesRoute: typeof DashboardAdminOrganizationsInvitesRoute
+  DashboardAdminOrganizationsIndexRoute: typeof DashboardAdminOrganizationsIndexRoute
 }
 
 const DashboardAdminOrganizationsRouteRouteChildren: DashboardAdminOrganizationsRouteRouteChildren =
   {
-    DashboardAdminOrganizationsInvitesRoute: DashboardAdminOrganizationsInvitesRoute,
-    DashboardAdminOrganizationsIndexRoute: DashboardAdminOrganizationsIndexRoute,
-  };
+    DashboardAdminOrganizationsInvitesRoute:
+      DashboardAdminOrganizationsInvitesRoute,
+    DashboardAdminOrganizationsIndexRoute:
+      DashboardAdminOrganizationsIndexRoute,
+  }
 
 const DashboardAdminOrganizationsRouteRouteWithChildren =
   DashboardAdminOrganizationsRouteRoute._addFileChildren(
     DashboardAdminOrganizationsRouteRouteChildren,
-  );
+  )
 
 interface DashboardAdminUsersRouteRouteChildren {
-  DashboardAdminUsersPublicInvitesRoute: typeof DashboardAdminUsersPublicInvitesRoute;
-  DashboardAdminUsersIndexRoute: typeof DashboardAdminUsersIndexRoute;
+  DashboardAdminUsersPublicInvitesRoute: typeof DashboardAdminUsersPublicInvitesRoute
+  DashboardAdminUsersIndexRoute: typeof DashboardAdminUsersIndexRoute
 }
 
-const DashboardAdminUsersRouteRouteChildren: DashboardAdminUsersRouteRouteChildren = {
-  DashboardAdminUsersPublicInvitesRoute: DashboardAdminUsersPublicInvitesRoute,
-  DashboardAdminUsersIndexRoute: DashboardAdminUsersIndexRoute,
-};
+const DashboardAdminUsersRouteRouteChildren: DashboardAdminUsersRouteRouteChildren =
+  {
+    DashboardAdminUsersPublicInvitesRoute:
+      DashboardAdminUsersPublicInvitesRoute,
+    DashboardAdminUsersIndexRoute: DashboardAdminUsersIndexRoute,
+  }
 
-const DashboardAdminUsersRouteRouteWithChildren = DashboardAdminUsersRouteRoute._addFileChildren(
-  DashboardAdminUsersRouteRouteChildren,
-);
+const DashboardAdminUsersRouteRouteWithChildren =
+  DashboardAdminUsersRouteRoute._addFileChildren(
+    DashboardAdminUsersRouteRouteChildren,
+  )
 
 interface DashboardAdminRouteRouteChildren {
-  DashboardAdminLogsAnalyticsRouteRoute: typeof DashboardAdminLogsAnalyticsRouteRouteWithChildren;
-  DashboardAdminOrganizationsRouteRoute: typeof DashboardAdminOrganizationsRouteRouteWithChildren;
-  DashboardAdminUsersRouteRoute: typeof DashboardAdminUsersRouteRouteWithChildren;
-  DashboardAdminIndexRoute: typeof DashboardAdminIndexRoute;
+  DashboardAdminLogsAnalyticsRouteRoute: typeof DashboardAdminLogsAnalyticsRouteRouteWithChildren
+  DashboardAdminOrganizationsRouteRoute: typeof DashboardAdminOrganizationsRouteRouteWithChildren
+  DashboardAdminUsersRouteRoute: typeof DashboardAdminUsersRouteRouteWithChildren
+  DashboardAdminIndexRoute: typeof DashboardAdminIndexRoute
 }
 
 const DashboardAdminRouteRouteChildren: DashboardAdminRouteRouteChildren = {
-  DashboardAdminLogsAnalyticsRouteRoute: DashboardAdminLogsAnalyticsRouteRouteWithChildren,
-  DashboardAdminOrganizationsRouteRoute: DashboardAdminOrganizationsRouteRouteWithChildren,
+  DashboardAdminLogsAnalyticsRouteRoute:
+    DashboardAdminLogsAnalyticsRouteRouteWithChildren,
+  DashboardAdminOrganizationsRouteRoute:
+    DashboardAdminOrganizationsRouteRouteWithChildren,
   DashboardAdminUsersRouteRoute: DashboardAdminUsersRouteRouteWithChildren,
   DashboardAdminIndexRoute: DashboardAdminIndexRoute,
-};
+}
 
-const DashboardAdminRouteRouteWithChildren = DashboardAdminRouteRoute._addFileChildren(
-  DashboardAdminRouteRouteChildren,
-);
+const DashboardAdminRouteRouteWithChildren =
+  DashboardAdminRouteRoute._addFileChildren(DashboardAdminRouteRouteChildren)
 
 interface DashboardCatalogRouteRouteChildren {
-  DashboardCatalogIndexRoute: typeof DashboardCatalogIndexRoute;
-  DashboardCatalogCourseIdPayRoute: typeof DashboardCatalogCourseIdPayRoute;
-  DashboardCatalogCourseIdIndexRoute: typeof DashboardCatalogCourseIdIndexRoute;
+  DashboardCatalogIndexRoute: typeof DashboardCatalogIndexRoute
+  DashboardCatalogCourseIdPayRoute: typeof DashboardCatalogCourseIdPayRoute
+  DashboardCatalogCourseIdIndexRoute: typeof DashboardCatalogCourseIdIndexRoute
 }
 
 const DashboardCatalogRouteRouteChildren: DashboardCatalogRouteRouteChildren = {
   DashboardCatalogIndexRoute: DashboardCatalogIndexRoute,
   DashboardCatalogCourseIdPayRoute: DashboardCatalogCourseIdPayRoute,
   DashboardCatalogCourseIdIndexRoute: DashboardCatalogCourseIdIndexRoute,
-};
-
-const DashboardCatalogRouteRouteWithChildren = DashboardCatalogRouteRoute._addFileChildren(
-  DashboardCatalogRouteRouteChildren,
-);
-
-interface DashboardCourseCourseIdRouteRouteChildren {
-  DashboardCourseCourseIdAnalyticsRoute: typeof DashboardCourseCourseIdAnalyticsRoute;
-  DashboardCourseCourseIdAnnouncementsRoute: typeof DashboardCourseCourseIdAnnouncementsRoute;
-  DashboardCourseCourseIdCertificatesRoute: typeof DashboardCourseCourseIdCertificatesRoute;
-  DashboardCourseCourseIdMembersRoute: typeof DashboardCourseCourseIdMembersRoute;
-  DashboardCourseCourseIdIndexRoute: typeof DashboardCourseCourseIdIndexRoute;
-  DashboardCourseCourseIdCurriculumIndexRoute: typeof DashboardCourseCourseIdCurriculumIndexRoute;
-  DashboardCourseCourseIdCurriculumLessonIdEditRoute: typeof DashboardCourseCourseIdCurriculumLessonIdEditRoute;
-  DashboardCourseCourseIdCurriculumLessonIdViewRoute: typeof DashboardCourseCourseIdCurriculumLessonIdViewRoute;
 }
 
-const DashboardCourseCourseIdRouteRouteChildren: DashboardCourseCourseIdRouteRouteChildren = {
-  DashboardCourseCourseIdAnalyticsRoute: DashboardCourseCourseIdAnalyticsRoute,
-  DashboardCourseCourseIdAnnouncementsRoute: DashboardCourseCourseIdAnnouncementsRoute,
-  DashboardCourseCourseIdCertificatesRoute: DashboardCourseCourseIdCertificatesRoute,
-  DashboardCourseCourseIdMembersRoute: DashboardCourseCourseIdMembersRoute,
-  DashboardCourseCourseIdIndexRoute: DashboardCourseCourseIdIndexRoute,
-  DashboardCourseCourseIdCurriculumIndexRoute: DashboardCourseCourseIdCurriculumIndexRoute,
-  DashboardCourseCourseIdCurriculumLessonIdEditRoute:
-    DashboardCourseCourseIdCurriculumLessonIdEditRoute,
-  DashboardCourseCourseIdCurriculumLessonIdViewRoute:
-    DashboardCourseCourseIdCurriculumLessonIdViewRoute,
-};
+const DashboardCatalogRouteRouteWithChildren =
+  DashboardCatalogRouteRoute._addFileChildren(
+    DashboardCatalogRouteRouteChildren,
+  )
+
+interface DashboardCourseCourseIdRouteRouteChildren {
+  DashboardCourseCourseIdAnalyticsRoute: typeof DashboardCourseCourseIdAnalyticsRoute
+  DashboardCourseCourseIdAnnouncementsRoute: typeof DashboardCourseCourseIdAnnouncementsRoute
+  DashboardCourseCourseIdCertificatesRoute: typeof DashboardCourseCourseIdCertificatesRoute
+  DashboardCourseCourseIdMembersRoute: typeof DashboardCourseCourseIdMembersRoute
+  DashboardCourseCourseIdIndexRoute: typeof DashboardCourseCourseIdIndexRoute
+  DashboardCourseCourseIdCurriculumIndexRoute: typeof DashboardCourseCourseIdCurriculumIndexRoute
+  DashboardCourseCourseIdCurriculumLessonIdEditRoute: typeof DashboardCourseCourseIdCurriculumLessonIdEditRoute
+  DashboardCourseCourseIdCurriculumLessonIdViewRoute: typeof DashboardCourseCourseIdCurriculumLessonIdViewRoute
+}
+
+const DashboardCourseCourseIdRouteRouteChildren: DashboardCourseCourseIdRouteRouteChildren =
+  {
+    DashboardCourseCourseIdAnalyticsRoute:
+      DashboardCourseCourseIdAnalyticsRoute,
+    DashboardCourseCourseIdAnnouncementsRoute:
+      DashboardCourseCourseIdAnnouncementsRoute,
+    DashboardCourseCourseIdCertificatesRoute:
+      DashboardCourseCourseIdCertificatesRoute,
+    DashboardCourseCourseIdMembersRoute: DashboardCourseCourseIdMembersRoute,
+    DashboardCourseCourseIdIndexRoute: DashboardCourseCourseIdIndexRoute,
+    DashboardCourseCourseIdCurriculumIndexRoute:
+      DashboardCourseCourseIdCurriculumIndexRoute,
+    DashboardCourseCourseIdCurriculumLessonIdEditRoute:
+      DashboardCourseCourseIdCurriculumLessonIdEditRoute,
+    DashboardCourseCourseIdCurriculumLessonIdViewRoute:
+      DashboardCourseCourseIdCurriculumLessonIdViewRoute,
+  }
 
 const DashboardCourseCourseIdRouteRouteWithChildren =
-  DashboardCourseCourseIdRouteRoute._addFileChildren(DashboardCourseCourseIdRouteRouteChildren);
+  DashboardCourseCourseIdRouteRoute._addFileChildren(
+    DashboardCourseCourseIdRouteRouteChildren,
+  )
 
 interface DashboardCourseRouteRouteChildren {
-  DashboardCourseCourseIdRouteRoute: typeof DashboardCourseCourseIdRouteRouteWithChildren;
-  DashboardCourseCategoriesRoute: typeof DashboardCourseCategoriesRoute;
-  DashboardCourseGenerateRoute: typeof DashboardCourseGenerateRoute;
-  DashboardCourseIndexRoute: typeof DashboardCourseIndexRoute;
+  DashboardCourseCourseIdRouteRoute: typeof DashboardCourseCourseIdRouteRouteWithChildren
+  DashboardCourseCategoriesRoute: typeof DashboardCourseCategoriesRoute
+  DashboardCourseGenerateRoute: typeof DashboardCourseGenerateRoute
+  DashboardCourseIndexRoute: typeof DashboardCourseIndexRoute
 }
 
 const DashboardCourseRouteRouteChildren: DashboardCourseRouteRouteChildren = {
-  DashboardCourseCourseIdRouteRoute: DashboardCourseCourseIdRouteRouteWithChildren,
+  DashboardCourseCourseIdRouteRoute:
+    DashboardCourseCourseIdRouteRouteWithChildren,
   DashboardCourseCategoriesRoute: DashboardCourseCategoriesRoute,
   DashboardCourseGenerateRoute: DashboardCourseGenerateRoute,
   DashboardCourseIndexRoute: DashboardCourseIndexRoute,
-};
+}
 
-const DashboardCourseRouteRouteWithChildren = DashboardCourseRouteRoute._addFileChildren(
-  DashboardCourseRouteRouteChildren,
-);
+const DashboardCourseRouteRouteWithChildren =
+  DashboardCourseRouteRoute._addFileChildren(DashboardCourseRouteRouteChildren)
 
 interface DashboardOrgCohortsCohortIdRouteRouteChildren {
-  DashboardOrgCohortsCohortIdCoursesRoute: typeof DashboardOrgCohortsCohortIdCoursesRoute;
-  DashboardOrgCohortsCohortIdMembersRoute: typeof DashboardOrgCohortsCohortIdMembersRoute;
-  DashboardOrgCohortsCohortIdIndexRoute: typeof DashboardOrgCohortsCohortIdIndexRoute;
+  DashboardOrgCohortsCohortIdCoursesRoute: typeof DashboardOrgCohortsCohortIdCoursesRoute
+  DashboardOrgCohortsCohortIdMembersRoute: typeof DashboardOrgCohortsCohortIdMembersRoute
+  DashboardOrgCohortsCohortIdIndexRoute: typeof DashboardOrgCohortsCohortIdIndexRoute
 }
 
 const DashboardOrgCohortsCohortIdRouteRouteChildren: DashboardOrgCohortsCohortIdRouteRouteChildren =
   {
-    DashboardOrgCohortsCohortIdCoursesRoute: DashboardOrgCohortsCohortIdCoursesRoute,
-    DashboardOrgCohortsCohortIdMembersRoute: DashboardOrgCohortsCohortIdMembersRoute,
-    DashboardOrgCohortsCohortIdIndexRoute: DashboardOrgCohortsCohortIdIndexRoute,
-  };
+    DashboardOrgCohortsCohortIdCoursesRoute:
+      DashboardOrgCohortsCohortIdCoursesRoute,
+    DashboardOrgCohortsCohortIdMembersRoute:
+      DashboardOrgCohortsCohortIdMembersRoute,
+    DashboardOrgCohortsCohortIdIndexRoute:
+      DashboardOrgCohortsCohortIdIndexRoute,
+  }
 
 const DashboardOrgCohortsCohortIdRouteRouteWithChildren =
   DashboardOrgCohortsCohortIdRouteRoute._addFileChildren(
     DashboardOrgCohortsCohortIdRouteRouteChildren,
-  );
+  )
 
 interface DashboardOrgCohortsRouteRouteChildren {
-  DashboardOrgCohortsCohortIdRouteRoute: typeof DashboardOrgCohortsCohortIdRouteRouteWithChildren;
-  DashboardOrgCohortsIndexRoute: typeof DashboardOrgCohortsIndexRoute;
+  DashboardOrgCohortsCohortIdRouteRoute: typeof DashboardOrgCohortsCohortIdRouteRouteWithChildren
+  DashboardOrgCohortsIndexRoute: typeof DashboardOrgCohortsIndexRoute
 }
 
-const DashboardOrgCohortsRouteRouteChildren: DashboardOrgCohortsRouteRouteChildren = {
-  DashboardOrgCohortsCohortIdRouteRoute: DashboardOrgCohortsCohortIdRouteRouteWithChildren,
-  DashboardOrgCohortsIndexRoute: DashboardOrgCohortsIndexRoute,
-};
+const DashboardOrgCohortsRouteRouteChildren: DashboardOrgCohortsRouteRouteChildren =
+  {
+    DashboardOrgCohortsCohortIdRouteRoute:
+      DashboardOrgCohortsCohortIdRouteRouteWithChildren,
+    DashboardOrgCohortsIndexRoute: DashboardOrgCohortsIndexRoute,
+  }
 
-const DashboardOrgCohortsRouteRouteWithChildren = DashboardOrgCohortsRouteRoute._addFileChildren(
-  DashboardOrgCohortsRouteRouteChildren,
-);
+const DashboardOrgCohortsRouteRouteWithChildren =
+  DashboardOrgCohortsRouteRoute._addFileChildren(
+    DashboardOrgCohortsRouteRouteChildren,
+  )
 
 interface DashboardOrgCoursesCourseIdRouteRouteChildren {
-  DashboardOrgCoursesCourseIdAnalyticsRoute: typeof DashboardOrgCoursesCourseIdAnalyticsRoute;
-  DashboardOrgCoursesCourseIdAnnouncementsRoute: typeof DashboardOrgCoursesCourseIdAnnouncementsRoute;
-  DashboardOrgCoursesCourseIdMembersRoute: typeof DashboardOrgCoursesCourseIdMembersRoute;
-  DashboardOrgCoursesCourseIdIndexRoute: typeof DashboardOrgCoursesCourseIdIndexRoute;
-  DashboardOrgCoursesCourseIdCurriculumIndexRoute: typeof DashboardOrgCoursesCourseIdCurriculumIndexRoute;
-  DashboardOrgCoursesCourseIdCurriculumLessonIdEditRoute: typeof DashboardOrgCoursesCourseIdCurriculumLessonIdEditRoute;
-  DashboardOrgCoursesCourseIdCurriculumLessonIdViewRoute: typeof DashboardOrgCoursesCourseIdCurriculumLessonIdViewRoute;
+  DashboardOrgCoursesCourseIdAnalyticsRoute: typeof DashboardOrgCoursesCourseIdAnalyticsRoute
+  DashboardOrgCoursesCourseIdAnnouncementsRoute: typeof DashboardOrgCoursesCourseIdAnnouncementsRoute
+  DashboardOrgCoursesCourseIdMembersRoute: typeof DashboardOrgCoursesCourseIdMembersRoute
+  DashboardOrgCoursesCourseIdIndexRoute: typeof DashboardOrgCoursesCourseIdIndexRoute
+  DashboardOrgCoursesCourseIdCurriculumIndexRoute: typeof DashboardOrgCoursesCourseIdCurriculumIndexRoute
+  DashboardOrgCoursesCourseIdCurriculumLessonIdEditRoute: typeof DashboardOrgCoursesCourseIdCurriculumLessonIdEditRoute
+  DashboardOrgCoursesCourseIdCurriculumLessonIdViewRoute: typeof DashboardOrgCoursesCourseIdCurriculumLessonIdViewRoute
 }
 
 const DashboardOrgCoursesCourseIdRouteRouteChildren: DashboardOrgCoursesCourseIdRouteRouteChildren =
   {
-    DashboardOrgCoursesCourseIdAnalyticsRoute: DashboardOrgCoursesCourseIdAnalyticsRoute,
-    DashboardOrgCoursesCourseIdAnnouncementsRoute: DashboardOrgCoursesCourseIdAnnouncementsRoute,
-    DashboardOrgCoursesCourseIdMembersRoute: DashboardOrgCoursesCourseIdMembersRoute,
-    DashboardOrgCoursesCourseIdIndexRoute: DashboardOrgCoursesCourseIdIndexRoute,
+    DashboardOrgCoursesCourseIdAnalyticsRoute:
+      DashboardOrgCoursesCourseIdAnalyticsRoute,
+    DashboardOrgCoursesCourseIdAnnouncementsRoute:
+      DashboardOrgCoursesCourseIdAnnouncementsRoute,
+    DashboardOrgCoursesCourseIdMembersRoute:
+      DashboardOrgCoursesCourseIdMembersRoute,
+    DashboardOrgCoursesCourseIdIndexRoute:
+      DashboardOrgCoursesCourseIdIndexRoute,
     DashboardOrgCoursesCourseIdCurriculumIndexRoute:
       DashboardOrgCoursesCourseIdCurriculumIndexRoute,
     DashboardOrgCoursesCourseIdCurriculumLessonIdEditRoute:
       DashboardOrgCoursesCourseIdCurriculumLessonIdEditRoute,
     DashboardOrgCoursesCourseIdCurriculumLessonIdViewRoute:
       DashboardOrgCoursesCourseIdCurriculumLessonIdViewRoute,
-  };
+  }
 
 const DashboardOrgCoursesCourseIdRouteRouteWithChildren =
   DashboardOrgCoursesCourseIdRouteRoute._addFileChildren(
     DashboardOrgCoursesCourseIdRouteRouteChildren,
-  );
+  )
 
 interface DashboardOrgCoursesRouteRouteChildren {
-  DashboardOrgCoursesCourseIdRouteRoute: typeof DashboardOrgCoursesCourseIdRouteRouteWithChildren;
-  DashboardOrgCoursesIndexRoute: typeof DashboardOrgCoursesIndexRoute;
+  DashboardOrgCoursesCourseIdRouteRoute: typeof DashboardOrgCoursesCourseIdRouteRouteWithChildren
+  DashboardOrgCoursesIndexRoute: typeof DashboardOrgCoursesIndexRoute
 }
 
-const DashboardOrgCoursesRouteRouteChildren: DashboardOrgCoursesRouteRouteChildren = {
-  DashboardOrgCoursesCourseIdRouteRoute: DashboardOrgCoursesCourseIdRouteRouteWithChildren,
-  DashboardOrgCoursesIndexRoute: DashboardOrgCoursesIndexRoute,
-};
+const DashboardOrgCoursesRouteRouteChildren: DashboardOrgCoursesRouteRouteChildren =
+  {
+    DashboardOrgCoursesCourseIdRouteRoute:
+      DashboardOrgCoursesCourseIdRouteRouteWithChildren,
+    DashboardOrgCoursesIndexRoute: DashboardOrgCoursesIndexRoute,
+  }
 
-const DashboardOrgCoursesRouteRouteWithChildren = DashboardOrgCoursesRouteRoute._addFileChildren(
-  DashboardOrgCoursesRouteRouteChildren,
-);
+const DashboardOrgCoursesRouteRouteWithChildren =
+  DashboardOrgCoursesRouteRoute._addFileChildren(
+    DashboardOrgCoursesRouteRouteChildren,
+  )
 
 interface DashboardOrgOrganizationRouteRouteChildren {
-  DashboardOrgOrganizationIntegrationsRoute: typeof DashboardOrgOrganizationIntegrationsRoute;
-  DashboardOrgOrganizationRulesRoute: typeof DashboardOrgOrganizationRulesRoute;
-  DashboardOrgOrganizationIndexRoute: typeof DashboardOrgOrganizationIndexRoute;
+  DashboardOrgOrganizationIntegrationsRoute: typeof DashboardOrgOrganizationIntegrationsRoute
+  DashboardOrgOrganizationRulesRoute: typeof DashboardOrgOrganizationRulesRoute
+  DashboardOrgOrganizationIndexRoute: typeof DashboardOrgOrganizationIndexRoute
 }
 
-const DashboardOrgOrganizationRouteRouteChildren: DashboardOrgOrganizationRouteRouteChildren = {
-  DashboardOrgOrganizationIntegrationsRoute: DashboardOrgOrganizationIntegrationsRoute,
-  DashboardOrgOrganizationRulesRoute: DashboardOrgOrganizationRulesRoute,
-  DashboardOrgOrganizationIndexRoute: DashboardOrgOrganizationIndexRoute,
-};
+const DashboardOrgOrganizationRouteRouteChildren: DashboardOrgOrganizationRouteRouteChildren =
+  {
+    DashboardOrgOrganizationIntegrationsRoute:
+      DashboardOrgOrganizationIntegrationsRoute,
+    DashboardOrgOrganizationRulesRoute: DashboardOrgOrganizationRulesRoute,
+    DashboardOrgOrganizationIndexRoute: DashboardOrgOrganizationIndexRoute,
+  }
 
 const DashboardOrgOrganizationRouteRouteWithChildren =
-  DashboardOrgOrganizationRouteRoute._addFileChildren(DashboardOrgOrganizationRouteRouteChildren);
+  DashboardOrgOrganizationRouteRoute._addFileChildren(
+    DashboardOrgOrganizationRouteRouteChildren,
+  )
 
 interface DashboardOrgSettingsRouteRouteChildren {
-  DashboardOrgSettingsGeneralRoute: typeof DashboardOrgSettingsGeneralRoute;
-  DashboardOrgSettingsPreferencesRoute: typeof DashboardOrgSettingsPreferencesRoute;
-  DashboardOrgSettingsSecurityRoute: typeof DashboardOrgSettingsSecurityRoute;
-  DashboardOrgSettingsIndexRoute: typeof DashboardOrgSettingsIndexRoute;
+  DashboardOrgSettingsGeneralRoute: typeof DashboardOrgSettingsGeneralRoute
+  DashboardOrgSettingsPreferencesRoute: typeof DashboardOrgSettingsPreferencesRoute
+  DashboardOrgSettingsSecurityRoute: typeof DashboardOrgSettingsSecurityRoute
+  DashboardOrgSettingsIndexRoute: typeof DashboardOrgSettingsIndexRoute
 }
 
-const DashboardOrgSettingsRouteRouteChildren: DashboardOrgSettingsRouteRouteChildren = {
-  DashboardOrgSettingsGeneralRoute: DashboardOrgSettingsGeneralRoute,
-  DashboardOrgSettingsPreferencesRoute: DashboardOrgSettingsPreferencesRoute,
-  DashboardOrgSettingsSecurityRoute: DashboardOrgSettingsSecurityRoute,
-  DashboardOrgSettingsIndexRoute: DashboardOrgSettingsIndexRoute,
-};
+const DashboardOrgSettingsRouteRouteChildren: DashboardOrgSettingsRouteRouteChildren =
+  {
+    DashboardOrgSettingsGeneralRoute: DashboardOrgSettingsGeneralRoute,
+    DashboardOrgSettingsPreferencesRoute: DashboardOrgSettingsPreferencesRoute,
+    DashboardOrgSettingsSecurityRoute: DashboardOrgSettingsSecurityRoute,
+    DashboardOrgSettingsIndexRoute: DashboardOrgSettingsIndexRoute,
+  }
 
-const DashboardOrgSettingsRouteRouteWithChildren = DashboardOrgSettingsRouteRoute._addFileChildren(
-  DashboardOrgSettingsRouteRouteChildren,
-);
+const DashboardOrgSettingsRouteRouteWithChildren =
+  DashboardOrgSettingsRouteRoute._addFileChildren(
+    DashboardOrgSettingsRouteRouteChildren,
+  )
 
 interface DashboardOrgSupportRouteRouteChildren {
-  DashboardOrgSupportContactRoute: typeof DashboardOrgSupportContactRoute;
-  DashboardOrgSupportFaqsRoute: typeof DashboardOrgSupportFaqsRoute;
-  DashboardOrgSupportReportIssueRoute: typeof DashboardOrgSupportReportIssueRoute;
-  DashboardOrgSupportIndexRoute: typeof DashboardOrgSupportIndexRoute;
+  DashboardOrgSupportContactRoute: typeof DashboardOrgSupportContactRoute
+  DashboardOrgSupportFaqsRoute: typeof DashboardOrgSupportFaqsRoute
+  DashboardOrgSupportReportIssueRoute: typeof DashboardOrgSupportReportIssueRoute
+  DashboardOrgSupportIndexRoute: typeof DashboardOrgSupportIndexRoute
 }
 
-const DashboardOrgSupportRouteRouteChildren: DashboardOrgSupportRouteRouteChildren = {
-  DashboardOrgSupportContactRoute: DashboardOrgSupportContactRoute,
-  DashboardOrgSupportFaqsRoute: DashboardOrgSupportFaqsRoute,
-  DashboardOrgSupportReportIssueRoute: DashboardOrgSupportReportIssueRoute,
-  DashboardOrgSupportIndexRoute: DashboardOrgSupportIndexRoute,
-};
+const DashboardOrgSupportRouteRouteChildren: DashboardOrgSupportRouteRouteChildren =
+  {
+    DashboardOrgSupportContactRoute: DashboardOrgSupportContactRoute,
+    DashboardOrgSupportFaqsRoute: DashboardOrgSupportFaqsRoute,
+    DashboardOrgSupportReportIssueRoute: DashboardOrgSupportReportIssueRoute,
+    DashboardOrgSupportIndexRoute: DashboardOrgSupportIndexRoute,
+  }
 
-const DashboardOrgSupportRouteRouteWithChildren = DashboardOrgSupportRouteRoute._addFileChildren(
-  DashboardOrgSupportRouteRouteChildren,
-);
+const DashboardOrgSupportRouteRouteWithChildren =
+  DashboardOrgSupportRouteRoute._addFileChildren(
+    DashboardOrgSupportRouteRouteChildren,
+  )
 
 interface DashboardOrgUsersRouteRouteChildren {
-  DashboardOrgUsersInvitesRoute: typeof DashboardOrgUsersInvitesRoute;
-  DashboardOrgUsersIndexRoute: typeof DashboardOrgUsersIndexRoute;
+  DashboardOrgUsersInvitesRoute: typeof DashboardOrgUsersInvitesRoute
+  DashboardOrgUsersIndexRoute: typeof DashboardOrgUsersIndexRoute
 }
 
-const DashboardOrgUsersRouteRouteChildren: DashboardOrgUsersRouteRouteChildren = {
-  DashboardOrgUsersInvitesRoute: DashboardOrgUsersInvitesRoute,
-  DashboardOrgUsersIndexRoute: DashboardOrgUsersIndexRoute,
-};
+const DashboardOrgUsersRouteRouteChildren: DashboardOrgUsersRouteRouteChildren =
+  {
+    DashboardOrgUsersInvitesRoute: DashboardOrgUsersInvitesRoute,
+    DashboardOrgUsersIndexRoute: DashboardOrgUsersIndexRoute,
+  }
 
-const DashboardOrgUsersRouteRouteWithChildren = DashboardOrgUsersRouteRoute._addFileChildren(
-  DashboardOrgUsersRouteRouteChildren,
-);
+const DashboardOrgUsersRouteRouteWithChildren =
+  DashboardOrgUsersRouteRoute._addFileChildren(
+    DashboardOrgUsersRouteRouteChildren,
+  )
 
 interface DashboardOrgRouteRouteChildren {
-  DashboardOrgCohortsRouteRoute: typeof DashboardOrgCohortsRouteRouteWithChildren;
-  DashboardOrgCoursesRouteRoute: typeof DashboardOrgCoursesRouteRouteWithChildren;
-  DashboardOrgOrganizationRouteRoute: typeof DashboardOrgOrganizationRouteRouteWithChildren;
-  DashboardOrgSettingsRouteRoute: typeof DashboardOrgSettingsRouteRouteWithChildren;
-  DashboardOrgSupportRouteRoute: typeof DashboardOrgSupportRouteRouteWithChildren;
-  DashboardOrgUsersRouteRoute: typeof DashboardOrgUsersRouteRouteWithChildren;
-  DashboardOrgMembersRoute: typeof DashboardOrgMembersRoute;
-  DashboardOrgIndexRoute: typeof DashboardOrgIndexRoute;
-  DashboardOrgLibraryIndexRoute: typeof DashboardOrgLibraryIndexRoute;
+  DashboardOrgCohortsRouteRoute: typeof DashboardOrgCohortsRouteRouteWithChildren
+  DashboardOrgCoursesRouteRoute: typeof DashboardOrgCoursesRouteRouteWithChildren
+  DashboardOrgOrganizationRouteRoute: typeof DashboardOrgOrganizationRouteRouteWithChildren
+  DashboardOrgSettingsRouteRoute: typeof DashboardOrgSettingsRouteRouteWithChildren
+  DashboardOrgSupportRouteRoute: typeof DashboardOrgSupportRouteRouteWithChildren
+  DashboardOrgUsersRouteRoute: typeof DashboardOrgUsersRouteRouteWithChildren
+  DashboardOrgMembersRoute: typeof DashboardOrgMembersRoute
+  DashboardOrgIndexRoute: typeof DashboardOrgIndexRoute
+  DashboardOrgLibraryIndexRoute: typeof DashboardOrgLibraryIndexRoute
 }
 
 const DashboardOrgRouteRouteChildren: DashboardOrgRouteRouteChildren = {
   DashboardOrgCohortsRouteRoute: DashboardOrgCohortsRouteRouteWithChildren,
   DashboardOrgCoursesRouteRoute: DashboardOrgCoursesRouteRouteWithChildren,
-  DashboardOrgOrganizationRouteRoute: DashboardOrgOrganizationRouteRouteWithChildren,
+  DashboardOrgOrganizationRouteRoute:
+    DashboardOrgOrganizationRouteRouteWithChildren,
   DashboardOrgSettingsRouteRoute: DashboardOrgSettingsRouteRouteWithChildren,
   DashboardOrgSupportRouteRoute: DashboardOrgSupportRouteRouteWithChildren,
   DashboardOrgUsersRouteRoute: DashboardOrgUsersRouteRouteWithChildren,
   DashboardOrgMembersRoute: DashboardOrgMembersRoute,
   DashboardOrgIndexRoute: DashboardOrgIndexRoute,
   DashboardOrgLibraryIndexRoute: DashboardOrgLibraryIndexRoute,
-};
-
-const DashboardOrgRouteRouteWithChildren = DashboardOrgRouteRoute._addFileChildren(
-  DashboardOrgRouteRouteChildren,
-);
-
-interface DashboardSettingsRouteRouteChildren {
-  DashboardSettingsGeneralRoute: typeof DashboardSettingsGeneralRoute;
-  DashboardSettingsPreferencesRoute: typeof DashboardSettingsPreferencesRoute;
-  DashboardSettingsSecurityRoute: typeof DashboardSettingsSecurityRoute;
-  DashboardSettingsIndexRoute: typeof DashboardSettingsIndexRoute;
 }
 
-const DashboardSettingsRouteRouteChildren: DashboardSettingsRouteRouteChildren = {
-  DashboardSettingsGeneralRoute: DashboardSettingsGeneralRoute,
-  DashboardSettingsPreferencesRoute: DashboardSettingsPreferencesRoute,
-  DashboardSettingsSecurityRoute: DashboardSettingsSecurityRoute,
-  DashboardSettingsIndexRoute: DashboardSettingsIndexRoute,
-};
+const DashboardOrgRouteRouteWithChildren =
+  DashboardOrgRouteRoute._addFileChildren(DashboardOrgRouteRouteChildren)
 
-const DashboardSettingsRouteRouteWithChildren = DashboardSettingsRouteRoute._addFileChildren(
-  DashboardSettingsRouteRouteChildren,
-);
+interface DashboardSettingsRouteRouteChildren {
+  DashboardSettingsGeneralRoute: typeof DashboardSettingsGeneralRoute
+  DashboardSettingsPreferencesRoute: typeof DashboardSettingsPreferencesRoute
+  DashboardSettingsSecurityRoute: typeof DashboardSettingsSecurityRoute
+  DashboardSettingsIndexRoute: typeof DashboardSettingsIndexRoute
+}
+
+const DashboardSettingsRouteRouteChildren: DashboardSettingsRouteRouteChildren =
+  {
+    DashboardSettingsGeneralRoute: DashboardSettingsGeneralRoute,
+    DashboardSettingsPreferencesRoute: DashboardSettingsPreferencesRoute,
+    DashboardSettingsSecurityRoute: DashboardSettingsSecurityRoute,
+    DashboardSettingsIndexRoute: DashboardSettingsIndexRoute,
+  }
+
+const DashboardSettingsRouteRouteWithChildren =
+  DashboardSettingsRouteRoute._addFileChildren(
+    DashboardSettingsRouteRouteChildren,
+  )
 
 interface DashboardSupportRouteRouteChildren {
-  DashboardSupportContactRoute: typeof DashboardSupportContactRoute;
-  DashboardSupportFaqsRoute: typeof DashboardSupportFaqsRoute;
-  DashboardSupportReportIssueRoute: typeof DashboardSupportReportIssueRoute;
-  DashboardSupportIndexRoute: typeof DashboardSupportIndexRoute;
+  DashboardSupportContactRoute: typeof DashboardSupportContactRoute
+  DashboardSupportFaqsRoute: typeof DashboardSupportFaqsRoute
+  DashboardSupportReportIssueRoute: typeof DashboardSupportReportIssueRoute
+  DashboardSupportIndexRoute: typeof DashboardSupportIndexRoute
 }
 
 const DashboardSupportRouteRouteChildren: DashboardSupportRouteRouteChildren = {
@@ -2219,22 +2301,23 @@ const DashboardSupportRouteRouteChildren: DashboardSupportRouteRouteChildren = {
   DashboardSupportFaqsRoute: DashboardSupportFaqsRoute,
   DashboardSupportReportIssueRoute: DashboardSupportReportIssueRoute,
   DashboardSupportIndexRoute: DashboardSupportIndexRoute,
-};
+}
 
-const DashboardSupportRouteRouteWithChildren = DashboardSupportRouteRoute._addFileChildren(
-  DashboardSupportRouteRouteChildren,
-);
+const DashboardSupportRouteRouteWithChildren =
+  DashboardSupportRouteRoute._addFileChildren(
+    DashboardSupportRouteRouteChildren,
+  )
 
 interface DashboardRouteRouteChildren {
-  DashboardAdminRouteRoute: typeof DashboardAdminRouteRouteWithChildren;
-  DashboardCatalogRouteRoute: typeof DashboardCatalogRouteRouteWithChildren;
-  DashboardCourseRouteRoute: typeof DashboardCourseRouteRouteWithChildren;
-  DashboardOrgRouteRoute: typeof DashboardOrgRouteRouteWithChildren;
-  DashboardSettingsRouteRoute: typeof DashboardSettingsRouteRouteWithChildren;
-  DashboardSupportRouteRoute: typeof DashboardSupportRouteRouteWithChildren;
-  DashboardSplatRoute: typeof DashboardSplatRoute;
-  DashboardIndexRoute: typeof DashboardIndexRoute;
-  DashboardLibraryIndexRoute: typeof DashboardLibraryIndexRoute;
+  DashboardAdminRouteRoute: typeof DashboardAdminRouteRouteWithChildren
+  DashboardCatalogRouteRoute: typeof DashboardCatalogRouteRouteWithChildren
+  DashboardCourseRouteRoute: typeof DashboardCourseRouteRouteWithChildren
+  DashboardOrgRouteRoute: typeof DashboardOrgRouteRouteWithChildren
+  DashboardSettingsRouteRoute: typeof DashboardSettingsRouteRouteWithChildren
+  DashboardSupportRouteRoute: typeof DashboardSupportRouteRouteWithChildren
+  DashboardSplatRoute: typeof DashboardSplatRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardLibraryIndexRoute: typeof DashboardLibraryIndexRoute
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
@@ -2247,58 +2330,59 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardSplatRoute: DashboardSplatRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardLibraryIndexRoute: DashboardLibraryIndexRoute,
-};
+}
 
 const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
   DashboardRouteRouteChildren,
-);
+)
 
 interface LearnCourseIdRouteRouteChildren {
-  LearnCourseIdLessonIdRoute: typeof LearnCourseIdLessonIdRoute;
-  LearnCourseIdIndexRoute: typeof LearnCourseIdIndexRoute;
+  LearnCourseIdLessonIdRoute: typeof LearnCourseIdLessonIdRoute
+  LearnCourseIdIndexRoute: typeof LearnCourseIdIndexRoute
 }
 
 const LearnCourseIdRouteRouteChildren: LearnCourseIdRouteRouteChildren = {
   LearnCourseIdLessonIdRoute: LearnCourseIdLessonIdRoute,
   LearnCourseIdIndexRoute: LearnCourseIdIndexRoute,
-};
+}
 
-const LearnCourseIdRouteRouteWithChildren = LearnCourseIdRouteRoute._addFileChildren(
-  LearnCourseIdRouteRouteChildren,
-);
+const LearnCourseIdRouteRouteWithChildren =
+  LearnCourseIdRouteRoute._addFileChildren(LearnCourseIdRouteRouteChildren)
 
 interface LearnRouteRouteChildren {
-  LearnCourseIdRouteRoute: typeof LearnCourseIdRouteRouteWithChildren;
+  LearnCourseIdRouteRoute: typeof LearnCourseIdRouteRouteWithChildren
 }
 
 const LearnRouteRouteChildren: LearnRouteRouteChildren = {
   LearnCourseIdRouteRoute: LearnCourseIdRouteRouteWithChildren,
-};
+}
 
-const LearnRouteRouteWithChildren = LearnRouteRoute._addFileChildren(LearnRouteRouteChildren);
+const LearnRouteRouteWithChildren = LearnRouteRoute._addFileChildren(
+  LearnRouteRouteChildren,
+)
 
 interface OnboardingRouteRouteChildren {
-  OnboardingOrganizationRoute: typeof OnboardingOrganizationRoute;
-  OnboardingIndexRoute: typeof OnboardingIndexRoute;
+  OnboardingOrganizationRoute: typeof OnboardingOrganizationRoute
+  OnboardingIndexRoute: typeof OnboardingIndexRoute
 }
 
 const OnboardingRouteRouteChildren: OnboardingRouteRouteChildren = {
   OnboardingOrganizationRoute: OnboardingOrganizationRoute,
   OnboardingIndexRoute: OnboardingIndexRoute,
-};
+}
 
 const OnboardingRouteRouteWithChildren = OnboardingRouteRoute._addFileChildren(
   OnboardingRouteRouteChildren,
-);
+)
 
 interface AuthRouteChildren {
-  AuthCheckEmailRoute: typeof AuthCheckEmailRoute;
-  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute;
-  AuthResetPasswordRoute: typeof AuthResetPasswordRoute;
-  AuthSignInRoute: typeof AuthSignInRoute;
-  AuthSignUpRoute: typeof AuthSignUpRoute;
-  AuthTwoFactorRoute: typeof AuthTwoFactorRoute;
-  AuthVerifyEmailRoute: typeof AuthVerifyEmailRoute;
+  AuthCheckEmailRoute: typeof AuthCheckEmailRoute
+  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+  AuthSignInRoute: typeof AuthSignInRoute
+  AuthSignUpRoute: typeof AuthSignUpRoute
+  AuthTwoFactorRoute: typeof AuthTwoFactorRoute
+  AuthVerifyEmailRoute: typeof AuthVerifyEmailRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
@@ -2309,9 +2393,9 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthSignUpRoute: AuthSignUpRoute,
   AuthTwoFactorRoute: AuthTwoFactorRoute,
   AuthVerifyEmailRoute: AuthVerifyEmailRoute,
-};
+}
 
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren);
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -2322,17 +2406,17 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   AcceptInviteRoute: AcceptInviteRoute,
   HealthRoute: HealthRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
-import type { getRouter } from "./router.tsx";
-import type { startInstance } from "./start.ts";
-declare module "@tanstack/react-start" {
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
   interface Register {
-    ssr: true;
-    router: Awaited<ReturnType<typeof getRouter>>;
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>;
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
   }
 }
