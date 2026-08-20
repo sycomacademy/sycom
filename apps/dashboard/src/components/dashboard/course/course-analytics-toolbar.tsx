@@ -8,9 +8,12 @@ export type CourseAnalyticsToolbarProps = {
   isFetching?: boolean;
   onSearchChange: (next: string) => void;
   search: string;
+  /** Export control, supplied by the page so each scope uses its own tRPC router. */
+  actions?: ReactNode;
 };
 
 export function CourseAnalyticsToolbar({
+  actions,
   isFetching = false,
   onSearchChange,
   search,
@@ -34,6 +37,8 @@ export function CourseAnalyticsToolbar({
           />
         </InputGroup>
       </div>
+
+      {actions}
     </div>
   );
 }

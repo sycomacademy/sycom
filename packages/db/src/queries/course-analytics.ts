@@ -350,3 +350,151 @@ export async function getCourseAnalyticsStudentDetail(
     userId: enrollmentRow.userId,
   };
 }
+
+// ---------------------------------------------------------------------------
+// Export
+// ---------------------------------------------------------------------------
+
+export type CourseAnalyticsExportLesson = {
+  lessonId: string;
+  title: string;
+  sectionTitle: string;
+  type: LessonType;
+  /** Question count for quizzes and exams; 0 for articles, which aren't scored. */
+  maxScore: number;
+};
+
+export type CourseAnalyticsExportProgress = {
+  status: LessonProgressStatus;
+  bestScore: number | null;
+};
+
+export type CourseAnalyticsExportStudent = {
+  userId: string;
+  enrollmentId: string;
+  name: string;
+  email: string;
+  enrollmentStatus: string;
+  enrolledAt: Date;
+  completedCounts: Record<LessonType, number>;
+  /** Mean of best-score percentages across attempted quizzes / exams. */
+  averageQuizScore: number | null;
+  averageExamScore: number | null;
+  /** Keyed by lesson id; a lesson with no row was never started. */
+  progressByLesson: Map<string, CourseAnalyticsExportProgress>;
+};
+
+export type CourseAnalyticsExportResult = {
+  lessons: CourseAnalyticsExportLesson[];
+  students: CourseAnalyticsExportStudent[];
+};
+
+/**
+ * The whole gradebook for a course: every enrolled student against every lesson.
+ *
+ * `getCourseAnalyticsStudentDetail` answers the same question for one student, but
+ * calling it per student would be a query per row. This loads the lessons once, the
+ * enrolments once, and all of their progress in a single pass, then joins in memory
+ * — three queries regardless of course or cohort size.
+ */
+export async function getCourseAnalyticsExport(
+  database: Database,
+  input: { courseId: string },
+): Promise<CourseAnalyticsExportResult> {
+  const [lessonRows, enrollmentRows] = await Promise.all([
+    loadCourseLessons(database, input.courseId),
+    database
+      .select({
+        email: user.email,
+        enrolledAt: enrollment.createdAt,
+        enrollmentId: enrollment.id,
+        enrollmentStatus: enrollment.status,
+        name: user.name,
+        userId: user.id,
+      })
+      .from(enrollment)
+      .innerJoin(user, eq(user.id, enrollment.userId))
+      .where(eq(enrollment.courseId, input.courseId))
+      .orderBy(asc(user.name), asc(user.email)),
+  ]);
+
+  const lessons: CourseAnalyticsExportLesson[] = lessonRows.map((row) => ({
+    lessonId: row.lessonId,
+    maxScore:
+      row.type === "quiz" || row.type === "exam" ? countQuestionBlocksInContent(row.content) : 0,
+    sectionTitle: row.sectionTitle,
+    title: row.title,
+    type: row.type,
+  }));
+
+  const lessonById = new Map(lessons.map((entry) => [entry.lessonId, entry]));
+  const enrollmentIds = enrollmentRows.map((row) => row.enrollmentId);
+
+  const progressRows =
+    enrollmentIds.length > 0
+      ? await database
+          .select({
+            bestScore: lessonProgress.bestScore,
+            enrollmentId: lessonProgress.enrollmentId,
+            lessonId: lessonProgress.lessonId,
+            status: lessonProgress.status,
+          })
+          .from(lessonProgress)
+          .where(inArray(lessonProgress.enrollmentId, enrollmentIds))
+      : [];
+
+  const progressByEnrollment = new Map<string, Map<string, CourseAnalyticsExportProgress>>();
+  for (const row of progressRows) {
+    // Progress can outlive the lesson it points at; skip rows with no lesson left.
+    if (!lessonById.has(row.lessonId)) continue;
+    const forEnrollment = progressByEnrollment.get(row.enrollmentId) ?? new Map();
+    forEnrollment.set(row.lessonId, { bestScore: row.bestScore, status: row.status });
+    progressByEnrollment.set(row.enrollmentId, forEnrollment);
+  }
+
+  const students = enrollmentRows.map((row) => {
+    const progress = progressByEnrollment.get(row.enrollmentId) ?? new Map();
+    const completedCounts: Record<LessonType, number> = { article: 0, exam: 0, quiz: 0 };
+    const scoreTotals: Record<"exam" | "quiz", { sum: number; count: number }> = {
+      exam: { count: 0, sum: 0 },
+      quiz: { count: 0, sum: 0 },
+    };
+
+    for (const [lessonId, entry] of progress) {
+      const lessonEntry = lessonById.get(lessonId);
+      if (!lessonEntry) continue;
+
+      if (entry.status === "completed") {
+        completedCounts[lessonEntry.type] += 1;
+      }
+
+      if (
+        (lessonEntry.type === "quiz" || lessonEntry.type === "exam") &&
+        entry.bestScore !== null &&
+        lessonEntry.maxScore > 0
+      ) {
+        const bucket = scoreTotals[lessonEntry.type];
+        bucket.sum += (entry.bestScore / lessonEntry.maxScore) * 100;
+        bucket.count += 1;
+      }
+    }
+
+    const average = (bucket: { sum: number; count: number }) =>
+      bucket.count === 0 ? null : roundToOneDecimal(bucket.sum / bucket.count);
+
+    return {
+      averageExamScore: average(scoreTotals.exam),
+      averageQuizScore: average(scoreTotals.quiz),
+      completedCounts,
+      email: row.email,
+      enrolledAt: row.enrolledAt,
+      enrollmentId: row.enrollmentId,
+      enrollmentStatus: row.enrollmentStatus,
+      name: row.name,
+      progressByLesson: progress,
+      userId: row.userId,
+    };
+  });
+
+  return { lessons, students };
+}

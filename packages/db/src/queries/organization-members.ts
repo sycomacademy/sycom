@@ -2,7 +2,11 @@ import { and, asc, count, desc, eq, ilike, inArray, or, sql, type SQL } from "dr
 
 import type { Database } from "..";
 import { cohort, cohort_member, member, user, type OrganizationRole } from "../schema/auth";
-import type { MemberMetadata, StudentProfileValues } from "../schema/student-profile";
+import type {
+  MemberMetadata,
+  OrgStudentProfileField,
+  StudentProfileValues,
+} from "../schema/student-profile";
 import {
   getOrgStudentProfileFields,
   resolveStudentProfileForMember,
@@ -209,5 +213,70 @@ export async function getOrganizationMemberById(
       fieldDefs,
       (memberMetadata ?? {}) as MemberMetadata,
     ),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Export
+// ---------------------------------------------------------------------------
+
+export type OrgMemberExportRow = OrgMemberRow & {
+  studentProfile: StudentProfileValues;
+};
+
+export type OrgMemberExportResult = {
+  /** Field definitions in display order; the export turns each into a column. */
+  fields: OrgStudentProfileField[];
+  rows: OrgMemberExportRow[];
+};
+
+/**
+ * Every member of an organization with their cohorts and student-profile values,
+ * unpaginated and unfiltered — an export is a snapshot of the whole roster, not of
+ * whatever the table happened to be showing.
+ *
+ * The field definitions come back alongside the rows because profile fields are
+ * per-organization and stored as free-form metadata: the caller needs them to know
+ * which columns exist and what to label them.
+ */
+export async function listOrganizationMembersForExport(
+  database: Database,
+  input: { organizationId: string },
+): Promise<OrgMemberExportResult> {
+  const rows = await database
+    .select({
+      memberId: member.id,
+      userId: user.id,
+      name: user.name,
+      email: user.email,
+      image: user.image,
+      role: member.role,
+      emailVerified: user.emailVerified,
+      banned: sql<boolean>`coalesce(${user.banned}, false)`,
+      twoFactorEnabled: sql<boolean>`coalesce(${user.twoFactorEnabled}, false)`,
+      joinedAt: member.createdAt,
+      metadata: member.metadata,
+    })
+    .from(member)
+    .innerJoin(user, eq(user.id, member.userId))
+    .where(eq(member.organizationId, input.organizationId))
+    .orderBy(asc(user.name), asc(user.email));
+
+  const [cohortsByUser, fields] = await Promise.all([
+    fetchCohortsByUser(
+      database,
+      input.organizationId,
+      rows.map((row) => row.userId),
+    ),
+    getOrgStudentProfileFields(database, { organizationId: input.organizationId }),
+  ]);
+
+  return {
+    fields,
+    rows: rows.map(({ metadata, ...memberRow }) => ({
+      ...memberRow,
+      cohorts: cohortsByUser.get(memberRow.userId) ?? [],
+      studentProfile: resolveStudentProfileForMember(fields, (metadata ?? {}) as MemberMetadata),
+    })),
   };
 }

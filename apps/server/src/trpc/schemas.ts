@@ -1189,6 +1189,12 @@ export const getCourseAnalyticsOverviewSchema = z.object({
 });
 export type GetCourseAnalyticsOverviewInput = z.infer<typeof getCourseAnalyticsOverviewSchema>;
 
+/** Whole-gradebook export; deliberately takes no filters — see `getCourseAnalyticsExport`. */
+export const exportCourseAnalyticsSchema = z.object({
+  courseId: z.string().min(1),
+});
+export type ExportCourseAnalyticsInput = z.infer<typeof exportCourseAnalyticsSchema>;
+
 export const listCourseAnalyticsStudentsSchema = z.object({
   courseId: z.string().min(1),
   limit: z.number().int().min(1).max(100).default(20),

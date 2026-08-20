@@ -55,6 +55,9 @@ function OrgUsersMembersPage() {
   });
 
   const query = useSuspenseQuery(trpc.organization.listMembers.queryOptions(search));
+  // Loaded by the /dashboard/org route's loader; this is a cache read for the
+  // export filename, not another request.
+  const { data: workspace } = useSuspenseQuery(trpc.organization.workspaceContext.queryOptions());
   const isFetching = useIsFetching({ queryKey: trpc.organization.listMembers.queryKey() }) > 0;
 
   const tableState = useMemo(
@@ -124,6 +127,7 @@ function OrgUsersMembersPage() {
         isFetching={isFetching}
         onRefresh={query.refetch}
         onSearchChange={setSearchInput}
+        organizationName={workspace.name}
         search={searchInput}
       />
       <OrgMembersFilters table={table} />

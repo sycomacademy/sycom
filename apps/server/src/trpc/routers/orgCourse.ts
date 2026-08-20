@@ -5,6 +5,7 @@ import {
   createSection,
   deleteCourse,
   deleteSectionById,
+  getCourseAnalyticsExport,
   getCourseAnalyticsOverview,
   getCourseAnalyticsStudentDetail,
   getCourseCurriculum,
@@ -33,6 +34,7 @@ import {
   createSectionSchema,
   deleteCourseSchema,
   deleteSectionSchema,
+  exportCourseAnalyticsSchema,
   getCourseAnalyticsOverviewSchema,
   getCourseAnalyticsStudentSchema,
   getCourseCurriculumSchema,
@@ -100,6 +102,13 @@ export const orgCourseRouter = router({
     .query(async ({ ctx, input }) => {
       await loadOrgCourseOrThrow(ctx, input.courseId);
       return await listCourseAnalyticsStudents(ctx.db, input);
+    }),
+
+  exportAnalytics: protectedProcedure
+    .input(exportCourseAnalyticsSchema)
+    .query(async ({ ctx, input }) => {
+      await loadOrgCourseOrThrow(ctx, input.courseId);
+      return await getCourseAnalyticsExport(ctx.db, input);
     }),
 
   getAnalyticsStudent: protectedProcedure

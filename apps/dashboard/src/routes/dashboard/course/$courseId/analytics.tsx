@@ -20,9 +20,11 @@ import {
   type CourseAnalyticsStudentRow,
 } from "@/components/dashboard/course/course-analytics-schema";
 import { CourseAnalyticsToolbar } from "@/components/dashboard/course/course-analytics-toolbar";
+import { buildCourseAnalyticsCsv } from "@/components/dashboard/course/export-course-analytics";
+import { ExportCsvButton } from "@/components/dashboard/export-csv-button";
 import { DataTable } from "@/components/dashboard/data-table";
 import { useDebouncedSearch } from "@/hooks/use-debounced-search";
-import { useTRPC } from "@/lib/trpc/client";
+import { useTRPC, useTRPCClient } from "@/lib/trpc/client";
 
 export const Route = createFileRoute("/dashboard/course/$courseId/analytics")({
   validateSearch: courseAnalyticsSearchSchema,
@@ -51,8 +53,11 @@ function CourseAnalyticsPage() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
   const trpc = useTRPC();
+  const trpcClient = useTRPCClient();
 
   const overviewQuery = useSuspenseQuery(trpc.course.analyticsOverview.queryOptions({ courseId }));
+  // Loaded by the parent course route; a cache read for the export filename.
+  const { data: course } = useSuspenseQuery(trpc.course.get.queryOptions({ courseId }));
   const listQuery = useSuspenseQuery(
     trpc.course.listAnalyticsStudents.queryOptions(getAnalyticsListInput(search, courseId)),
   );
@@ -141,6 +146,17 @@ function CourseAnalyticsPage() {
       </div>
 
       <CourseAnalyticsToolbar
+        actions={
+          <ExportCsvButton
+            build={async () => {
+              const result = await trpcClient.course.exportAnalytics.query({ courseId });
+              return { blob: buildCourseAnalyticsCsv(result), rowCount: result.students.length };
+            }}
+            name={`${course.title}-analytics`}
+          >
+            Export
+          </ExportCsvButton>
+        }
         isFetching={isFetching}
         onSearchChange={setSearchInput}
         search={searchInput}

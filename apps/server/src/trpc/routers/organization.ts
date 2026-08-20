@@ -24,6 +24,7 @@ import {
   listOrganizationCohorts,
   listOrganizationInvitations,
   listOrganizationMembers,
+  listOrganizationMembersForExport,
   getOrgStudentProfileFields,
   listOrganizationMembershipsForUser,
   recordApplicationAuditEvent,
@@ -589,6 +590,13 @@ export const organizationRouter = router({
   listMembers: orgAdminProcedure.input(listOrgMembersSchema).query(async ({ ctx, input }) => {
     return await listOrganizationMembers(ctx.db, {
       ...input,
+      organizationId: ctx.organizationId,
+    });
+  }),
+
+  /** Full roster snapshot for CSV export — unpaginated and unfiltered by design. */
+  exportMembers: orgAdminProcedure.query(async ({ ctx }) => {
+    return await listOrganizationMembersForExport(ctx.db, {
       organizationId: ctx.organizationId,
     });
   }),
