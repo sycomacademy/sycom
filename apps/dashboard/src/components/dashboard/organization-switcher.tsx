@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
+import type { TRoutes } from "@/router";
 import { BuildingIcon } from "@sycom/ui/components/animated/icons/building";
 import { AnimateIcon } from "@sycom/ui/components/animated/icons/icon";
 import {
@@ -25,7 +26,7 @@ import { ChevronsUpDown } from "lucide-react";
 import { useUser } from "@/hooks/use-user";
 import { authClient } from "@/lib/auth/auth-client";
 import { dashboardHomeRoute } from "@/lib/auth/dashboard-home-route";
-import { SESSION_QUERY_KEY, sessionQueryOptions } from "@/lib/auth/session";
+import { sessionQueryOptions } from "@/lib/auth/session";
 import { useTRPC } from "@/lib/trpc/client";
 
 export function OrganizationSwitcher(): React.ReactElement | null {
@@ -56,28 +57,40 @@ export function OrganizationSwitcher(): React.ReactElement | null {
   const triggerLabel =
     activeMembership?.name?.trim() || activeMembership?.slug?.trim() || "Personal workspace";
 
+  /**
+   * The active organization is a cache-wide dimension: org-scoped procedures read it off
+   * the session instead of taking it as input, so their query keys don't encode it. An
+   * explicit invalidation list silently goes stale as routes are added, so invalidate
+   * everything, then warm only what the destination route needs. `refetchType: "none"`
+   * keeps the page we're leaving from firing a wave of doomed refetches against the new
+   * org; the warm-up below batches into a single tRPC request so the loader chain that
+   * follows runs cache-hot.
+   */
   const syncWorkspaceState = async (nextOrganizationId: string | null) => {
-    await Promise.all([
-      queryClient.invalidateQueries({ queryKey: SESSION_QUERY_KEY }),
-      queryClient.invalidateQueries(trpc.profile.get.queryOptions()),
-      queryClient.invalidateQueries(trpc.onboarding.status.queryOptions()),
-      queryClient.invalidateQueries(trpc.student.getDashboardOverview.queryOptions({})),
-      queryClient.invalidateQueries(trpc.student.getLibrary.queryOptions({})),
-      queryClient.invalidateQueries({ queryKey: trpc.catalog.list.queryKey() }),
-    ]);
-
-    if (nextOrganizationId) {
-      await queryClient.invalidateQueries(trpc.organization.workspaceContext.queryOptions());
-    }
+    await queryClient.invalidateQueries({ refetchType: "none" });
 
     await Promise.all([
       queryClient.fetchQuery(sessionQueryOptions()),
       queryClient.fetchQuery(trpc.profile.get.queryOptions()),
       queryClient.fetchQuery(trpc.onboarding.status.queryOptions()),
-      nextOrganizationId
-        ? queryClient.fetchQuery(trpc.organization.workspaceContext.queryOptions())
-        : Promise.resolve(),
+      ...(nextOrganizationId
+        ? [queryClient.fetchQuery(trpc.organization.workspaceContext.queryOptions())]
+        : []),
     ]);
+  };
+
+  /**
+   * Navigating to the path we're already on is a no-op, so the loaders would never re-run
+   * for the new organization. Invalidate in that case instead — either branch runs the
+   * matched loaders exactly once.
+   */
+  const settleWorkspaceRoute = async (target: TRoutes) => {
+    const current = router.state.location.pathname.replace(/\/+$/, "");
+    if (current === target.replace(/\/+$/, "")) {
+      await router.invalidate();
+      return;
+    }
+    await router.navigate({ to: target, replace: true });
   };
 
   const handleSwitch = async (org: { organizationId: string; slug: string }) => {
@@ -94,11 +107,7 @@ export function OrganizationSwitcher(): React.ReactElement | null {
         return;
       }
       await syncWorkspaceState(organizationId);
-      await router.navigate({
-        to: dashboardHomeRoute(organizationId),
-        replace: true,
-      });
-      await router.invalidate();
+      await settleWorkspaceRoute(dashboardHomeRoute(organizationId));
     } catch {
       toastManager.add({
         title: "Couldn't reach server. Check your connection and try again.",
@@ -122,8 +131,7 @@ export function OrganizationSwitcher(): React.ReactElement | null {
         return;
       }
       await syncWorkspaceState(null);
-      await router.navigate({ to: "/dashboard", replace: true });
-      await router.invalidate();
+      await settleWorkspaceRoute("/dashboard");
     } catch {
       toastManager.add({
         title: "Couldn't reach server. Check your connection and try again.",

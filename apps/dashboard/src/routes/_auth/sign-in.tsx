@@ -25,7 +25,7 @@ import { AuthMethods } from "@/components/auth/auth-methods";
 import { Link } from "@/components/layout/foresight-link";
 import { authClient } from "@/lib/auth/auth-client";
 import { resolveAuthenticatedEntryHref, safeRedirectPath } from "@/lib/auth/auth-redirect";
-import { SESSION_QUERY_KEY, sessionQueryOptions } from "@/lib/auth/session";
+import { SESSION_QUERY_KEY } from "@/lib/auth/session";
 import { useTRPC } from "@/lib/trpc/client";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -73,9 +73,8 @@ function SignInPage() {
 
   const finishSignIn = async () => {
     await queryClient.invalidateQueries({ queryKey: SESSION_QUERY_KEY });
-    await queryClient.fetchQuery(sessionQueryOptions());
     const target = await resolveAuthenticatedEntryHref(queryClient, trpc, router, redirectParam);
-    window.location.replace(target);
+    await router.navigate({ href: target, replace: true });
   };
 
   const onSubmit = async (data: SignInInput) => {
