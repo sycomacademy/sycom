@@ -3,18 +3,21 @@
     "*.css": "tailwindcss"
   },
   "files.exclude": {
-    // "**/.cursor": true,
-    // "**/.claude": true,
-    // "**/.agents": true,
-    // "**/.azure": true,
-    // "**/.codex": true,
-    // "**/.impeccable": true,
-    // "**/.deepsec": true,
-    // "**/.turbo": true,
-    // "**/.github/skills": true,
-    // "**/.github/agents": true,
-    // "**/.github/hooks": true,
-    // "**/.opencode": true
+    "**/dist": true,
+    "**/.tanstack": true,
+    "**/node_modules": true,
+    "**/.cursor": true,
+    "**/.claude": true,
+    "**/.agents": true,
+    "**/.azure": true,
+    "**/.codex": true,
+    "**/.impeccable": true,
+    "**/.deepsec": true,
+    "**/.turbo": true,
+    "**/.github/skills": true,
+    "**/.github/agents": true,
+    "**/.github/hooks": true,
+    "**/.opencode": true
   },
   "tailwindCSS.experimental.configFile": {
     "packages/ui/src/styles/globals.css": ["packages/ui/src/**", "apps/dashboard/src/**"]
