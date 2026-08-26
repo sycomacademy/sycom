@@ -6,9 +6,29 @@ pre-commit:
   jobs:
     - name: oxlint
       glob: "*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}"
+      exclude:
+        - "**/routeTree.gen.ts"
+        - ".cursor/**"
+        - ".claude/**"
+        - ".agents/**"
+        - ".codex/**"
+        - ".deepsec/**"
+        - ".github/skills/**"
+        - ".github/agents/**"
+        - ".github/hooks/**"
       run: bun oxlint --fix {staged_files}
       stage_fixed: true
     - name: oxfmt
       glob: "*.{js,jsx,mjs,cjs,ts,tsx,mts,cts,json}"
+      exclude:
+        - "**/routeTree.gen.ts"
+        - ".cursor/**"
+        - ".claude/**"
+        - ".agents/**"
+        - ".codex/**"
+        - ".deepsec/**"
+        - ".github/skills/**"
+        - ".github/agents/**"
+        - ".github/hooks/**"
       run: bun oxfmt --write {staged_files}
       stage_fixed: true
