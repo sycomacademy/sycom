@@ -34,8 +34,8 @@ FQDN="$(az postgres flexible-server show \
 echo "Opening firewall for $MY_IP on $POSTGRES_SERVER ..."
 az postgres flexible-server firewall-rule create \
   --resource-group "$RESOURCE_GROUP" \
-  --name "$POSTGRES_SERVER" \
-  --rule-name "$RULE_NAME" \
+  --server-name "$POSTGRES_SERVER" \
+  --name "$RULE_NAME" \
   --start-ip-address "$MY_IP" \
   --end-ip-address "$MY_IP" \
   --output none
@@ -44,8 +44,8 @@ cleanup() {
   echo "Removing firewall rule $RULE_NAME ..."
   az postgres flexible-server firewall-rule delete \
     --resource-group "$RESOURCE_GROUP" \
-    --name "$POSTGRES_SERVER" \
-    --rule-name "$RULE_NAME" \
+    --server-name "$POSTGRES_SERVER" \
+    --name "$RULE_NAME" \
     --yes \
     --output none 2>/dev/null || true
 }
