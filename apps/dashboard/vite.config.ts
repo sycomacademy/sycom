@@ -1,5 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
-import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
@@ -22,7 +22,7 @@ export default defineConfig({
   plugins: [
     tsconfigPaths(),
     tailwindcss(),
-    tanstackStart(),
+    tanstackRouter({ target: "react", autoCodeSplitting: true }),
     viteReact(),
     shouldAnalyzeBundle &&
       visualizer({

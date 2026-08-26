@@ -1,11 +1,8 @@
-import { createServerFn } from "@tanstack/react-start";
+import { authClient } from "@/lib/auth/auth-client";
 
-import { sessionMiddleware } from "@/middleware/auth";
-
-export const getSession = createServerFn({ method: "GET" })
-  .middleware([sessionMiddleware])
-  .handler(({ context }) =>
-    context.session && context.user ? { session: context.session, user: context.user } : null,
-  );
+export const getSession = async () => {
+  const data = await authClient.getSession({ fetchOptions: { throw: true } });
+  return data?.session && data.user ? { session: data.session, user: data.user } : null;
+};
 
 export type SessionData = NonNullable<Awaited<ReturnType<typeof getSession>>>;
