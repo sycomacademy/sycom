@@ -85,12 +85,25 @@ export function signUploadParams(input: {
 
 export type SignedUploadParams = ReturnType<typeof signUploadParams>;
 
+/**
+ * Cloudinary only knows three resource types (`image`, `video`, `raw`) while our
+ * `StorageResourceType` enum has four. Every SDK call must go through this map:
+ * the SDK types `resource_type` as a loose string, so an unmapped `"file"` or
+ * `"audio"` type-checks fine and then silently builds a URL for an endpoint that
+ * doesn't exist (`/file/download`, `/audio/destroy`).
+ */
+function deliveryResourceType(resourceType: StorageResourceType): "image" | "video" | "raw" {
+  if (resourceType === "file") return "raw";
+  if (resourceType === "audio") return "video";
+  return resourceType;
+}
+
 export async function removeAsset(
   publicId: string,
   options?: { resourceType?: StorageResourceType; invalidate?: boolean },
 ): Promise<{ result: string }> {
   return cloudinary.uploader.destroy(publicId, {
-    resource_type: options?.resourceType ?? "image",
+    resource_type: deliveryResourceType(options?.resourceType ?? "image"),
     invalidate: options?.invalidate ?? true,
   });
 }
@@ -99,27 +112,10 @@ export function getPublicUrl(
   publicId: string,
   resourceType: StorageResourceType = "image",
 ): string {
-  return cloudinary.url(publicId, { resource_type: resourceType, secure: true });
-}
-
-export function getSignedUrl(
-  publicId: string,
-  expireIn: number,
-  options?: { download?: boolean; resourceType?: StorageResourceType },
-): string {
-  return cloudinary.utils.private_download_url(publicId, "", {
-    resource_type: options?.resourceType ?? "image",
-    attachment: options?.download ?? false,
-    expires_at: Math.round(Date.now() / 1000) + expireIn,
+  return cloudinary.url(publicId, {
+    resource_type: deliveryResourceType(resourceType),
+    secure: true,
   });
-}
-
-function cloudinaryDeliveryResourceType(
-  resourceType: StorageResourceType,
-): "image" | "video" | "raw" {
-  if (resourceType === "file") return "raw";
-  if (resourceType === "audio") return "video";
-  return resourceType;
 }
 
 function withFormatExtension(publicId: string, format?: string): string {
@@ -140,37 +136,27 @@ export function getSignedDeliveryUrl(
   },
 ): string {
   const resourceType = options?.resourceType ?? "image";
-  const deliveryType = cloudinaryDeliveryResourceType(resourceType);
+  const deliveryType = deliveryResourceType(resourceType);
   let id = publicId.replace(/^\/+/, "");
   const expiresAt = Math.round(Date.now() / 1000) + expireIn;
 
-  if (options?.download) {
-    // private_download_url only works for raw assets; PDFs uploaded as image need signed delivery + attachment
-    if (deliveryType === "raw") {
-      return getSignedUrl(publicId, expireIn, {
-        download: true,
-        resourceType,
-      });
-    }
-
-    id = withFormatExtension(id, options?.format);
-    return cloudinary.url(id, {
-      resource_type: deliveryType,
-      secure: true,
-      sign_url: true,
-      expires_at: expiresAt,
-      flags: "attachment",
-    });
-  }
-
-  if (deliveryType === "raw" || (resourceType === "image" && options?.format)) {
+  // Raw ids are addressed with their extension; so are PDFs, which Cloudinary
+  // stores as `image` but delivers under `<public_id>.pdf`. Attachments always
+  // carry it so the downloaded file lands with a usable extension.
+  if (options?.download || deliveryType === "raw" || resourceType === "image") {
     id = withFormatExtension(id, options?.format);
   }
 
+  // NOTE: downloads use signed delivery + `fl_attachment` for every resource
+  // type, raw included. The download API (`utils.private_download_url`) is not
+  // an alternative here: it serves `private`/`authenticated` assets, and ours
+  // are uploaded as plain `type: upload`, so it 404s with "Resource not found".
+  // Cloudinary sets Content-Disposition from the asset's original filename.
   return cloudinary.url(id, {
     resource_type: deliveryType,
     secure: true,
     sign_url: true,
     expires_at: expiresAt,
+    ...(options?.download ? { flags: "attachment" } : {}),
   });
 }
