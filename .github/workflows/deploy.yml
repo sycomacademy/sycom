@@ -1,4 +1,4 @@
-name: Deploy Azure
+name: Deploy apps
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -7,21 +7,30 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - "infra/**"
+      - ".github/workflows/infra.yml"
+      - "**/*.md"
+  workflow_dispatch:
 
 permissions:
   contents: read
   id-token: write
 
 jobs:
-  deploy-production:
+  deploy-apps:
     runs-on: ubuntu-latest
     environment: production
     concurrency:
-      group: deploy-production
+      group: deploy-apps-production
       cancel-in-progress: true
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.12
 
       - name: Azure login
         uses: azure/login@v2
@@ -30,39 +39,49 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Create resource group
-        run: az group create --name "${{ vars.AZURE_RESOURCE_GROUP }}" --location "${{ vars.AZURE_LOCATION }}"
-
-      - name: Bootstrap shared production infrastructure
+      - name: Resolve Azure resource names
         run: |
-          az deployment group create \
-            --resource-group "${{ vars.AZURE_RESOURCE_GROUP }}" \
-            --template-file infra/main.local-deploy.bicep \
-            --parameters infra/params/prod.bicepparam \
-            --parameters deployApps=false \
-              keyVaultAdminObjectId="${{ vars.KEY_VAULT_ADMIN_OBJECT_ID }}" \
-              postgresAdminPassword="${{ secrets.POSTGRES_ADMIN_PASSWORD }}" > /tmp/prod-bootstrap.json
+          RG="${{ vars.AZURE_RESOURCE_GROUP }}"
+          ACR_NAME="$(az acr list --resource-group "$RG" --query "[0].name" -o tsv)"
+          ACR_LOGIN_SERVER="$(az acr show --name "$ACR_NAME" --query loginServer -o tsv)"
+          WEB_APP_NAME="$(az webapp list --resource-group "$RG" --query "[0].name" -o tsv)"
+          CONTAINER_APP_NAME="$(az containerapp list --resource-group "$RG" --query "[0].name" -o tsv)"
+          SERVER_FQDN="$(az containerapp show --name "$CONTAINER_APP_NAME" --resource-group "$RG" --query properties.configuration.ingress.fqdn -o tsv)"
+          SERVER_URL="${{ vars.SERVER_URL }}"
+          if [ -z "$SERVER_URL" ]; then
+            SERVER_URL="https://${SERVER_FQDN}"
+          fi
 
-          echo "ACR_NAME=$(jq -r '.properties.outputs.containerRegistryName.value' /tmp/prod-bootstrap.json)" >> "$GITHUB_ENV"
-          echo "ACR_LOGIN_SERVER=$(jq -r '.properties.outputs.containerRegistryLoginServer.value' /tmp/prod-bootstrap.json)" >> "$GITHUB_ENV"
-          echo "CONTAINER_APPS_DEFAULT_DOMAIN=$(jq -r '.properties.outputs.containerAppsEnvironmentDefaultDomain.value' /tmp/prod-bootstrap.json)" >> "$GITHUB_ENV"
-          echo "APP_URL=${{ vars.DASHBOARD_URL }}" >> "$GITHUB_ENV"
+          {
+            echo "ACR_NAME=$ACR_NAME"
+            echo "ACR_LOGIN_SERVER=$ACR_LOGIN_SERVER"
+            echo "WEB_APP_NAME=$WEB_APP_NAME"
+            echo "CONTAINER_APP_NAME=$CONTAINER_APP_NAME"
+            echo "SERVER_URL=$SERVER_URL"
+            echo "DASHBOARD_URL=${{ vars.DASHBOARD_URL }}"
+          } >> "$GITHUB_ENV"
 
-      - name: Build and push dashboard image
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build dashboard SPA
+        run: bun run build --filter=dashboard
+        env:
+          VITE_SERVER_URL: ${{ env.SERVER_URL }}
+          VITE_DASHBOARD_URL: ${{ env.DASHBOARD_URL }}
+          VITE_WEBSITE_URL: ${{ vars.WEBSITE_URL }}
+          VITE_CLOUDINARY_CLOUD_NAME: ${{ vars.CLOUDINARY_CLOUD_NAME }}
+
+      - name: Zip dashboard dist
         run: |
-          IMAGE_TAG="${GITHUB_SHA}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-          az acr build \
-            --registry "$ACR_NAME" \
-            --image "dashboard:${IMAGE_TAG}" \
-            --file Dockerfile.dashboard \
-            --build-arg "VITE_SERVER_URL=$APP_URL" \
-            --build-arg "VITE_DASHBOARD_URL=$APP_URL" \
-            --build-arg "VITE_WEBSITE_URL=${{ vars.WEBSITE_URL }}" \
-            --build-arg "VITE_CLOUDINARY_CLOUD_NAME=${{ vars.CLOUDINARY_CLOUD_NAME }}" \
-            .
+          cd apps/dashboard/dist
+          zip -r "$GITHUB_WORKSPACE/dashboard-spa.zip" .
 
-      - name: Record dashboard image tag
-        run: echo "DASHBOARD_IMAGE=$ACR_LOGIN_SERVER/dashboard:${GITHUB_SHA}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_ENV"
+      - name: Deploy dashboard to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.WEB_APP_NAME }}
+          package: dashboard-spa.zip
 
       - name: Build and push server image
         run: |
@@ -70,37 +89,19 @@ jobs:
           az acr build \
             --registry "$ACR_NAME" \
             --image "server:${IMAGE_TAG}" \
-            --file Dockerfile.server \
+            --file apps/server/Dockerfile \
             .
+          echo "SERVER_IMAGE=$ACR_LOGIN_SERVER/server:${IMAGE_TAG}" >> "$GITHUB_ENV"
 
-      - name: Record server image tag
-        run: echo "SERVER_IMAGE=$ACR_LOGIN_SERVER/server:${GITHUB_SHA}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_ENV"
-
-      - name: Deploy production apps
+      - name: Update Container App image
         run: |
-          az deployment group create \
+          az containerapp update \
+            --name "$CONTAINER_APP_NAME" \
             --resource-group "${{ vars.AZURE_RESOURCE_GROUP }}" \
-            --template-file infra/main.local-deploy.bicep \
-            --parameters infra/params/prod.bicepparam \
-            --parameters \
-              deployApps=true \
-              keyVaultAdminObjectId="${{ vars.KEY_VAULT_ADMIN_OBJECT_ID }}" \
-              postgresAdminPassword="${{ secrets.POSTGRES_ADMIN_PASSWORD }}" \
-              dashboardUrl="$APP_URL" \
-              dashboardImage="$DASHBOARD_IMAGE" \
-              serverImage="$SERVER_IMAGE" \
-              betterAuthSecret="${{ secrets.BETTER_AUTH_SECRET }}" \
-              betterAuthApiKey="${{ secrets.BETTER_AUTH_API_KEY }}" \
-              googleClientId="${{ secrets.GOOGLE_CLIENT_ID }}" \
-              googleClientSecret="${{ secrets.GOOGLE_CLIENT_SECRET }}" \
-              linkedinClientId="${{ secrets.LINKEDIN_CLIENT_ID }}" \
-              linkedinClientSecret="${{ secrets.LINKEDIN_CLIENT_SECRET }}" \
-              cloudinaryCloudName="${{ secrets.CLOUDINARY_CLOUD_NAME }}" \
-              cloudinaryApiKey="${{ secrets.CLOUDINARY_API_KEY }}" \
-              cloudinaryApiSecret="${{ secrets.CLOUDINARY_API_SECRET }}" \
-              resendApiKey="${{ secrets.RESEND_API_KEY }}" \
-              resendEmailFrom="${{ secrets.RESEND_EMAIL_FROM }}" \
-              resendEmailReplyTo="${{ secrets.RESEND_EMAIL_REPLY_TO }}" \
-              aiGatewayApiKey="${{ secrets.AI_GATEWAY_API_KEY }}" > /tmp/prod-deploy.json
+            --image "$SERVER_IMAGE"
 
-          echo "App default URL: $(jq -r '.properties.outputs.appDefaultUrl.value' /tmp/prod-deploy.json)"
+      - name: Print URLs
+        run: |
+          echo "Dashboard Web App: https://${WEB_APP_NAME}.azurewebsites.net"
+          echo "Dashboard URL: $DASHBOARD_URL"
+          echo "API URL: $SERVER_URL"

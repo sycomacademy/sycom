@@ -29,21 +29,24 @@
   "type": "module",
   "scripts": {
     "dev": "turbo -F dashboard -F server dev",
+    "dev:dashboard": "turbo -F dashboard dev",
+    "dev:server": "turbo -F server dev",
     "build": "turbo build",
     "check-types": "turbo check-types",
     "test": "turbo test",
     "storybook:ui": "turbo -F @sycom/ui storybook",
     "build-storybook:ui": "turbo -F @sycom/ui build-storybook",
-    "dev:dashboard": "turbo -F dashboard dev",
-    "dev:website": "turbo -F website dev",
-    "dev:server": "turbo -F server dev",
     "db:push": "turbo -F @sycom/db db:push",
     "db:studio": "turbo -F @sycom/db db:studio",
     "db:generate": "turbo -F @sycom/db db:generate",
     "db:migrate": "turbo -F @sycom/db db:migrate",
     "check": "oxlint && oxfmt --write",
     "dev:emails": "turbo -F @sycom/emails dev",
-    "update-deps": "bun run scripts/update-deps.ts && bun install"
+    "update-deps": "bun run scripts/update-deps.ts && bun install",
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f"
   },
   "dependencies": {
     "@sycom/db": "workspace:*",

@@ -24,17 +24,23 @@ param logAnalyticsWorkspaceName string = '${projectName}-${environmentName}-logs
 @description('Container Apps environment name.')
 param containerAppsEnvironmentName string = '${projectName}-${environmentName}-cae'
 
-@description('Container App name. Both containers live in this single app.')
+@description('Container App name for the API server.')
 param appName string = '${projectName}-${environmentName}-app'
 
-@description('Dashboard image reference in ACR.')
-param dashboardImage string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
+@description('Linux App Service plan name for the SPA.')
+param appServicePlanName string = '${projectName}-${environmentName}-plan'
+
+@description('Azure Web App name for the dashboard SPA.')
+param webAppName string = '${projectName}-${environmentName}-web'
 
 @description('Server image reference in ACR.')
 param serverImage string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
 
-@description('Public app URL for this environment.')
+@description('Public dashboard SPA URL (custom domain or azurewebsites.net).')
 param dashboardUrl string = ''
+
+@description('Public API URL. Defaults to the Container App FQDN when empty.')
+param serverUrl string = ''
 
 @description('Optional public website URL used by server-side links.')
 param websiteUrl string = 'https://sycomsolutions.com'
@@ -42,11 +48,8 @@ param websiteUrl string = 'https://sycomsolutions.com'
 @description('Allowed browser origins for the server.')
 param corsOrigins array = []
 
-@description('Dashboard container port (the only ingress).')
-param dashboardTargetPort int = 3000
-
-@description('Server container port (loopback only).')
-param serverTargetPort int = 3001
+@description('Server container port.')
+param serverTargetPort int = 3000
 
 @description('Minimum app replicas.')
 param appMinReplicas int = 1
@@ -140,15 +143,19 @@ var mergedTags = union(tags, {
   project: projectName
 })
 
-var defaultCorsOrigins = empty(websiteUrl) ? [dashboardUrl] : [dashboardUrl, websiteUrl]
-var effectiveCorsOrigins = length(corsOrigins) > 0 ? corsOrigins : defaultCorsOrigins
-var corsOriginValue = join(effectiveCorsOrigins, ',')
-var internalServerUrl = 'http://localhost:${serverTargetPort}'
 var acrUsername = containerRegistry.listCredentials().username
 var acrPassword = containerRegistry.listCredentials().passwords[0].value
 var effectiveDatabaseUrl = deployPostgres
   ? 'postgresql://${postgresAdminLogin}:${uriComponent(postgresAdminPassword)}@${postgres!.properties.fullyQualifiedDomainName}:5432/${postgresDatabaseName}?sslmode=require'
   : databaseUrl
+var serverFqdn = '${appName}.${containerAppsEnvironment.properties.defaultDomain}'
+var effectiveServerUrl = empty(serverUrl) ? 'https://${serverFqdn}' : serverUrl
+var webAppUrl = 'https://${webApp.properties.defaultHostName}'
+var defaultCorsOrigins = empty(websiteUrl)
+  ? [dashboardUrl, webAppUrl]
+  : [dashboardUrl, websiteUrl, webAppUrl]
+var effectiveCorsOrigins = length(corsOrigins) > 0 ? concat(corsOrigins, [webAppUrl]) : defaultCorsOrigins
+var corsOriginValue = join(effectiveCorsOrigins, ',')
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
   name: logAnalyticsWorkspaceName
@@ -284,6 +291,46 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2024-03-01'
   tags: mergedTags
 }
 
+resource appServicePlan 'Microsoft.Web/serverfarms@2023-12-01' = {
+  name: appServicePlanName
+  location: location
+  kind: 'linux'
+  sku: {
+    name: 'B1'
+    tier: 'Basic'
+  }
+  properties: {
+    reserved: true
+  }
+  tags: mergedTags
+}
+
+resource webApp 'Microsoft.Web/sites@2023-12-01' = {
+  name: webAppName
+  location: location
+  kind: 'app,linux'
+  properties: {
+    serverFarmId: appServicePlan.id
+    httpsOnly: true
+    siteConfig: {
+      linuxFxVersion: 'NODE|22-lts'
+      alwaysOn: true
+      ftpsState: 'Disabled'
+      minTlsVersion: '1.2'
+      http20Enabled: true
+      appCommandLine: 'node spa-server.mjs'
+      healthCheckPath: '/health'
+      appSettings: [
+        {
+          name: 'SCM_DO_BUILD_DURING_DEPLOYMENT'
+          value: 'false'
+        }
+      ]
+    }
+  }
+  tags: mergedTags
+}
+
 resource app 'Microsoft.App/containerApps@2024-03-01' = if (deployApps) {
   name: appName
   location: location
@@ -294,7 +341,7 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = if (deployApps) {
       ingress: {
         allowInsecure: false
         external: true
-        targetPort: dashboardTargetPort
+        targetPort: serverTargetPort
         transport: 'auto'
         traffic: [
           {
@@ -376,44 +423,6 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = if (deployApps) {
     template: {
       containers: [
         {
-          name: 'dashboard'
-          image: dashboardImage
-          resources: {
-            cpu: json('0.5')
-            memory: '1Gi'
-          }
-          env: [
-            {
-              name: 'INTERNAL_SERVER_URL'
-              value: internalServerUrl
-            }
-          ]
-          probes: [
-            {
-              type: 'Startup'
-              httpGet: {
-                path: '/health'
-                port: dashboardTargetPort
-              }
-              initialDelaySeconds: 10
-              periodSeconds: 10
-              timeoutSeconds: 5
-              failureThreshold: 12
-            }
-            {
-              type: 'Liveness'
-              httpGet: {
-                path: '/health'
-                port: dashboardTargetPort
-              }
-              initialDelaySeconds: 15
-              periodSeconds: 30
-              timeoutSeconds: 5
-              failureThreshold: 3
-            }
-          ]
-        }
-        {
           name: 'server'
           image: serverImage
           resources: {
@@ -427,7 +436,7 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = if (deployApps) {
             }
             {
               name: 'BETTER_AUTH_URL'
-              value: dashboardUrl
+              value: effectiveServerUrl
             }
             {
               name: 'DASHBOARD_URL'
@@ -435,7 +444,7 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = if (deployApps) {
             }
             {
               name: 'SERVER_URL'
-              value: dashboardUrl
+              value: effectiveServerUrl
             }
             {
               name: 'WEBSITE_URL'
@@ -455,7 +464,7 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = if (deployApps) {
             }
             {
               name: 'HOST'
-              value: '127.0.0.1'
+              value: '0.0.0.0'
             }
             {
               name: 'DATABASE_URL'
@@ -517,7 +526,8 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = if (deployApps) {
           probes: [
             {
               type: 'Startup'
-              tcpSocket: {
+              httpGet: {
+                path: '/health'
                 port: serverTargetPort
               }
               initialDelaySeconds: 5
@@ -527,7 +537,8 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = if (deployApps) {
             }
             {
               type: 'Liveness'
-              tcpSocket: {
+              httpGet: {
+                path: '/health'
                 port: serverTargetPort
               }
               initialDelaySeconds: 15
@@ -553,5 +564,7 @@ output keyVaultName string = keyVault.name
 output containerAppsEnvironmentId string = containerAppsEnvironment.id
 output containerAppsEnvironmentDefaultDomain string = containerAppsEnvironment.properties.defaultDomain
 output appContainerAppName string = appName
-output appDefaultUrl string = deployApps ? 'https://${app!.properties.configuration.ingress.fqdn}' : ''
+output serverDefaultUrl string = deployApps ? 'https://${app!.properties.configuration.ingress.fqdn}' : 'https://${serverFqdn}'
+output dashboardWebAppName string = webApp.name
+output webAppDefaultUrl string = 'https://${webApp.properties.defaultHostName}'
 output postgresFqdn string = deployPostgres ? postgres!.properties.fullyQualifiedDomainName : ''

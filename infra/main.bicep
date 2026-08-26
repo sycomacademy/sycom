@@ -1,9 +1,8 @@
 targetScope = 'resourceGroup'
 
-// One Container App with two containers (dashboard + server). Dashboard
-// reverse-proxies /api/auth/* and /trpc/* to the server on localhost:3001
-// so the env-internal hairpin / TLS handshake quirks are bypassed
-// entirely. Server has no external ingress.
+// Production topology: SPA on Azure Web App, API on Container Apps,
+// Postgres on Azure Database for PostgreSQL. The live template used by
+// CI is infra/main.local-deploy.bicep.
 
 @description('Azure region for this environment.')
 param location string = resourceGroup().location

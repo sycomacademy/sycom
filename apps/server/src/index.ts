@@ -1,4 +1,5 @@
 import { trpcServer } from "@hono/trpc-server";
+import { serve } from "@hono/node-server";
 import { auth } from "@sycom/auth";
 import { env } from "@sycom/env/server";
 import { createLoggerWithContext } from "@sycom/logger";
@@ -144,8 +145,13 @@ const shutdown = async (signal: string) => {
 process.on("SIGTERM", () => shutdown("SIGTERM"));
 process.on("SIGINT", () => shutdown("SIGINT"));
 
-export default {
-  hostname: "0.0.0.0",
-  port,
-  fetch: app.fetch,
-};
+serve(
+  {
+    fetch: app.fetch,
+    hostname: process.env.HOST ?? "0.0.0.0",
+    port,
+  },
+  (info) => {
+    honoLogger.info(`Server listening on http://${info.address}:${info.port}`);
+  },
+);
