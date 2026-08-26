@@ -11,11 +11,6 @@ pre-commit:
         - ".cursor/**"
         - ".claude/**"
         - ".agents/**"
-        - ".codex/**"
-        - ".deepsec/**"
-        - ".github/skills/**"
-        - ".github/agents/**"
-        - ".github/hooks/**"
       run: bun oxlint --fix {staged_files}
       stage_fixed: true
     - name: oxfmt
@@ -25,10 +20,5 @@ pre-commit:
         - ".cursor/**"
         - ".claude/**"
         - ".agents/**"
-        - ".codex/**"
-        - ".deepsec/**"
-        - ".github/skills/**"
-        - ".github/agents/**"
-        - ".github/hooks/**"
       run: bun oxfmt --write {staged_files}
       stage_fixed: true
