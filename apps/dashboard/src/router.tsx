@@ -2,7 +2,7 @@ import type { AppRouter } from "server/trpc/routers/_app";
 import { env } from "@sycom/env/web";
 
 import "./index.css";
-import { QueryCache, QueryClient } from "@tanstack/react-query";
+import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
@@ -84,9 +84,11 @@ export const getRouter = () => {
       <RouteError error={error} mode="container" reset={reset} />
     ),
     Wrap: ({ children }) => (
-      <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
-        {children}
-      </TRPCProvider>
+      <QueryClientProvider client={queryClient}>
+        <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
+          {children}
+        </TRPCProvider>
+      </QueryClientProvider>
     ),
   });
 
