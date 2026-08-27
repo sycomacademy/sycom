@@ -1,0 +1,91 @@
+name: Provision Azure
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "infra/**"
+      - ".github/workflows/infra.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  provision:
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency:
+      group: provision-production
+      cancel-in-progress: false
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Create resource group
+        run: az group create --name "${{ vars.AZURE_RESOURCE_GROUP }}" --location "${{ vars.AZURE_LOCATION }}"
+
+      - name: Keep currently running images (don't roll back on infra-only changes)
+        run: |
+          RG="${{ vars.AZURE_RESOURCE_GROUP }}"
+          DASHBOARD_IMAGE="mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
+          SERVER_IMAGE="mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
+
+          CURRENT_DASHBOARD="$(az containerapp show --name "${{ vars.DASHBOARD_APP_NAME }}" --resource-group "$RG" --query "properties.template.containers[0].image" -o tsv 2>/dev/null || true)"
+          if [ -n "$CURRENT_DASHBOARD" ]; then
+            DASHBOARD_IMAGE="$CURRENT_DASHBOARD"
+          fi
+
+          CURRENT_SERVER="$(az containerapp show --name "${{ vars.SERVER_APP_NAME }}" --resource-group "$RG" --query "properties.template.containers[0].image" -o tsv 2>/dev/null || true)"
+          if [ -n "$CURRENT_SERVER" ]; then
+            SERVER_IMAGE="$CURRENT_SERVER"
+          fi
+
+          {
+            echo "DASHBOARD_IMAGE=$DASHBOARD_IMAGE"
+            echo "SERVER_IMAGE=$SERVER_IMAGE"
+          } >> "$GITHUB_ENV"
+
+      - name: Deploy infrastructure
+        run: |
+          az deployment group create \
+            --resource-group "${{ vars.AZURE_RESOURCE_GROUP }}" \
+            --template-file infra/main.bicep \
+            --parameters infra/params/prod.bicepparam \
+            --parameters \
+              dashboardAppName="${{ vars.DASHBOARD_APP_NAME }}" \
+              serverAppName="${{ vars.SERVER_APP_NAME }}" \
+              postgresAdminPassword="${{ secrets.POSTGRES_ADMIN_PASSWORD }}" \
+              dashboardUrl="${{ vars.DASHBOARD_URL }}" \
+              serverUrl="${{ vars.SERVER_URL }}" \
+              dashboardImage="$DASHBOARD_IMAGE" \
+              serverImage="$SERVER_IMAGE" \
+              betterAuthSecret="${{ secrets.BETTER_AUTH_SECRET }}" \
+              betterAuthApiKey="${{ secrets.BETTER_AUTH_API_KEY }}" \
+              googleClientId="${{ secrets.GOOGLE_CLIENT_ID }}" \
+              googleClientSecret="${{ secrets.GOOGLE_CLIENT_SECRET }}" \
+              linkedinClientId="${{ secrets.LINKEDIN_CLIENT_ID }}" \
+              linkedinClientSecret="${{ secrets.LINKEDIN_CLIENT_SECRET }}" \
+              cloudinaryCloudName="${{ secrets.CLOUDINARY_CLOUD_NAME }}" \
+              cloudinaryApiKey="${{ secrets.CLOUDINARY_API_KEY }}" \
+              cloudinaryApiSecret="${{ secrets.CLOUDINARY_API_SECRET }}" \
+              resendApiKey="${{ secrets.RESEND_API_KEY }}" \
+              resendEmailFrom="${{ secrets.RESEND_EMAIL_FROM }}" \
+              resendEmailReplyTo="${{ secrets.RESEND_EMAIL_REPLY_TO }}" \
+              aiGatewayApiKey="${{ secrets.AI_GATEWAY_API_KEY }}" > /tmp/prod-infra.json
+
+          echo "Dashboard: $(jq -r '.properties.outputs.dashboardDefaultUrl.value' /tmp/prod-infra.json)"
+          echo "Server: $(jq -r '.properties.outputs.serverDefaultUrl.value' /tmp/prod-infra.json)"
+          echo "Postgres: $(jq -r '.properties.outputs.postgresFqdn.value' /tmp/prod-infra.json)"

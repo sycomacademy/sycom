@@ -2,10 +2,9 @@ import type { AppRouter } from "server/trpc/routers/_app";
 import { env } from "@sycom/env/web";
 
 import "./index.css";
-import { QueryCache, QueryClient } from "@tanstack/react-query";
+import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 
-import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 import { logSycomConsoleBanner } from "@sycom/ui/lib/console-banner";
@@ -15,13 +14,10 @@ import superjson from "superjson";
 import Loader from "./components/layout/loader";
 import NotFound from "./components/layout/not-found";
 import RouteError from "./components/layout/route-error";
-import { getForwardedCookieHeader } from "./functions/forward-header-cookies";
 import { TRPCProvider } from "./lib/trpc/client";
 import { routeTree, type FileRoutesByTo } from "./routeTree.gen";
 
-if (typeof window !== "undefined") {
-  logSycomConsoleBanner();
-}
+logSycomConsoleBanner();
 /**
  * Type for the routes in the dashboard.
  */
@@ -53,7 +49,6 @@ export const getRouter = () => {
       httpBatchLink({
         url: `${env.VITE_SERVER_URL}/trpc`,
         transformer: superjson,
-        headers: () => getForwardedCookieHeader(),
         fetch(url, options) {
           return fetch(url, {
             ...options,
@@ -89,16 +84,12 @@ export const getRouter = () => {
       <RouteError error={error} mode="container" reset={reset} />
     ),
     Wrap: ({ children }) => (
-      <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
-        {children}
-      </TRPCProvider>
+      <QueryClientProvider client={queryClient}>
+        <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
+          {children}
+        </TRPCProvider>
+      </QueryClientProvider>
     ),
-  });
-
-  setupRouterSsrQueryIntegration({
-    router,
-    queryClient,
-    wrapQueryClient: true,
   });
 
   return router;

@@ -12,10 +12,60 @@ import type { UserRole } from "@sycom/db/schema/auth";
 import { dash } from "@better-auth/infra";
 import { betterAuthLogger, sendResetPasswordEmail, sendVerificationEmail } from "./config";
 import { auditPlugin } from "./audit-plugin/server";
+
+function sharedCookieDomain(left: string, right: string): string | undefined {
+  if (left === right) {
+    return undefined;
+  }
+  if (left.endsWith(`.${right}`)) {
+    return right;
+  }
+  if (right.endsWith(`.${left}`)) {
+    return left;
+  }
+
+  const leftLabels = left.split(".");
+  const rightLabels = right.split(".");
+  const max = Math.min(leftLabels.length, rightLabels.length);
+  for (let size = 2; size <= max; size++) {
+    const suffix = leftLabels.slice(-size).join(".");
+    if (suffix === rightLabels.slice(-size).join(".")) {
+      return suffix;
+    }
+  }
+  return undefined;
+}
+
+function cookieSiteSettings(dashboardUrl: string | undefined, authUrl: string) {
+  const authHost = new URL(authUrl).hostname;
+  const dashboardHost = dashboardUrl ? new URL(dashboardUrl).hostname : authHost;
+  const parentDomain = sharedCookieDomain(dashboardHost, authHost);
+
+  if (parentDomain && env.NODE_ENV === "production") {
+    return {
+      sameSite: "lax" as const,
+      crossSubDomainCookies: { enabled: true as const, domain: parentDomain },
+    };
+  }
+
+  if (dashboardHost !== authHost && env.NODE_ENV === "production") {
+    return {
+      sameSite: "none" as const,
+      crossSubDomainCookies: { enabled: false as const },
+    };
+  }
+
+  return {
+    sameSite: "lax" as const,
+    crossSubDomainCookies: { enabled: false as const },
+  };
+}
+
 export function createAuth() {
   const db = createDb();
   const passkeyOrigin = env.DASHBOARD_URL ?? env.BETTER_AUTH_URL;
   const passkeyRpId = new URL(passkeyOrigin).hostname;
+  const cookieSettings = cookieSiteSettings(env.DASHBOARD_URL, env.BETTER_AUTH_URL);
 
   return betterAuth({
     appName: "Sycom",
@@ -28,16 +78,14 @@ export function createAuth() {
     trustedOrigins: env.CORS_ORIGIN,
     advanced: {
       defaultCookieAttributes: {
-        sameSite: "lax",
+        sameSite: cookieSettings.sameSite,
         httpOnly: true,
       },
       useSecureCookies: env.NODE_ENV === "production",
-      crossSubDomainCookies: {
-        enabled: process.env.NODE_ENV === "production",
-      },
+      crossSubDomainCookies: cookieSettings.crossSubDomainCookies,
       ipAddressHeaders:
         env.NODE_ENV === "production"
-          ? ["x-vercel-forwarded-for", "x-real-ip", "x-forwarded-for"]
+          ? ["x-forwarded-for", "x-real-ip", "x-vercel-forwarded-for"]
           : ["x-forwarded-for"],
     },
     experimental: {

@@ -3,13 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "NODE_OPTIONS=--max-old-space-size=8192 vite build",
-    "start": "bun start.ts",
+    "build": "vite build",
     "serve": "vite preview",
     "dev": "vite dev",
     "build:analyze": "BUNDLE_ANALYZE=true vite build",
     "check-types": "tsc --noEmit",
-    "test": "bun test"
+    "test": "bun test ./src"
   },
   "dependencies": {
     "@better-auth/infra": "^0.2.5",
@@ -28,8 +27,6 @@
     "@tailwindcss/vite": "^4.2.4",
     "@tanstack/react-query": "^5.100.9",
     "@tanstack/react-router": "^1.170.11",
-    "@tanstack/react-router-ssr-query": "^1.166.12",
-    "@tanstack/react-start": "^1.168.20",
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/router-plugin": "^1.168.14",
     "@tiptap/core": "^3.22.5",

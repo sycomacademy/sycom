@@ -1,27 +1,22 @@
 targetScope = 'resourceGroup'
 
-// One Container App with two containers (dashboard + server). Dashboard
-// reverse-proxies /api/auth/* and /trpc/* to the server on localhost:3001
-// so the env-internal hairpin / TLS handshake quirks are bypassed
-// entirely. Server has no external ingress.
+// Production topology: dashboard (static SPA, nginx) and server (API) as two
+// separate Container Apps in one Container Apps Environment, both dockerized.
+// Postgres on Azure Database for PostgreSQL Flexible Server. A Container App
+// Job runs schema migrations using the server image before the server is
+// updated.
 
 @description('Azure region for this environment.')
 param location string = resourceGroup().location
 
 @description('Project name prefix used in resource naming.')
-param projectName string = 'sycom'
+param projectName string = 'sycomlearn'
 
 @description('Environment name, usually prod.')
-param environmentName string
-
-@description('Deploy only the shared infrastructure when false, or infrastructure plus the app when true.')
-param deployApps bool = true
+param environmentName string = 'prod'
 
 @description('Globally unique Azure Container Registry name.')
 param containerRegistryName string
-
-@description('Globally unique Azure Key Vault name.')
-param keyVaultName string
 
 @description('Log Analytics workspace name.')
 param logAnalyticsWorkspaceName string = '${projectName}-${environmentName}-logs'
@@ -29,11 +24,14 @@ param logAnalyticsWorkspaceName string = '${projectName}-${environmentName}-logs
 @description('Container Apps environment name.')
 param containerAppsEnvironmentName string = '${projectName}-${environmentName}-cae'
 
-@description('User-assigned managed identity name (shared by both containers).')
-param appIdentityName string = '${projectName}-${environmentName}-app-id'
+@description('Dashboard Container App name.')
+param dashboardAppName string = '${projectName}-${environmentName}-dashboard'
 
-@description('Container App name. Both containers live in this single app.')
-param appName string = '${projectName}-${environmentName}-app'
+@description('Server Container App name.')
+param serverAppName string = '${projectName}-${environmentName}-server'
+
+@description('Migration Container App Job name. Runs drizzle-kit migrate against Postgres using the server image.')
+param migrateJobName string = '${projectName}-${environmentName}-migrate'
 
 @description('Dashboard image reference in ACR.')
 param dashboardImage string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
@@ -41,73 +39,180 @@ param dashboardImage string = 'mcr.microsoft.com/azuredocs/containerapps-hellowo
 @description('Server image reference in ACR.')
 param serverImage string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
 
-@description('Public app URL for this environment (browser-facing, hits the dashboard ingress).')
-param dashboardUrl string
+@description('Public dashboard URL (custom domain once bound, otherwise the Container App default FQDN).')
+param dashboardUrl string = ''
 
-@description('Optional public website URL used by server-side links.')
-param websiteUrl string = ''
+@description('Public server/API URL. Defaults to the server Container App default FQDN when empty.')
+param serverUrl string = ''
+
+@description('Optional public marketing website URL used by server-side links.')
+param websiteUrl string = 'https://sycomsolutions.com'
 
 @description('Allowed browser origins for the server. Defaults to dashboardUrl plus websiteUrl when omitted.')
 param corsOrigins array = []
 
-@description('Dashboard container port (the only ingress).')
-param dashboardTargetPort int = 3000
+@description('Dashboard container port (nginx).')
+param dashboardTargetPort int = 80
 
-@description('Server container port (loopback only).')
-param serverTargetPort int = 3001
+@description('Server container port.')
+param serverTargetPort int = 3000
 
-@description('Minimum app replicas.')
+@description('Minimum replicas for both apps.')
 param appMinReplicas int = 1
 
-@description('Maximum app replicas.')
+@description('Maximum replicas for both apps.')
 param appMaxReplicas int = 2
 
-@description('DEBUG_PERFORMANCE value passed to the server.')
 @allowed([
   'true'
   'false'
 ])
 param debugPerformance string = 'false'
 
-@description('Key Vault secret names expected by the server container.')
-param keyVaultSecretNames object = {
-  databaseUrl: 'database-url'
-  betterAuthSecret: 'better-auth-secret'
-  betterAuthApiKey: 'better-auth-api-key'
-  googleClientId: 'google-client-id'
-  googleClientSecret: 'google-client-secret'
-  linkedinClientId: 'linkedin-client-id'
-  linkedinClientSecret: 'linkedin-client-secret'
-  cloudinaryCloudName: 'cloudinary-cloud-name'
-  cloudinaryApiKey: 'cloudinary-api-key'
-  cloudinaryApiSecret: 'cloudinary-api-secret'
-  resendApiKey: 'resend-api-key'
-  resendEmailFrom: 'resend-email-from'
-  resendEmailReplyTo: 'resend-email-reply-to'
-  aiGatewayApiKey: 'ai-gateway-api-key'
-}
+@description('Provision Azure Database for PostgreSQL Flexible Server. Set false to bring your own Postgres (e.g. Neon) via databaseUrl.')
+param deployPostgres bool = true
+
+@description('External Postgres connection string when deployPostgres is false. Stored as the server/migrate secret.')
+@secure()
+param databaseUrl string = ''
+
+@description('Globally unique PostgreSQL flexible server name.')
+param postgresServerName string = ''
+
+@description('Application database name on the flexible server.')
+param postgresDatabaseName string = 'sycom'
+
+@description('PostgreSQL administrator login.')
+param postgresAdminLogin string = ''
+
+@secure()
+param postgresAdminPassword string = ''
+
+@description('Flexible server SKU name.')
+param postgresSkuName string = 'Standard_B1ms'
+
+@description('Flexible server SKU tier.')
+param postgresSkuTier string = 'Burstable'
+
+@description('Storage size in GB.')
+param postgresStorageGb int = 32
+
+@description('PostgreSQL major version.')
+param postgresVersion string = '18'
+
+@secure()
+param betterAuthSecret string = ''
+
+@secure()
+param betterAuthApiKey string = ''
+
+@secure()
+param googleClientId string = ''
+
+@secure()
+param googleClientSecret string = ''
+
+@secure()
+param linkedinClientId string = ''
+
+@secure()
+param linkedinClientSecret string = ''
+
+@secure()
+param cloudinaryCloudName string = ''
+
+@secure()
+param cloudinaryApiKey string = ''
+
+@secure()
+param cloudinaryApiSecret string = ''
+
+@secure()
+param resendApiKey string = ''
+
+@secure()
+param resendEmailFrom string = ''
+
+@secure()
+param resendEmailReplyTo string = ''
+
+@secure()
+param aiGatewayApiKey string = ''
 
 @description('Common tags applied to created resources.')
 param tags object = {}
 
 var mergedTags = union(tags, {
-  environment: environmentName
   project: projectName
-  managedBy: 'bicep'
 })
 
-var defaultCorsOrigins = empty(websiteUrl) ? [dashboardUrl] : [dashboardUrl, websiteUrl]
+var acrUsername = containerRegistry.listCredentials().username
+var acrPassword = containerRegistry.listCredentials().passwords[0].value
+var effectiveDatabaseUrl = deployPostgres
+  ? 'postgresql://${postgresAdminLogin}:${uriComponent(postgresAdminPassword)}@${postgres!.properties.fullyQualifiedDomainName}:5432/${postgresDatabaseName}?sslmode=require'
+  : databaseUrl
+// Built from the environment's default domain rather than read back off the
+// app resources themselves — reading serverApp's own fqdn into serverApp's
+// own env would be a circular reference.
+var serverDefaultUrl = 'https://${serverAppName}.${containerAppsEnvironment.properties.defaultDomain}'
+var effectiveServerUrl = empty(serverUrl) ? serverDefaultUrl : serverUrl
+var dashboardDefaultUrl = 'https://${dashboardAppName}.${containerAppsEnvironment.properties.defaultDomain}'
+var effectiveDashboardUrl = empty(dashboardUrl) ? dashboardDefaultUrl : dashboardUrl
+var defaultCorsOrigins = empty(websiteUrl) ? [effectiveDashboardUrl] : [effectiveDashboardUrl, websiteUrl]
 var effectiveCorsOrigins = length(corsOrigins) > 0 ? corsOrigins : defaultCorsOrigins
 var corsOriginValue = join(effectiveCorsOrigins, ',')
-var keyVaultBaseUrl = '${keyVault.properties.vaultUri}secrets'
-// Both containers share a network namespace; dashboard SSR talks to the
-// server over loopback. No env-level service discovery needed.
-var internalServerUrl = 'http://localhost:${serverTargetPort}'
-var acrPullRoleDefinitionId = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')
-var keyVaultSecretsUserRoleDefinitionId = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6')
-var appIdentityMap = {
-  '${appIdentity.id}': {}
-}
+
+var registryLoginConfig = [
+  {
+    server: containerRegistry.properties.loginServer
+    username: acrUsername
+    passwordSecretRef: 'acr-password'
+  }
+]
+
+var serverEnv = [
+  { name: 'NODE_ENV', value: 'production' }
+  { name: 'BETTER_AUTH_URL', value: effectiveServerUrl }
+  { name: 'DASHBOARD_URL', value: effectiveDashboardUrl }
+  { name: 'SERVER_URL', value: effectiveServerUrl }
+  { name: 'WEBSITE_URL', value: websiteUrl }
+  { name: 'CORS_ORIGIN', value: corsOriginValue }
+  { name: 'DEBUG_PERFORMANCE', value: debugPerformance }
+  { name: 'PORT', value: string(serverTargetPort) }
+  { name: 'HOST', value: '0.0.0.0' }
+  { name: 'DATABASE_URL', secretRef: 'database-url' }
+  { name: 'BETTER_AUTH_SECRET', secretRef: 'better-auth-secret' }
+  { name: 'BETTER_AUTH_API_KEY', secretRef: 'better-auth-api-key' }
+  { name: 'GOOGLE_CLIENT_ID', secretRef: 'google-client-id' }
+  { name: 'GOOGLE_CLIENT_SECRET', secretRef: 'google-client-secret' }
+  { name: 'LINKEDIN_CLIENT_ID', secretRef: 'linkedin-client-id' }
+  { name: 'LINKEDIN_CLIENT_SECRET', secretRef: 'linkedin-client-secret' }
+  { name: 'CLOUDINARY_CLOUD_NAME', secretRef: 'cloudinary-cloud-name' }
+  { name: 'CLOUDINARY_API_KEY', secretRef: 'cloudinary-api-key' }
+  { name: 'CLOUDINARY_API_SECRET', secretRef: 'cloudinary-api-secret' }
+  { name: 'RESEND_API_KEY', secretRef: 'resend-api-key' }
+  { name: 'RESEND_EMAIL_FROM', secretRef: 'resend-email-from' }
+  { name: 'RESEND_EMAIL_REPLY_TO', secretRef: 'resend-email-reply-to' }
+  { name: 'AI_GATEWAY_API_KEY', secretRef: 'ai-gateway-api-key' }
+]
+
+var appSecrets = [
+  { name: 'acr-password', value: acrPassword }
+  { name: 'database-url', value: effectiveDatabaseUrl }
+  { name: 'better-auth-secret', value: betterAuthSecret }
+  { name: 'better-auth-api-key', value: betterAuthApiKey }
+  { name: 'google-client-id', value: googleClientId }
+  { name: 'google-client-secret', value: googleClientSecret }
+  { name: 'linkedin-client-id', value: linkedinClientId }
+  { name: 'linkedin-client-secret', value: linkedinClientSecret }
+  { name: 'cloudinary-cloud-name', value: cloudinaryCloudName }
+  { name: 'cloudinary-api-key', value: cloudinaryApiKey }
+  { name: 'cloudinary-api-secret', value: cloudinaryApiSecret }
+  { name: 'resend-api-key', value: resendApiKey }
+  { name: 'resend-email-from', value: resendEmailFrom }
+  { name: 'resend-email-reply-to', value: resendEmailReplyTo }
+  { name: 'ai-gateway-api-key', value: aiGatewayApiKey }
+]
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
   name: logAnalyticsWorkspaceName
@@ -131,36 +236,59 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' =
     name: 'Basic'
   }
   properties: {
-    adminUserEnabled: false
+    adminUserEnabled: true
     publicNetworkAccess: 'Enabled'
   }
   tags: mergedTags
 }
 
-resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' = {
-  name: keyVaultName
+resource postgres 'Microsoft.DBforPostgreSQL/flexibleServers@2024-08-01' = if (deployPostgres) {
+  name: postgresServerName
   location: location
+  sku: {
+    name: postgresSkuName
+    tier: postgresSkuTier
+  }
   properties: {
-    enableRbacAuthorization: true
-    enablePurgeProtection: true
-    enabledForDeployment: false
-    enabledForDiskEncryption: false
-    enabledForTemplateDeployment: false
-    publicNetworkAccess: 'Enabled'
-    tenantId: subscription().tenantId
-    sku: {
-      family: 'A'
-      name: 'standard'
+    version: postgresVersion
+    administratorLogin: postgresAdminLogin
+    administratorLoginPassword: postgresAdminPassword
+    storage: {
+      storageSizeGB: postgresStorageGb
     }
-    softDeleteRetentionInDays: 90
+    backup: {
+      backupRetentionDays: 7
+      geoRedundantBackup: 'Disabled'
+    }
+    network: {
+      publicNetworkAccess: 'Enabled'
+    }
+    highAvailability: {
+      mode: 'Disabled'
+    }
   }
   tags: mergedTags
 }
 
-resource appIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
-  name: appIdentityName
-  location: location
-  tags: mergedTags
+resource postgresDatabase 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2024-08-01' = if (deployPostgres) {
+  parent: postgres
+  name: postgresDatabaseName
+  properties: {
+    charset: 'UTF8'
+    collation: 'en_US.utf8'
+  }
+}
+
+// Special "0.0.0.0-0.0.0.0" rule = allow traffic from other Azure resources
+// (Container Apps, Container App Jobs) without opening the server to the
+// public internet.
+resource postgresFirewallAllowAzure 'Microsoft.DBforPostgreSQL/flexibleServers/firewallRules@2024-08-01' = if (deployPostgres) {
+  parent: postgres
+  name: 'AllowAllAzureServices'
+  properties: {
+    startIpAddress: '0.0.0.0'
+    endIpAddress: '0.0.0.0'
+  }
 }
 
 resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2024-03-01' = {
@@ -168,43 +296,19 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2024-03-01'
   location: location
   properties: {
     appLogsConfiguration: {
-        destination: 'log-analytics'
-        logAnalyticsConfiguration: {
-          customerId: logAnalyticsWorkspace.properties.customerId
-          sharedKey: logAnalyticsWorkspace.listKeys().primarySharedKey
-        }
+      destination: 'log-analytics'
+      logAnalyticsConfiguration: {
+        customerId: logAnalyticsWorkspace.properties.customerId
+        sharedKey: logAnalyticsWorkspace.listKeys().primarySharedKey
       }
     }
+  }
   tags: mergedTags
 }
 
-resource appAcrPullRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(containerRegistry.id, appIdentity.id, 'acr-pull')
-  scope: containerRegistry
-  properties: {
-    principalId: appIdentity.properties.principalId
-    principalType: 'ServicePrincipal'
-    roleDefinitionId: acrPullRoleDefinitionId
-  }
-}
-
-resource appKeyVaultSecretsUserRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(keyVault.id, appIdentity.id, 'key-vault-secrets-user')
-  scope: keyVault
-  properties: {
-    principalId: appIdentity.properties.principalId
-    principalType: 'ServicePrincipal'
-    roleDefinitionId: keyVaultSecretsUserRoleDefinitionId
-  }
-}
-
-resource app 'Microsoft.App/containerApps@2024-03-01' = if (deployApps) {
-  name: appName
+resource dashboardApp 'Microsoft.App/containerApps@2024-03-01' = {
+  name: dashboardAppName
   location: location
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: appIdentityMap
-  }
   properties: {
     managedEnvironmentId: containerAppsEnvironment.id
     configuration: {
@@ -221,82 +325,11 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = if (deployApps) {
           }
         ]
       }
-      registries: [
-        {
-          server: containerRegistry.properties.loginServer
-          identity: appIdentity.id
-        }
-      ]
+      registries: registryLoginConfig
       secrets: [
         {
-          name: 'database-url'
-          identity: appIdentity.id
-          keyVaultUrl: '${keyVaultBaseUrl}/${keyVaultSecretNames.databaseUrl}'
-        }
-        {
-          name: 'better-auth-secret'
-          identity: appIdentity.id
-          keyVaultUrl: '${keyVaultBaseUrl}/${keyVaultSecretNames.betterAuthSecret}'
-        }
-        {
-          name: 'better-auth-api-key'
-          identity: appIdentity.id
-          keyVaultUrl: '${keyVaultBaseUrl}/${keyVaultSecretNames.betterAuthApiKey}'
-        }
-        {
-          name: 'google-client-id'
-          identity: appIdentity.id
-          keyVaultUrl: '${keyVaultBaseUrl}/${keyVaultSecretNames.googleClientId}'
-        }
-        {
-          name: 'google-client-secret'
-          identity: appIdentity.id
-          keyVaultUrl: '${keyVaultBaseUrl}/${keyVaultSecretNames.googleClientSecret}'
-        }
-        {
-          name: 'linkedin-client-id'
-          identity: appIdentity.id
-          keyVaultUrl: '${keyVaultBaseUrl}/${keyVaultSecretNames.linkedinClientId}'
-        }
-        {
-          name: 'linkedin-client-secret'
-          identity: appIdentity.id
-          keyVaultUrl: '${keyVaultBaseUrl}/${keyVaultSecretNames.linkedinClientSecret}'
-        }
-        {
-          name: 'cloudinary-cloud-name'
-          identity: appIdentity.id
-          keyVaultUrl: '${keyVaultBaseUrl}/${keyVaultSecretNames.cloudinaryCloudName}'
-        }
-        {
-          name: 'cloudinary-api-key'
-          identity: appIdentity.id
-          keyVaultUrl: '${keyVaultBaseUrl}/${keyVaultSecretNames.cloudinaryApiKey}'
-        }
-        {
-          name: 'cloudinary-api-secret'
-          identity: appIdentity.id
-          keyVaultUrl: '${keyVaultBaseUrl}/${keyVaultSecretNames.cloudinaryApiSecret}'
-        }
-        {
-          name: 'resend-api-key'
-          identity: appIdentity.id
-          keyVaultUrl: '${keyVaultBaseUrl}/${keyVaultSecretNames.resendApiKey}'
-        }
-        {
-          name: 'resend-email-from'
-          identity: appIdentity.id
-          keyVaultUrl: '${keyVaultBaseUrl}/${keyVaultSecretNames.resendEmailFrom}'
-        }
-        {
-          name: 'resend-email-reply-to'
-          identity: appIdentity.id
-          keyVaultUrl: '${keyVaultBaseUrl}/${keyVaultSecretNames.resendEmailReplyTo}'
-        }
-        {
-          name: 'ai-gateway-api-key'
-          identity: appIdentity.id
-          keyVaultUrl: '${keyVaultBaseUrl}/${keyVaultSecretNames.aiGatewayApiKey}'
+          name: 'acr-password'
+          value: acrPassword
         }
       ]
     }
@@ -306,15 +339,9 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = if (deployApps) {
           name: 'dashboard'
           image: dashboardImage
           resources: {
-            cpu: json('0.5')
-            memory: '1Gi'
+            cpu: json('0.25')
+            memory: '0.5Gi'
           }
-          env: [
-            {
-              name: 'INTERNAL_SERVER_URL'
-              value: internalServerUrl
-            }
-          ]
           probes: [
             {
               type: 'Startup'
@@ -322,9 +349,9 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = if (deployApps) {
                 path: '/health'
                 port: dashboardTargetPort
               }
-              initialDelaySeconds: 10
-              periodSeconds: 10
-              timeoutSeconds: 5
+              initialDelaySeconds: 5
+              periodSeconds: 5
+              timeoutSeconds: 3
               failureThreshold: 12
             }
             {
@@ -333,13 +360,47 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = if (deployApps) {
                 path: '/health'
                 port: dashboardTargetPort
               }
-              initialDelaySeconds: 15
+              initialDelaySeconds: 10
               periodSeconds: 30
               timeoutSeconds: 5
               failureThreshold: 3
             }
           ]
         }
+      ]
+      scale: {
+        minReplicas: appMinReplicas
+        maxReplicas: appMaxReplicas
+      }
+    }
+  }
+  tags: mergedTags
+}
+
+resource serverApp 'Microsoft.App/containerApps@2024-03-01' = {
+  name: serverAppName
+  location: location
+  properties: {
+    managedEnvironmentId: containerAppsEnvironment.id
+    configuration: {
+      activeRevisionsMode: 'Single'
+      ingress: {
+        allowInsecure: false
+        external: true
+        targetPort: serverTargetPort
+        transport: 'auto'
+        traffic: [
+          {
+            latestRevision: true
+            weight: 100
+          }
+        ]
+      }
+      registries: registryLoginConfig
+      secrets: appSecrets
+    }
+    template: {
+      containers: [
         {
           name: 'server'
           image: serverImage
@@ -347,100 +408,7 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = if (deployApps) {
             cpu: json('0.5')
             memory: '1Gi'
           }
-          env: [
-            {
-              name: 'NODE_ENV'
-              value: 'production'
-            }
-            {
-              name: 'BETTER_AUTH_URL'
-              value: dashboardUrl
-            }
-            {
-              name: 'DASHBOARD_URL'
-              value: dashboardUrl
-            }
-            {
-              name: 'SERVER_URL'
-              value: dashboardUrl
-            }
-            {
-              name: 'WEBSITE_URL'
-              value: websiteUrl
-            }
-            {
-              name: 'CORS_ORIGIN'
-              value: corsOriginValue
-            }
-            {
-              name: 'DEBUG_PERFORMANCE'
-              value: debugPerformance
-            }
-            {
-              name: 'PORT'
-              value: string(serverTargetPort)
-            }
-            {
-              name: 'HOST'
-              value: '127.0.0.1'
-            }
-            {
-              name: 'DATABASE_URL'
-              secretRef: 'database-url'
-            }
-            {
-              name: 'BETTER_AUTH_SECRET'
-              secretRef: 'better-auth-secret'
-            }
-            {
-              name: 'BETTER_AUTH_API_KEY'
-              secretRef: 'better-auth-api-key'
-            }
-            {
-              name: 'GOOGLE_CLIENT_ID'
-              secretRef: 'google-client-id'
-            }
-            {
-              name: 'GOOGLE_CLIENT_SECRET'
-              secretRef: 'google-client-secret'
-            }
-            {
-              name: 'LINKEDIN_CLIENT_ID'
-              secretRef: 'linkedin-client-id'
-            }
-            {
-              name: 'LINKEDIN_CLIENT_SECRET'
-              secretRef: 'linkedin-client-secret'
-            }
-            {
-              name: 'CLOUDINARY_CLOUD_NAME'
-              secretRef: 'cloudinary-cloud-name'
-            }
-            {
-              name: 'CLOUDINARY_API_KEY'
-              secretRef: 'cloudinary-api-key'
-            }
-            {
-              name: 'CLOUDINARY_API_SECRET'
-              secretRef: 'cloudinary-api-secret'
-            }
-            {
-              name: 'RESEND_API_KEY'
-              secretRef: 'resend-api-key'
-            }
-            {
-              name: 'RESEND_EMAIL_FROM'
-              secretRef: 'resend-email-from'
-            }
-            {
-              name: 'RESEND_EMAIL_REPLY_TO'
-              secretRef: 'resend-email-reply-to'
-            }
-            {
-              name: 'AI_GATEWAY_API_KEY'
-              secretRef: 'ai-gateway-api-key'
-            }
-          ]
+          env: serverEnv
           probes: [
             {
               type: 'Startup'
@@ -471,16 +439,65 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = if (deployApps) {
       }
     }
   }
-  dependsOn: [
-    appAcrPullRole
-    appKeyVaultSecretsUserRole
-  ]
+  tags: mergedTags
+}
+
+// Manually-triggered job that runs `drizzle-kit migrate` using the server
+// image (which already bundles packages/db's migrations + drizzle-kit).
+// deploy.yml points it at the freshly built server image and starts it
+// before updating the server Container App.
+resource migrateJob 'Microsoft.App/jobs@2024-03-01' = {
+  name: migrateJobName
+  location: location
+  properties: {
+    environmentId: containerAppsEnvironment.id
+    configuration: {
+      triggerType: 'Manual'
+      replicaTimeout: 600
+      replicaRetryLimit: 0
+      manualTriggerConfig: {
+        parallelism: 1
+        replicaCompletionCount: 1
+      }
+      registries: registryLoginConfig
+      secrets: [
+        {
+          name: 'acr-password'
+          value: acrPassword
+        }
+        {
+          name: 'database-url'
+          value: effectiveDatabaseUrl
+        }
+      ]
+    }
+    template: {
+      containers: [
+        {
+          name: 'migrate'
+          image: serverImage
+          command: ['sh', '-c']
+          args: ['cd /app && bun run db:migrate']
+          resources: {
+            cpu: json('0.5')
+            memory: '1Gi'
+          }
+          env: [
+            { name: 'DATABASE_URL', secretRef: 'database-url' }
+          ]
+        }
+      ]
+    }
+  }
   tags: mergedTags
 }
 
 output containerRegistryName string = containerRegistry.name
 output containerRegistryLoginServer string = containerRegistry.properties.loginServer
-output keyVaultName string = keyVault.name
 output containerAppsEnvironmentId string = containerAppsEnvironment.id
-output appContainerAppName string = appName
-output appDefaultUrl string = deployApps ? 'https://${app!.properties.configuration.ingress.fqdn}' : ''
+output dashboardAppName string = dashboardApp.name
+output serverAppName string = serverApp.name
+output migrateJobName string = migrateJob.name
+output dashboardDefaultUrl string = dashboardDefaultUrl
+output serverDefaultUrl string = serverDefaultUrl
+output postgresFqdn string = deployPostgres ? postgres!.properties.fullyQualifiedDomainName : ''

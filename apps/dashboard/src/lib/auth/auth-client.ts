@@ -10,16 +10,8 @@ import {
 import { createAuthClient } from "better-auth/react";
 import { dashClient } from "@better-auth/infra/client";
 
-// Browser hits the public ingress (the dashboard reverse-proxies /api/auth
-// to localhost:3001). SSR skips the proxy hop and talks to the server
-// container directly over loopback via INTERNAL_SERVER_URL.
-const baseURL =
-  typeof window === "undefined"
-    ? (process.env.INTERNAL_SERVER_URL ?? env.VITE_SERVER_URL)
-    : env.VITE_SERVER_URL;
-
 export const authClient = createAuthClient({
-  baseURL,
+  baseURL: env.VITE_SERVER_URL,
   plugins: [
     passkeyClient(),
     lastLoginMethodClient(),

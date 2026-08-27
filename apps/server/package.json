@@ -11,11 +11,12 @@
     "check-types": "tsc -b",
     "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
     "dev": "bun run --hot src/index.ts",
-    "start": "bun run dist/index.mjs",
-    "test": "bun test"
+    "start": "node dist/index.mjs",
+    "test": "bun test ./src"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.61",
+    "@hono/node-server": "^2.0.12",
     "@hono/trpc-server": "^0.4.2",
     "@sycom/auth": "workspace:*",
     "@sycom/certificates": "workspace:*",

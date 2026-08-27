@@ -14,7 +14,7 @@
   },
   "scripts": {
     "check-types": "tsc --noEmit",
-    "test": "bun test"
+    "test": "bun test ./src"
   },
   "dependencies": {
     "@better-auth/infra": "^0.2.5",

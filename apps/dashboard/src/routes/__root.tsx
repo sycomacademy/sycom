@@ -1,11 +1,11 @@
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import type { AppRouter } from "server/trpc/routers/_app";
 import { AnchoredToastProvider, ToastProvider } from "@sycom/ui/components/toast";
 import type { QueryClient } from "@tanstack/react-query";
 import {
   HeadContent,
   Outlet,
-  Scripts,
   createRootRouteWithContext,
   type RegisteredRouter,
 } from "@tanstack/react-router";
@@ -19,7 +19,6 @@ import { TooltipProvider } from "@sycom/ui/components/tooltip";
 import GlobalError from "@/components/layout/global-error";
 import { RootLoader } from "@/components/layout/loader";
 
-import appCss from "../index.css?url";
 type RouterAppContext = {
   trpc: TRPCOptionsProxy<AppRouter>;
   queryClient: QueryClient;
@@ -41,10 +40,6 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
       },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
       {
         rel: "icon",
         href: "/favicon.ico",
@@ -72,32 +67,22 @@ function RootComponent() {
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <LazyMotion features={domAnimation} strict>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <TooltipProvider>
-              <ToastProvider>
-                <AnchoredToastProvider>
-                  {children}
-                  {/* <TanStackRouterDevtools position="bottom-left" />
-                  <ReactQueryDevtools position="bottom" buttonPosition="bottom-right" /> */}
-                </AnchoredToastProvider>
-              </ToastProvider>
-            </TooltipProvider>
-          </ThemeProvider>
-        </LazyMotion>
-        <Scripts />
-      </body>
-    </html>
+    <>
+      {createPortal(<HeadContent />, document.head)}
+      <LazyMotion features={domAnimation} strict>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+          <TooltipProvider>
+            <ToastProvider>
+              <AnchoredToastProvider>
+                {children}
+                {/* <TanStackRouterDevtools position="bottom-left" />
+                <ReactQueryDevtools position="bottom" buttonPosition="bottom-right" /> */}
+              </AnchoredToastProvider>
+            </ToastProvider>
+          </TooltipProvider>
+        </ThemeProvider>
+      </LazyMotion>
+    </>
   );
 }
 

@@ -1,8 +1,9 @@
 import { SIDEBAR_COOKIE_NAME } from "@sycom/ui/components/sidebar";
-import { createServerFn } from "@tanstack/react-start";
-import { getCookie } from "@tanstack/react-start/server";
 
-export const getSidebarState = createServerFn({ method: "GET" }).handler(() => {
-  const value = getCookie(SIDEBAR_COOKIE_NAME);
+export const getSidebarState = () => {
+  const match = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith(`${SIDEBAR_COOKIE_NAME}=`));
+  const value = match?.slice(SIDEBAR_COOKIE_NAME.length + 1);
   return value === undefined ? undefined : value === "true";
-});
+};

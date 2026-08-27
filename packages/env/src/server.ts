@@ -40,5 +40,6 @@ export const env = createEnv({
       .transform((v) => v === "true"),
   },
   runtimeEnv: process.env,
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   emptyStringAsUndefined: true,
 });

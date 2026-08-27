@@ -5,5 +5,20 @@
     "stylesheet": "./packages/ui/src/styles/globals.css",
     "functions": ["clsx", "cn", "cva"]
   },
-  "ignorePatterns": ["node_modules", ".next", "dist", "build", ".cursor", ".claude", ".agents"]
+  "ignorePatterns": [
+    "node_modules",
+    ".next",
+    "dist",
+    "build",
+    ".cursor",
+    ".claude",
+    ".agents",
+    ".codex",
+    ".deepsec",
+    ".github/skills",
+    ".github/agents",
+    ".github/hooks",
+    "packages/db/src/migrations/**",
+    "**/routeTree.gen.ts"
+  ]
 }
