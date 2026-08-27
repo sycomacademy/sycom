@@ -44,10 +44,12 @@
       "cache": false
     },
     "db:migrate": {
-      "cache": false
+      "cache": false,
+      "env": ["DATABASE_URL"]
     },
     "db:ensure-app-role": {
-      "cache": false
+      "cache": false,
+      "env": ["DATABASE_URL", "APP_DB_PASSWORD", "APP_DB_NAME"]
     },
     "db:studio": {
       "cache": false,
