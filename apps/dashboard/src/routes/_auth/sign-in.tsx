@@ -23,6 +23,7 @@ import * as z from "zod/mini";
 
 import { AuthMethods } from "@/components/auth/auth-methods";
 import { Link } from "@/components/layout/foresight-link";
+import Loader from "@/components/layout/loader";
 import { authClient } from "@/lib/auth/auth-client";
 import { resolveAuthenticatedEntryHref, safeRedirectPath } from "@/lib/auth/auth-redirect";
 import { SESSION_QUERY_KEY } from "@/lib/auth/session";
@@ -61,6 +62,7 @@ function SignInPage() {
   const [linkedInPending, setLinkedInPending] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [passkeyPending, setPasskeyPending] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const form = useForm<SignInInput>({
     resolver: zodResolver(signInSchema),
@@ -72,6 +74,7 @@ function SignInPage() {
   }, []);
 
   const finishSignIn = async () => {
+    setIsRedirecting(true);
     await queryClient.invalidateQueries({ queryKey: SESSION_QUERY_KEY });
     const target = await resolveAuthenticatedEntryHref(queryClient, trpc, router, redirectParam);
     await router.navigate({ href: target, replace: true });
@@ -116,6 +119,7 @@ function SignInPage() {
       toastManager.add({ title: "Signed in", type: "success" });
       await finishSignIn();
     } catch (error) {
+      setIsRedirecting(false);
       if (error instanceof Error) {
         toastManager.add({
           title: error.message,
@@ -144,6 +148,7 @@ function SignInPage() {
       toastManager.add({ title: "Signed in with passkey", type: "success" });
       await finishSignIn();
     } catch (error) {
+      setIsRedirecting(false);
       toastManager.add({
         title:
           error instanceof Error
@@ -181,6 +186,10 @@ function SignInPage() {
       setLinkedInPending(false);
     }
   };
+
+  if (isRedirecting) {
+    return <Loader text="Signing you in" />;
+  }
 
   return (
     <div className="flex h-full w-full flex-col">
