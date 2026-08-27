@@ -42,6 +42,12 @@ param serverImage string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld
 @description('Public dashboard URL (custom domain once bound, otherwise the Container App default FQDN).')
 param dashboardUrl string = ''
 
+@description('Custom domain hostname to bind to the dashboard app (e.g. learn.sycom.academy). Leave empty to serve only from the Container App default FQDN.')
+param dashboardCustomDomainName string = ''
+
+@description('Name of the pre-provisioned managed certificate for dashboardCustomDomainName (see: az containerapp env certificate list). Required when dashboardCustomDomainName is set. This template does not provision or rotate the certificate — it only binds this existing one on every deploy, so the binding can no longer be silently dropped by an infra-only redeploy.')
+param dashboardCertificateName string = ''
+
 @description('Public server/API URL. Defaults to the server Container App default FQDN when empty.')
 param serverUrl string = ''
 
@@ -172,6 +178,18 @@ var serverDefaultUrl = 'https://${serverAppName}.${containerAppsEnvironment.prop
 var effectiveServerUrl = empty(serverUrl) ? serverDefaultUrl : serverUrl
 var dashboardDefaultUrl = 'https://${dashboardAppName}.${containerAppsEnvironment.properties.defaultDomain}'
 var effectiveDashboardUrl = empty(dashboardUrl) ? dashboardDefaultUrl : dashboardUrl
+var dashboardCertificateId = empty(dashboardCertificateName)
+  ? ''
+  : resourceId('Microsoft.App/managedEnvironments/managedCertificates', containerAppsEnvironmentName, dashboardCertificateName)
+var dashboardCustomDomains = empty(dashboardCustomDomainName)
+  ? []
+  : [
+      {
+        name: dashboardCustomDomainName
+        certificateId: dashboardCertificateId
+        bindingType: 'SniEnabled'
+      }
+    ]
 var defaultCorsOrigins = empty(websiteUrl) ? [effectiveDashboardUrl] : [effectiveDashboardUrl, websiteUrl]
 var effectiveCorsOrigins = length(corsOrigins) > 0 ? corsOrigins : defaultCorsOrigins
 var corsOriginValue = join(effectiveCorsOrigins, ',')
@@ -338,6 +356,7 @@ resource dashboardApp 'Microsoft.App/containerApps@2024-03-01' = {
             weight: 100
           }
         ]
+        customDomains: dashboardCustomDomains
       }
       registries: registryLoginConfig
       secrets: [

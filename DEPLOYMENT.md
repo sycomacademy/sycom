@@ -43,7 +43,15 @@ credentials:
 - **[`.github/workflows/infra.yml`](.github/workflows/infra.yml)** — runs
   the full Bicep template ([`infra/main.bicep`](infra/main.bicep)) whenever
   `infra/**` changes. It looks up whatever image is currently running before
-  deploying, so it never rolls an app back to the placeholder image.
+  deploying, so it never rolls an app back to the placeholder image. The
+  dashboard's custom domain binding (`dashboardCustomDomainName` /
+  `dashboardCertificateName` in
+  [`infra/params/prod.bicepparam`](infra/params/prod.bicepparam)) is declared
+  in the template and re-applied on every run — it previously lived only in
+  out-of-band `az containerapp hostname bind` state, so a bicep-only redeploy
+  would silently drop it (2026-08-27 outage). The certificate itself is
+  pre-provisioned out-of-band and only referenced by name; the template
+  doesn't create or rotate it.
 - **[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)** — runs
   on every other push to `main`. It diffs against the previous commit to
   decide which app(s) changed (anything under `packages/**` or a root

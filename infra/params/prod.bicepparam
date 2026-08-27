@@ -22,6 +22,11 @@ param postgresStorageGb = 32
 param postgresVersion = '18'
 
 param dashboardUrl = 'https://learn.sycom.academy'
+// Pre-provisioned via `az containerapp env certificate list` — rebind target
+// after any incident that drops the custom domain, so this is declared here
+// rather than left to whoever last ran `az containerapp hostname bind`.
+param dashboardCustomDomainName = 'learn.sycom.academy'
+param dashboardCertificateName = 'learn.sycom.academy-sycomlea-260519133833'
 param websiteUrl = 'https://sycomsolutions.com'
 param corsOrigins = [
   'https://learn.sycom.academy'
