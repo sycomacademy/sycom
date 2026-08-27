@@ -68,6 +68,7 @@ jobs:
               dashboardAppName="${{ vars.DASHBOARD_APP_NAME }}" \
               serverAppName="${{ vars.SERVER_APP_NAME }}" \
               postgresAdminPassword="${{ secrets.POSTGRES_ADMIN_PASSWORD }}" \
+              postgresAppPassword="${{ secrets.POSTGRES_APP_PASSWORD }}" \
               dashboardUrl="${{ vars.DASHBOARD_URL }}" \
               serverUrl="${{ vars.SERVER_URL }}" \
               dashboardImage="$DASHBOARD_IMAGE" \

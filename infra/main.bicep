@@ -82,11 +82,14 @@ param postgresServerName string = ''
 @description('Application database name on the flexible server.')
 param postgresDatabaseName string = 'sycom'
 
-@description('PostgreSQL administrator login.')
+@description('PostgreSQL administrator login. Used only for schema migrations, never by the running server.')
 param postgresAdminLogin string = ''
 
 @secure()
 param postgresAdminPassword string = ''
+
+@secure()
+param postgresAppPassword string = ''
 
 @description('Flexible server SKU name.')
 param postgresSkuName string = 'Standard_B1ms'
@@ -146,10 +149,21 @@ var mergedTags = union(tags, {
   project: projectName
 })
 
+// Must match the APP_ROLE constant in packages/db/src/ensure-app-role.ts —
+// not a param, since nothing benefits from these ever disagreeing.
+var postgresAppLogin = 'sycom_app'
+
 var acrUsername = containerRegistry.listCredentials().username
 var acrPassword = containerRegistry.listCredentials().passwords[0].value
 var effectiveDatabaseUrl = deployPostgres
   ? 'postgresql://${postgresAdminLogin}:${uriComponent(postgresAdminPassword)}@${postgres!.properties.fullyQualifiedDomainName}:5432/${postgresDatabaseName}?sslmode=require'
+  : databaseUrl
+// The server's own runtime connection uses the least-privilege role instead
+// of the admin login above. When bringing your own Postgres (deployPostgres
+// = false) there's no way for this template to provision that role, so it
+// falls back to the same connection string the admin/migrate path uses.
+var effectiveAppDatabaseUrl = deployPostgres
+  ? 'postgresql://${postgresAppLogin}:${uriComponent(postgresAppPassword)}@${postgres!.properties.fullyQualifiedDomainName}:5432/${postgresDatabaseName}?sslmode=require'
   : databaseUrl
 // Built from the environment's default domain rather than read back off the
 // app resources themselves — reading serverApp's own fqdn into serverApp's
@@ -198,7 +212,7 @@ var serverEnv = [
 
 var appSecrets = [
   { name: 'acr-password', value: acrPassword }
-  { name: 'database-url', value: effectiveDatabaseUrl }
+  { name: 'database-url', value: effectiveAppDatabaseUrl }
   { name: 'better-auth-secret', value: betterAuthSecret }
   { name: 'better-auth-api-key', value: betterAuthApiKey }
   { name: 'google-client-id', value: googleClientId }
@@ -443,9 +457,11 @@ resource serverApp 'Microsoft.App/containerApps@2024-03-01' = {
 }
 
 // Manually-triggered job that runs `drizzle-kit migrate` using the server
-// image (which already bundles packages/db's migrations + drizzle-kit).
-// deploy.yml points it at the freshly built server image and starts it
-// before updating the server Container App.
+// image (which already bundles packages/db's migrations + drizzle-kit),
+// then (re)provisions the least-privilege sycom_app role the server itself
+// connects as. Runs as the admin login — the only place that login is used;
+// the server never sees it. deploy.yml points this job at the freshly built
+// server image and starts it before updating the server Container App.
 resource migrateJob 'Microsoft.App/jobs@2024-03-01' = {
   name: migrateJobName
   location: location
@@ -469,6 +485,10 @@ resource migrateJob 'Microsoft.App/jobs@2024-03-01' = {
           name: 'database-url'
           value: effectiveDatabaseUrl
         }
+        {
+          name: 'app-db-password'
+          value: postgresAppPassword
+        }
       ]
     }
     template: {
@@ -477,13 +497,19 @@ resource migrateJob 'Microsoft.App/jobs@2024-03-01' = {
           name: 'migrate'
           image: serverImage
           command: ['sh', '-c']
-          args: ['cd /app && bun run db:migrate']
+          args: [
+            deployPostgres
+              ? 'cd /app && bun run db:migrate && bun run db:ensure-app-role'
+              : 'cd /app && bun run db:migrate'
+          ]
           resources: {
             cpu: json('0.5')
             memory: '1Gi'
           }
           env: [
             { name: 'DATABASE_URL', secretRef: 'database-url' }
+            { name: 'APP_DB_PASSWORD', secretRef: 'app-db-password' }
+            { name: 'APP_DB_NAME', value: postgresDatabaseName }
           ]
         }
       ]
