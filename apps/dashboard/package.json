@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "NODE_OPTIONS=--max-old-space-size=8192 vite build",
+    "build": "vite build",
     "serve": "vite preview",
     "dev": "vite dev",
     "build:analyze": "BUNDLE_ANALYZE=true vite build",
