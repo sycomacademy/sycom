@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "@tanstack/react-router";
+import { logSycomConsoleBanner } from "@sycom/ui/lib/console-banner";
 
 import { getRouter } from "./router";
 
@@ -16,3 +17,4 @@ createRoot(rootElement).render(
     <RouterProvider router={router} />
   </StrictMode>,
 );
+logSycomConsoleBanner();
