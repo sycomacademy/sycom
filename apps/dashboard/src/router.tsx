@@ -7,7 +7,6 @@ import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
-import { logSycomConsoleBanner } from "@sycom/ui/lib/console-banner";
 import { toastManager } from "@sycom/ui/components/toast";
 import superjson from "superjson";
 
@@ -17,10 +16,6 @@ import RouteError from "./components/layout/route-error";
 import { TRPCProvider } from "./lib/trpc/client";
 import { routeTree, type FileRoutesByTo } from "./routeTree.gen";
 
-logSycomConsoleBanner();
-/**
- * Type for the routes in the dashboard.
- */
 export type TRoutes = keyof FileRoutesByTo;
 
 export const getRouter = () => {

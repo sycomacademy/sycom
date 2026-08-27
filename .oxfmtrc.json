@@ -13,11 +13,6 @@
     ".cursor",
     ".claude",
     ".agents",
-    ".codex",
-    ".deepsec",
-    ".github/skills",
-    ".github/agents",
-    ".github/hooks",
     "packages/db/src/migrations/**",
     "**/routeTree.gen.ts"
   ]

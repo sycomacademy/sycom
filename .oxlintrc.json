@@ -13,49 +13,7 @@
     "react/no-array-index-key": "off",
     "jsx-a11y/click-events-have-key-events": "off",
     "jsx-a11y/no-static-element-interactions": "off",
-    "jsx-a11y/prefer-tag-over-role": "off",
-    "no-restricted-imports": [
-      "error",
-      {
-        "paths": [
-          {
-            "name": "axios",
-            "message": "Not part of the approved stack. Use tRPC in packages/api."
-          },
-          {
-            "name": "swr",
-            "message": "Not part of the approved stack. Use TanStack Query via tRPC."
-          },
-          { "name": "zustand", "message": "Not part of the approved stack (see AGENTS.md)." },
-          { "name": "redux", "message": "Not part of the approved stack (see AGENTS.md)." },
-          { "name": "react-redux", "message": "Not part of the approved stack (see AGENTS.md)." },
-          {
-            "name": "@reduxjs/toolkit",
-            "message": "Not part of the approved stack (see AGENTS.md)."
-          },
-          {
-            "name": "@tanstack/react-form",
-            "message": "Use React Hook Form + zodResolver (see .cursor/rules/forms.mdc)."
-          },
-          {
-            "name": "sonner",
-            "message": "Use toastManager from @sycom-learn/ui/components/toast."
-          },
-          { "name": "yup", "message": "Use Zod 4 (import { z } from \"zod\")." },
-          { "name": "valibot", "message": "Use Zod 4 (import { z } from \"zod\")." }
-        ],
-        "patterns": [
-          {
-            "regex": "^next(/.*)?$",
-            "message": "This is a Vite SPA (TanStack Router), not Next.js. Do not import next/* APIs."
-          },
-          {
-            "regex": "^\\.\\./(\\.\\./)*(packages|apps)/",
-            "message": "Do not reach into another package/app with a relative path. Import by package name instead (see AGENTS.md package ownership)."
-          }
-        ]
-      }
-    ]
+    "jsx-a11y/prefer-tag-over-role": "off"
   },
   "ignorePatterns": [
     "node_modules",
@@ -65,11 +23,6 @@
     ".cursor",
     ".claude",
     ".agents",
-    ".codex",
-    ".deepsec",
-    ".github/skills",
-    ".github/agents",
-    ".github/hooks",
     "**/routeTree.gen.ts"
   ],
   "env": {
