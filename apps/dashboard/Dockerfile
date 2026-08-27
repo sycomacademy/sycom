@@ -3,7 +3,7 @@ COPY --from=oven/bun:1 /usr/local/bin/bun /usr/local/bin/bun
 WORKDIR /app
 
 COPY . .
-RUN --mount=type=cache,target=/root/.bun/install/cache bun install
+RUN bun install --frozen-lockfile
 
 ARG VITE_SERVER_URL
 ARG VITE_DASHBOARD_URL
