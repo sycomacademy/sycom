@@ -47,7 +47,7 @@
         "patterns": [
           {
             "regex": "^next(/.*)?$",
-            "message": "This is a TanStack Start app, not Next.js. Do not import next/* APIs."
+            "message": "This is a Vite SPA (TanStack Router), not Next.js. Do not import next/* APIs."
           },
           {
             "regex": "^\\.\\./(\\.\\./)*(packages|apps)/",

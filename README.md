@@ -44,16 +44,16 @@ Then, run the development server:
 bun run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser to see the web application.
+Open [http://localhost:3001](http://localhost:3001) in your browser to see the dashboard.
 The API is running at [http://localhost:3000](http://localhost:3000).
 
 ## UI Customization
 
-React web apps in this stack share shadcn/ui primitives through `packages/ui`.
+The dashboard shares shadcn/ui primitives through `packages/ui`.
 
 - Change design tokens and global styles in `packages/ui/src/styles/globals.css`
 - Update shared primitives in `packages/ui/src/components/*`
-- Adjust shadcn aliases or style config in `packages/ui/components.json` and `apps/web/components.json`
+- Adjust shadcn aliases or style config in `packages/ui/components.json` and `apps/dashboard/components.json`
 
 ### Add more shared components
 
@@ -71,7 +71,7 @@ import { Button } from "@sycom/ui/components/button";
 
 ### Add app-specific blocks
 
-If you want to add app-specific blocks instead of shared primitives, run the shadcn CLI from `apps/web`.
+If you want to add app-specific blocks instead of shared primitives, run the shadcn CLI from `apps/dashboard`.
 
 ## Git Hooks and Formatting
 
@@ -82,24 +82,38 @@ If you want to add app-specific blocks instead of shared primitives, run the sha
 ```
 sycom/
 ├── apps/
-│   ├── web/         # Frontend application (React + TanStack Router)
-│   └── server/      # Backend API (Hono, TRPC)
+│   ├── dashboard/     # Frontend SPA (React + TanStack Router + Vite)
+│   └── server/        # Backend API (Hono, tRPC)
 ├── packages/
-│   ├── ui/          # Shared shadcn/ui components and styles
-│   ├── api/         # API layer / business logic
-│   ├── auth/        # Authentication configuration & logic
-│   └── db/          # Database schema & queries
+│   ├── ui/            # Shared shadcn/ui components and styles
+│   ├── auth/          # Authentication configuration & logic (Better Auth)
+│   ├── db/            # Database schema, queries & migrations (Drizzle)
+│   ├── certificates/  # Certificate PDF rendering & templates
+│   ├── emails/        # Transactional email templates
+│   ├── storage/       # Cloudinary uploads
+│   ├── env/           # Shared, validated env schemas (server + client)
+│   ├── logger/        # Shared logger
+│   └── config/        # Shared tsconfig/tooling config
 ```
 
 ## Available Scripts
 
-- `bun run dev`: Start all applications in development mode
-- `bun run build`: Build all applications
-- `bun run dev:web`: Start only the web application
+- `bun run dev`: Start dashboard + server in development mode
+- `bun run dev:dashboard`: Start only the dashboard
 - `bun run dev:server`: Start only the server
+- `bun run build`: Build all apps and packages
 - `bun run check-types`: Check TypeScript types across all apps
+- `bun run test`: Run tests across all apps and packages
 - `bun run db:push`: Push schema changes to database
-- `bun run db:generate`: Generate database client/types
-- `bun run db:migrate`: Run database migrations
+- `bun run db:generate`: Generate a migration from schema changes
+- `bun run db:migrate`: Apply pending migrations
 - `bun run db:studio`: Open database studio UI
 - `bun run check`: Run Oxlint and Oxfmt
+- `bun run docker:up` / `docker:down` / `docker:logs`: Run the whole stack (dashboard + server) in Docker via `docker-compose.yml`
+
+## Deployment
+
+Production runs dashboard and server as two separate, dockerized Azure
+Container Apps sharing one Container Apps Environment, with Postgres on
+Azure Database for PostgreSQL. See [DEPLOYMENT.md](DEPLOYMENT.md) for the
+full architecture, the CI/CD pipeline, and required configuration.
