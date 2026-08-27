@@ -8,7 +8,7 @@
     "dev": "vite dev",
     "build:analyze": "BUNDLE_ANALYZE=true vite build",
     "check-types": "tsc --noEmit",
-    "test": "bun test"
+    "test": "bun test ./src"
   },
   "dependencies": {
     "@better-auth/infra": "^0.2.5",

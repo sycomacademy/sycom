@@ -12,7 +12,7 @@
     "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
     "dev": "bun run --hot src/index.ts",
     "start": "node dist/index.mjs",
-    "test": "bun test"
+    "test": "bun test ./src"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.61",
