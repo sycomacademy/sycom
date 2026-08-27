@@ -37,31 +37,40 @@ jobs:
       - name: Create resource group
         run: az group create --name "${{ vars.AZURE_RESOURCE_GROUP }}" --location "${{ vars.AZURE_LOCATION }}"
 
-      - name: Keep the running server image when it exists
+      - name: Keep currently running images (don't roll back on infra-only changes)
         run: |
           RG="${{ vars.AZURE_RESOURCE_GROUP }}"
-          APP_NAME="$(az containerapp list --resource-group "$RG" --query "[0].name" -o tsv || true)"
+          DASHBOARD_IMAGE="mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
           SERVER_IMAGE="mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
-          if [ -n "$APP_NAME" ]; then
-            CURRENT="$(az containerapp show --name "$APP_NAME" --resource-group "$RG" --query "properties.template.containers[0].image" -o tsv || true)"
-            if [ -n "$CURRENT" ]; then
-              SERVER_IMAGE="$CURRENT"
-            fi
+
+          CURRENT_DASHBOARD="$(az containerapp show --name "${{ vars.DASHBOARD_APP_NAME }}" --resource-group "$RG" --query "properties.template.containers[0].image" -o tsv 2>/dev/null || true)"
+          if [ -n "$CURRENT_DASHBOARD" ]; then
+            DASHBOARD_IMAGE="$CURRENT_DASHBOARD"
           fi
-          echo "SERVER_IMAGE=$SERVER_IMAGE" >> "$GITHUB_ENV"
+
+          CURRENT_SERVER="$(az containerapp show --name "${{ vars.SERVER_APP_NAME }}" --resource-group "$RG" --query "properties.template.containers[0].image" -o tsv 2>/dev/null || true)"
+          if [ -n "$CURRENT_SERVER" ]; then
+            SERVER_IMAGE="$CURRENT_SERVER"
+          fi
+
+          {
+            echo "DASHBOARD_IMAGE=$DASHBOARD_IMAGE"
+            echo "SERVER_IMAGE=$SERVER_IMAGE"
+          } >> "$GITHUB_ENV"
 
       - name: Deploy infrastructure
         run: |
           az deployment group create \
             --resource-group "${{ vars.AZURE_RESOURCE_GROUP }}" \
-            --template-file infra/main.local-deploy.bicep \
+            --template-file infra/main.bicep \
             --parameters infra/params/prod.bicepparam \
             --parameters \
-              deployApps=true \
-              keyVaultAdminObjectId="${{ vars.KEY_VAULT_ADMIN_OBJECT_ID }}" \
+              dashboardAppName="${{ vars.DASHBOARD_APP_NAME }}" \
+              serverAppName="${{ vars.SERVER_APP_NAME }}" \
               postgresAdminPassword="${{ secrets.POSTGRES_ADMIN_PASSWORD }}" \
               dashboardUrl="${{ vars.DASHBOARD_URL }}" \
               serverUrl="${{ vars.SERVER_URL }}" \
+              dashboardImage="$DASHBOARD_IMAGE" \
               serverImage="$SERVER_IMAGE" \
               betterAuthSecret="${{ secrets.BETTER_AUTH_SECRET }}" \
               betterAuthApiKey="${{ secrets.BETTER_AUTH_API_KEY }}" \
@@ -77,6 +86,6 @@ jobs:
               resendEmailReplyTo="${{ secrets.RESEND_EMAIL_REPLY_TO }}" \
               aiGatewayApiKey="${{ secrets.AI_GATEWAY_API_KEY }}" > /tmp/prod-infra.json
 
-          echo "Web App: $(jq -r '.properties.outputs.webAppDefaultUrl.value' /tmp/prod-infra.json)"
-          echo "API: $(jq -r '.properties.outputs.serverDefaultUrl.value' /tmp/prod-infra.json)"
+          echo "Dashboard: $(jq -r '.properties.outputs.dashboardDefaultUrl.value' /tmp/prod-infra.json)"
+          echo "Server: $(jq -r '.properties.outputs.serverDefaultUrl.value' /tmp/prod-infra.json)"
           echo "Postgres: $(jq -r '.properties.outputs.postgresFqdn.value' /tmp/prod-infra.json)"

@@ -4,14 +4,17 @@ services:
   dashboard:
     build:
       context: .
-      dockerfile: apps/web/Dockerfile
+      dockerfile: apps/dashboard/Dockerfile
       args:
         VITE_SERVER_URL: http://localhost:3000
+        VITE_DASHBOARD_URL: http://localhost:3001
+        VITE_WEBSITE_URL: http://localhost:3001
+        VITE_CLOUDINARY_CLOUD_NAME: dev
     init: true
     ports:
       - "3001:80"
     env_file:
-      - path: apps/web/.env
+      - path: apps/dashboard/.env
         required: false
     depends_on:
       server:

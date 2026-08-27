@@ -19,8 +19,7 @@
     }
   },
   "scripts": {
-    "check-types": "tsc --noEmit",
-    "test": "bun test"
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@sycom/db": "workspace:*",
