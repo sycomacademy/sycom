@@ -2,7 +2,6 @@
   "$schema": "https://v2-9-18.turborepo.dev/schema.json",
   "ui": "tui",
   "globalEnv": ["NODE_ENV"],
-  "globalPassThroughEnv": ["VERCEL_*"],
   "tasks": {
     "build": {
       "env": [
@@ -45,8 +44,10 @@
       "cache": false
     },
     "db:migrate": {
-      "cache": false,
-      "persistent": true
+      "cache": false
+    },
+    "db:ensure-app-role": {
+      "cache": false
     },
     "db:studio": {
       "cache": false,
