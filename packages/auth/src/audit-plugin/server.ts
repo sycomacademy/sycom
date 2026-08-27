@@ -1,4 +1,4 @@
-import { createAuthMiddleware, getIp } from "better-auth/api";
+import { createAuthMiddleware, getIP } from "better-auth/api";
 import type { BetterAuthPlugin } from "better-auth";
 import { createHash } from "node:crypto";
 import * as z from "zod";
@@ -302,7 +302,7 @@ export const auditPlugin = () =>
             const newSession = ctx.context.newSession;
             if (!newSession) return;
             const { user } = newSession;
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = {
               userId: user.id,
@@ -332,7 +332,7 @@ export const auditPlugin = () =>
             const newSession = ctx.context.newSession;
             if (!newSession) return;
             const { user, session } = newSession;
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = {
               userId: user.id,
@@ -364,7 +364,7 @@ export const auditPlugin = () =>
             const newSession = ctx.context.newSession;
             if (!newSession) return;
             const { user, session } = newSession;
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = {
               userId: user.id,
@@ -393,7 +393,7 @@ export const auditPlugin = () =>
             // valid here even though sign-out has revoked it from the DB.
             const session = ctx.context.session;
             if (!session?.user?.id) return;
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = {
               userId: session.user.id,
@@ -420,7 +420,7 @@ export const auditPlugin = () =>
             const session = ctx.context.session;
             if (!session?.user?.id) return;
             const body = revokeSessionBody.safeParse(ctx.body);
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = {
               userId: session.user.id,
@@ -449,7 +449,7 @@ export const auditPlugin = () =>
           handler: createAuthMiddleware(async (ctx) => {
             const session = ctx.context.session;
             if (!session?.user?.id) return;
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = { userId: session.user.id, userName: session.user.name };
             await write({
@@ -473,7 +473,7 @@ export const auditPlugin = () =>
             if (!session?.user?.id) return;
             const body = impersonateBody.safeParse(ctx.body);
             const targetUserId = body.success ? body.data.userId : undefined;
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = {
               adminId: session.user.id,
@@ -500,7 +500,7 @@ export const auditPlugin = () =>
           handler: createAuthMiddleware(async (ctx) => {
             const session = ctx.context.session;
             if (!session?.user?.id) return;
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = {
               userId: session.user.id,
@@ -525,7 +525,7 @@ export const auditPlugin = () =>
           handler: createAuthMiddleware(async (ctx) => {
             const session = ctx.context.session;
             if (!session?.user?.id) return;
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = { userId: session.user.id, userName: session.user.name };
             await write({
@@ -546,7 +546,7 @@ export const auditPlugin = () =>
           matcher: (ctx) => ctx.path === "/request-password-reset",
           handler: createAuthMiddleware(async (ctx) => {
             const body = passwordResetBody.safeParse(ctx.body);
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = { userEmail: body.success ? body.data.email : undefined };
             await write({
@@ -566,7 +566,7 @@ export const auditPlugin = () =>
         {
           matcher: (ctx) => ctx.path === "/reset-password",
           handler: createAuthMiddleware(async (ctx) => {
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload: Record<string, unknown> = {};
             await write({
@@ -587,7 +587,7 @@ export const auditPlugin = () =>
           matcher: (ctx) => ctx.path === "/send-verification-email",
           handler: createAuthMiddleware(async (ctx) => {
             const body = sendVerificationBody.safeParse(ctx.body);
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = { userEmail: body.success ? body.data.email : undefined };
             await write({
@@ -611,7 +611,7 @@ export const auditPlugin = () =>
             const newSession = ctx.context.newSession;
             if (!newSession) return;
             const { user } = newSession;
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = {
               userId: user.id,
@@ -638,7 +638,7 @@ export const auditPlugin = () =>
             const session = ctx.context.session;
             if (!session?.user?.id) return;
             const body = socialLinkBody.safeParse(ctx.body);
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = {
               userId: session.user.id,
@@ -665,7 +665,7 @@ export const auditPlugin = () =>
             const session = ctx.context.session;
             if (!session?.user?.id) return;
             const body = unlinkBody.safeParse(ctx.body);
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = {
               userId: session.user.id,
@@ -692,7 +692,7 @@ export const auditPlugin = () =>
             const session = ctx.context.session;
             const body = banUserBody.safeParse(ctx.body);
             const targetUserId = body.success ? body.data.userId : undefined;
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = {
               adminId: session?.user?.id,
@@ -720,7 +720,7 @@ export const auditPlugin = () =>
             const session = ctx.context.session;
             const body = targetUserBody.safeParse(ctx.body);
             const targetUserId = body.success ? body.data.userId : undefined;
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = {
               adminId: session?.user?.id,
@@ -747,7 +747,7 @@ export const auditPlugin = () =>
             const session = ctx.context.session;
             const body = targetUserBody.safeParse(ctx.body);
             const targetUserId = body.success ? body.data.userId : undefined;
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = {
               adminId: session?.user?.id,
@@ -777,7 +777,7 @@ export const auditPlugin = () =>
             const returned = orgReturned.safeParse(ctx.context.returned);
             const org = returned.success ? returned.data : undefined;
             const body = createOrgBody.safeParse(ctx.body);
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = {
               userId: session.user.id,
@@ -805,7 +805,7 @@ export const auditPlugin = () =>
             const session = ctx.context.session;
             if (!session?.user?.id) return;
             const body = updateOrgBody.safeParse(ctx.body);
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const organizationId = body.success ? body.data.organizationId : undefined;
             const payload = {
@@ -834,7 +834,7 @@ export const auditPlugin = () =>
             const session = ctx.context.session;
             if (!session?.user?.id) return;
             const body = addMemberBody.safeParse(ctx.body);
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const organizationId = body.success ? body.data.organizationId : undefined;
             const userId = body.success ? body.data.userId : undefined;
@@ -865,7 +865,7 @@ export const auditPlugin = () =>
             const session = ctx.context.session;
             if (!session?.user?.id) return;
             const body = removeMemberBody.safeParse(ctx.body);
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const organizationId = body.success ? body.data.organizationId : undefined;
             const memberIdOrEmail = body.success ? body.data.memberIdOrEmail : undefined;
@@ -896,7 +896,7 @@ export const auditPlugin = () =>
             const session = ctx.context.session;
             if (!session?.user?.id) return;
             const body = updateMemberRoleBody.safeParse(ctx.body);
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const organizationId = body.success ? body.data.organizationId : undefined;
             const memberId = body.success ? body.data.memberId : undefined;
@@ -928,7 +928,7 @@ export const auditPlugin = () =>
             const session = ctx.context.session;
             if (!session?.user?.id) return;
             const body = inviteMemberBody.safeParse(ctx.body);
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const organizationId = body.success ? body.data.organizationId : undefined;
             const payload = {
@@ -957,7 +957,7 @@ export const auditPlugin = () =>
           handler: createAuthMiddleware(async (ctx) => {
             const session = ctx.context.session;
             if (!session?.user?.id) return;
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = { userId: session.user.id, userName: session.user.name };
             await write({
@@ -979,7 +979,7 @@ export const auditPlugin = () =>
           handler: createAuthMiddleware(async (ctx) => {
             const session = ctx.context.session;
             if (!session?.user?.id) return;
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = { userId: session.user.id, userName: session.user.name };
             await write({
@@ -1002,7 +1002,7 @@ export const auditPlugin = () =>
             const session = ctx.context.session;
             if (!session?.user?.id) return;
             const body = cancelInviteBody.safeParse(ctx.body);
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const payload = {
               actorId: session.user.id,
@@ -1031,7 +1031,7 @@ export const auditPlugin = () =>
             // ctx.context.returned is the created team object from BA
             const returned = teamReturned.safeParse(ctx.context.returned);
             const team = returned.success ? returned.data : undefined;
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const organizationId =
               team?.organizationId ?? (body.success ? body.data.organizationId : undefined);
@@ -1062,7 +1062,7 @@ export const auditPlugin = () =>
             const session = ctx.context.session;
             if (!session?.user?.id) return;
             const body = updateTeamBody.safeParse(ctx.body);
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const teamId = body.success ? body.data.teamId : undefined;
             const payload = {
@@ -1090,7 +1090,7 @@ export const auditPlugin = () =>
             const session = ctx.context.session;
             if (!session?.user?.id) return;
             const body = teamIdBody.safeParse(ctx.body);
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const teamId = body.success ? body.data.teamId : undefined;
             const payload = {
@@ -1118,7 +1118,7 @@ export const auditPlugin = () =>
             const session = ctx.context.session;
             if (!session?.user?.id) return;
             const body = teamMemberBody.safeParse(ctx.body);
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const memberId = body.success ? body.data.memberId : undefined;
             const teamId = body.success ? body.data.teamId : undefined;
@@ -1149,7 +1149,7 @@ export const auditPlugin = () =>
             const session = ctx.context.session;
             if (!session?.user?.id) return;
             const body = teamMemberBody.safeParse(ctx.body);
-            const ip = ctx.request ? getIp(ctx.request, ctx.context.options) : null;
+            const ip = ctx.request ? getIP(ctx.request, ctx.context.options) : null;
             const ua = ctx.request?.headers.get("user-agent") ?? null;
             const memberId = body.success ? body.data.memberId : undefined;
             const teamId = body.success ? body.data.teamId : undefined;
