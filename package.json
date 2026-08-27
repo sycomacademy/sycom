@@ -40,6 +40,7 @@
     "db:studio": "turbo -F @sycom/db db:studio",
     "db:generate": "turbo -F @sycom/db db:generate",
     "db:migrate": "turbo -F @sycom/db db:migrate",
+    "db:ensure-app-role": "turbo -F @sycom/db db:ensure-app-role",
     "check": "oxlint && oxfmt --write",
     "dev:emails": "turbo -F @sycom/emails dev",
     "update-deps": "bun run scripts/update-deps.ts && bun install",
