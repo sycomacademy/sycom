@@ -78,8 +78,12 @@ jobs:
         if: steps.changes.outputs.dashboard == 'true' || steps.changes.outputs.server == 'true'
         run: |
           RG="${{ vars.AZURE_RESOURCE_GROUP }}"
-          ACR_NAME="$(az acr list --resource-group "$RG" --query "[0].name" -o tsv)"
-          ACR_LOGIN_SERVER="$(az acr show --name "$ACR_NAME" --query loginServer -o tsv)"
+          # Resolve the registry from what the server app actually pulls
+          # from, not `az acr list --query [0]` — this resource group has
+          # more than one ACR, and picking by index once pushed an image
+          # to a registry the Container App has no pull credentials for.
+          ACR_LOGIN_SERVER="$(az containerapp show --name "${{ vars.SERVER_APP_NAME }}" --resource-group "$RG" --query "properties.configuration.registries[0].server" -o tsv)"
+          ACR_NAME="${ACR_LOGIN_SERVER%%.azurecr.io}"
           SERVER_FQDN="$(az containerapp show --name "${{ vars.SERVER_APP_NAME }}" --resource-group "$RG" --query properties.configuration.ingress.fqdn -o tsv)"
           SERVER_URL="${{ vars.SERVER_URL }}"
           if [ -z "$SERVER_URL" ]; then
