@@ -5,6 +5,7 @@ import {
   InfoIcon,
   LoaderCircleIcon,
   TriangleAlertIcon,
+  XIcon,
 } from "lucide-react";
 import type React from "react";
 import { cn } from "@sycom/ui/lib/utils";
@@ -32,6 +33,18 @@ function getSwipeDirection(position: ToastPosition): SwipeDirection[] {
   }
 
   return ["right", verticalDirection];
+}
+
+function ToastClose() {
+  return (
+    <Toast.Close
+      aria-label="Dismiss"
+      className={buttonVariants({ size: "icon-xs", variant: "ghost" })}
+      data-slot="toast-close"
+    >
+      <XIcon />
+    </Toast.Close>
+  );
 }
 
 function upsertReplayClassName(toast: { type?: string; updateKey?: number }): string | undefined {
@@ -117,7 +130,7 @@ function Toasts({ position }: { position: ToastPosition }): React.ReactElement {
               toast={toast}
             >
               <Toast.Content className="pointer-events-auto flex items-center justify-between gap-1.5 overflow-hidden px-3.5 py-3 text-sm transition-opacity duration-250 data-behind:opacity-0 data-behind:not-data-expanded:pointer-events-none data-expanded:opacity-100">
-                <div className="flex gap-2">
+                <div className="flex min-w-0 gap-2">
                   {Icon && (
                     <div
                       className="[&_svg]:pointer-events-none [&_svg]:shrink-0 [&>svg]:h-lh [&>svg]:w-4"
@@ -135,11 +148,17 @@ function Toasts({ position }: { position: ToastPosition }): React.ReactElement {
                     />
                   </div>
                 </div>
-                {toast.actionProps && (
-                  <Toast.Action className={buttonVariants({ size: "xs" })} data-slot="toast-action">
-                    {toast.actionProps.children}
-                  </Toast.Action>
-                )}
+                <div className="flex shrink-0 items-center gap-1">
+                  {toast.actionProps && (
+                    <Toast.Action
+                      className={buttonVariants({ size: "xs" })}
+                      data-slot="toast-action"
+                    >
+                      {toast.actionProps.children}
+                    </Toast.Action>
+                  )}
+                  <ToastClose />
+                </div>
               </Toast.Content>
             </Toast.Root>
           );
@@ -189,7 +208,7 @@ function AnchoredToasts(): React.ReactElement {
                   </Toast.Content>
                 ) : (
                   <Toast.Content className="pointer-events-auto flex items-center justify-between gap-1.5 overflow-hidden px-3.5 py-3 text-sm">
-                    <div className="flex gap-2">
+                    <div className="flex min-w-0 gap-2">
                       {Icon && (
                         <div
                           className="[&_svg]:pointer-events-none [&_svg]:shrink-0 [&>svg]:h-lh [&>svg]:w-4"
@@ -207,14 +226,17 @@ function AnchoredToasts(): React.ReactElement {
                         />
                       </div>
                     </div>
-                    {toast.actionProps && (
-                      <Toast.Action
-                        className={buttonVariants({ size: "xs" })}
-                        data-slot="toast-action"
-                      >
-                        {toast.actionProps.children}
-                      </Toast.Action>
-                    )}
+                    <div className="flex shrink-0 items-center gap-1">
+                      {toast.actionProps && (
+                        <Toast.Action
+                          className={buttonVariants({ size: "xs" })}
+                          data-slot="toast-action"
+                        >
+                          {toast.actionProps.children}
+                        </Toast.Action>
+                      )}
+                      <ToastClose />
+                    </div>
                   </Toast.Content>
                 )}
               </Toast.Root>

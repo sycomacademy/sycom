@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod/mini";
 
 import { Link } from "@/components/layout/foresight-link";
+import Loader from "@/components/layout/loader";
 import { authClient } from "@/lib/auth/auth-client";
 import { resolveAuthenticatedEntryHref } from "@/lib/auth/auth-redirect";
 import { SESSION_QUERY_KEY } from "@/lib/auth/session";
@@ -51,6 +52,7 @@ function TwoFactorPage() {
   const trpc = useTRPC();
   const { redirect: redirectParam } = useSearch({ from: "/_auth" });
   const [activeMethod, setActiveMethod] = useState("totp");
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const totpForm = useForm<TotpInput>({
     resolver: zodResolver(totpSchema),
@@ -63,6 +65,7 @@ function TwoFactorPage() {
   });
 
   const finishSignIn = async () => {
+    setIsRedirecting(true);
     await queryClient.invalidateQueries({ queryKey: SESSION_QUERY_KEY });
     const target = await resolveAuthenticatedEntryHref(queryClient, trpc, router, redirectParam);
     await router.navigate({ href: target, replace: true });
@@ -83,6 +86,7 @@ function TwoFactorPage() {
       toastManager.add({ title: "Verification complete", type: "success" });
       await finishSignIn();
     } catch (error) {
+      setIsRedirecting(false);
       toastManager.add({
         title:
           error instanceof Error
@@ -116,6 +120,7 @@ function TwoFactorPage() {
       toastManager.add({ title: "Verification complete", type: "success" });
       await finishSignIn();
     } catch (error) {
+      setIsRedirecting(false);
       toastManager.add({
         title:
           error instanceof Error
@@ -125,6 +130,10 @@ function TwoFactorPage() {
       });
     }
   };
+
+  if (isRedirecting) {
+    return <Loader text="Signing you in" />;
+  }
 
   return (
     <div className="flex h-full w-full flex-col">

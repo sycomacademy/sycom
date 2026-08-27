@@ -1,9 +1,19 @@
 import { Loader as BaseLoader } from "@sycom/ui/components/loader";
 
-export default function Loader() {
-  return <BaseLoader mode="container" text="Loading" spinnerClassName="text-primary  " />;
+import { FadeIn } from "@/components/layout/motion-fade";
+
+export default function Loader({ text = "Loading" }: { text?: string } = {}) {
+  return (
+    <FadeIn className="size-full">
+      <BaseLoader mode="container" spinnerClassName="text-primary" text={text} />
+    </FadeIn>
+  );
 }
 
-export function RootLoader() {
-  return <BaseLoader mode="screen" text="Loading workspace" spinnerClassName=" text-primary  " />;
+export function RootLoader({ text = "Loading workspace" }: { text?: string } = {}) {
+  return (
+    <FadeIn className="size-full" durationMs={320}>
+      <BaseLoader mode="screen" spinnerClassName="text-primary" text={text} />
+    </FadeIn>
+  );
 }
