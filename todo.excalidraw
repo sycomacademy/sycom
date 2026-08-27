@@ -1,0 +1,51 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://marketplace.visualstudio.com/items?itemName=pomdtr.excalidraw-editor",
+  "elements": [
+    {
+      "id": "lx6mn4Tn66ZlyhZkn5MsG",
+      "type": "text",
+      "x": 349.9117431640625,
+      "y": 194.41796875,
+      "width": 478.879638671875,
+      "height": 725,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a0",
+      "roundness": null,
+      "seed": 1897105756,
+      "version": 627,
+      "versionNonce": 942848612,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1787823468668,
+      "link": null,
+      "locked": false,
+      "text": "Exam engine\n\nTests\n    - delete all tests and start again\n\nstandard Loader\n\nImages\n    - file sdk\n    - student can upload in vaults/locker\n    - azure migration\n\ndecouple UI and images\n\nEditor\n\nonboarded after impersonating\n\nimmpeccable\n\nredesign Schema\n    - Better auth redesign \n    - remove auth\n    - make it fully org dependent\n    - certificates\n\nAPI routers cleanup (schema and Types cleaning)\n\nadd evlog",
+      "fontSize": 20,
+      "fontFamily": 5,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Exam engine\n\nTests\n    - delete all tests and start again\n\nstandard Loader\n\nImages\n    - file sdk\n    - student can upload in vaults/locker\n    - azure migration\n\ndecouple UI and images\n\nEditor\n\nonboarded after impersonating\n\nimmpeccable\n\nredesign Schema\n    - Better auth redesign \n    - remove auth\n    - make it fully org dependent\n    - certificates\n\nAPI routers cleanup (schema and Types cleaning)\n\nadd evlog",
+      "autoResize": true,
+      "lineHeight": 1.25
+    }
+  ],
+  "appState": {
+    "gridSize": 20,
+    "gridStep": 5,
+    "gridModeEnabled": false,
+    "viewBackgroundColor": "#ffffff"
+  },
+  "files": {}
+}
