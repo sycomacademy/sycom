@@ -14,6 +14,7 @@ const defaults = {
   RESEND_EMAIL_FROM: "noreply@test.local",
   RESEND_EMAIL_REPLY_TO: "support@test.local",
   CORS_ORIGIN: "http://localhost:3000,http://localhost:3002",
+  AI_GATEWAY_API_KEY: "test-ai-gateway-api-key",
   NODE_ENV: "test",
 } as const;
 
