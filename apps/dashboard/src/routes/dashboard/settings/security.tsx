@@ -197,6 +197,7 @@ type ActiveSession = {
 };
 type ProviderAccount = {
   providerId: string;
+  accountId: string;
 };
 type PasskeyCredential = {
   id: string;
@@ -557,7 +558,7 @@ function SecurityLinkedAccounts() {
   const { data: accounts } = useSuspenseQuery(listAccountsQueryOptions);
   const typedAccounts = accounts as ProviderAccount[];
   const [linkingProvider, setLinkingProvider] = useState<LinkedAccountProvider | null>(null);
-  const [unlinkingProviderId, setUnlinkingProviderId] = useState<string | null>(null);
+  const [unlinkingAccountId, setUnlinkingAccountId] = useState<string | null>(null);
 
   const getProviderAccount = (provider: LinkedAccountProvider) =>
     typedAccounts.find(
@@ -595,11 +596,11 @@ function SecurityLinkedAccounts() {
     }
   };
 
-  const handleUnlinkAccount = async (providerId: string) => {
-    setUnlinkingProviderId(providerId);
+  const handleUnlinkAccount = async (accountId: string) => {
+    setUnlinkingAccountId(accountId);
 
     try {
-      const { error } = await authClient.unlinkAccount({ providerId });
+      const { error } = await authClient.unlinkAccount({ accountId });
 
       if (error) {
         toastManager.add({
@@ -622,7 +623,7 @@ function SecurityLinkedAccounts() {
         type: "error",
       });
     } finally {
-      setUnlinkingProviderId(null);
+      setUnlinkingAccountId(null);
     }
   };
 
@@ -664,9 +665,9 @@ function SecurityLinkedAccounts() {
               </div>
               {providerAccount ? (
                 <Button
-                  loading={unlinkingProviderId === providerAccount.providerId}
+                  loading={unlinkingAccountId === providerAccount.accountId}
                   onClick={() => {
-                    void handleUnlinkAccount(providerAccount.providerId);
+                    void handleUnlinkAccount(providerAccount.accountId);
                   }}
                   size="sm"
                   type="button"
@@ -812,8 +813,8 @@ function SecurityTwoFactorAuthentication() {
 
       dispatchState({
         type: "startSetup",
-        backupCodes: response?.backupCodes ?? [],
-        totpUri: response?.totpURI ?? null,
+        backupCodes: response?.method === "totp" ? response.backupCodes : [],
+        totpUri: response?.method === "totp" ? response.totpURI : null,
       });
       verifyForm.reset({ code: "" });
       toastManager.add({ title: "2FA setup started", type: "success" });
