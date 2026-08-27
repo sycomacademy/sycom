@@ -75,7 +75,8 @@ If you want to add app-specific blocks instead of shared primitives, run the sha
 
 ## Git Hooks and Formatting
 
-- Format and lint fix: `bun run check`
+- Format and lint fix on demand: `bun run check`
+- A [Lefthook](lefthook.yml) pre-commit hook also runs `oxlint --fix` and `oxfmt --write` automatically on staged files
 
 ## Project Structure
 
@@ -89,7 +90,7 @@ sycom/
 │   ├── auth/          # Authentication configuration & logic (Better Auth)
 │   ├── db/            # Database schema, queries & migrations (Drizzle)
 │   ├── certificates/  # Certificate PDF rendering & templates
-│   ├── emails/        # Transactional email templates
+│   ├── emails/        # Transactional email templates (dev preview via `bun run dev:emails`)
 │   ├── storage/       # Cloudinary uploads
 │   ├── env/           # Shared, validated env schemas (server + client)
 │   ├── logger/        # Shared logger
@@ -107,9 +108,13 @@ sycom/
 - `bun run db:push`: Push schema changes to database
 - `bun run db:generate`: Generate a migration from schema changes
 - `bun run db:migrate`: Apply pending migrations
+- `bun run db:ensure-app-role`: Provision/re-sync the least-privilege runtime DB role (prod migration step, not needed for local dev)
 - `bun run db:studio`: Open database studio UI
 - `bun run check`: Run Oxlint and Oxfmt
-- `bun run docker:up` / `docker:down` / `docker:logs`: Run the whole stack (dashboard + server) in Docker via `docker-compose.yml`
+- `bun run update-deps`: Run the dependency-update script (bumps deps, audits with `bun audit`) then reinstalls
+- `bun run dev:emails`: Start the email template dev preview server
+- `bun run storybook:ui` / `build-storybook:ui`: Run or build Storybook for the shared UI package
+- `bun run docker:build` / `docker:up` / `docker:down` / `docker:logs`: Build or run the whole stack (dashboard + server) in Docker via `docker-compose.yml`
 
 ## Deployment
 

@@ -4,10 +4,10 @@
 
 Two Container Apps in one Container Apps Environment, both dockerized:
 
-| App         | Image                     | Ingress            |
-| ----------- | ------------------------- | ------------------- |
+| App         | Image                                           | Ingress                                     |
+| ----------- | ----------------------------------------------- | ------------------------------------------- |
 | `dashboard` | `apps/dashboard/Dockerfile` (Vite SPA on nginx) | Public, custom domain `learn.sycom.academy` |
-| `server`    | `apps/server/Dockerfile` (Hono/tRPC API)        | Public, Azure-issued FQDN by default |
+| `server`    | `apps/server/Dockerfile` (Hono/tRPC API)        | Public, Azure-issued FQDN by default        |
 
 The dashboard is a pure client-rendered SPA — the browser calls the server's
 URL directly (cross-origin). Auth cookies are handled by
@@ -51,12 +51,12 @@ credentials:
   changed app: builds the image in ACR and swaps the running Container App to
   it with `az containerapp update` (no Bicep deployment — seconds, not
   minutes). If the server changed, it updates the migrate job to the new
-  image, runs it, and waits for it to succeed *before* updating the server
+  image, runs it, and waits for it to succeed _before_ updating the server
   app, so the server never starts against a schema it doesn't expect.
 - **[`.github/workflows/ci.yml`](.github/workflows/ci.yml)** — runs on every
   pull request against `main`. Two jobs: `check` (lint, type-check, build,
   test — the required status check for branch protection) and `audit` (`bun
-  audit`, informational only, reports current vulnerability counts in the
+audit`, informational only, reports current vulnerability counts in the
   run summary; deliberately not required, since there's a pre-existing
   backlog of transitive-dependency advisories that hasn't been triaged and
   gating merges on debt a PR didn't introduce just trains people to route
@@ -69,17 +69,17 @@ credentials:
 
 ### Variables (not secret)
 
-| Variable               | Value                          |
-| ----------------------- | ------------------------------ |
-| `AZURE_RESOURCE_GROUP`  | `sycomlearn-prod-rg`           |
-| `AZURE_LOCATION`        | `uksouth`                      |
-| `DASHBOARD_URL`         | `https://learn.sycom.academy`  |
-| `WEBSITE_URL`           | `https://sycomsolutions.com`   |
-| `CLOUDINARY_CLOUD_NAME` | (existing value)               |
-| `DASHBOARD_APP_NAME`    | `sycomlearn-prod-dashboard`    |
-| `SERVER_APP_NAME`       | `sycomlearn-prod-server`       |
-| `MIGRATE_JOB_NAME`      | `sycomlearn-prod-migrate`      |
-| `SERVER_URL`            | *(unset — server has no custom domain, falls back to its Azure FQDN)* |
+| Variable                | Value                                                                 |
+| ----------------------- | --------------------------------------------------------------------- |
+| `AZURE_RESOURCE_GROUP`  | `sycomlearn-prod-rg`                                                  |
+| `AZURE_LOCATION`        | `uksouth`                                                             |
+| `DASHBOARD_URL`         | `https://learn.sycom.academy`                                         |
+| `WEBSITE_URL`           | `https://sycomsolutions.com`                                          |
+| `CLOUDINARY_CLOUD_NAME` | (existing value)                                                      |
+| `DASHBOARD_APP_NAME`    | `sycomlearn-prod-dashboard`                                           |
+| `SERVER_APP_NAME`       | `sycomlearn-prod-server`                                              |
+| `MIGRATE_JOB_NAME`      | `sycomlearn-prod-migrate`                                             |
+| `SERVER_URL`            | _(unset — server has no custom domain, falls back to its Azure FQDN)_ |
 
 ### Secrets
 
