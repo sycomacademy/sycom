@@ -41,9 +41,9 @@ describe("platform roles — content_creator", () => {
     expect(stmts(contentCreatorRole).report).toEqual(["submit"]);
   });
 
-  test("can list and manage courses", () => {
+  test("can list and manage courses, including AI generation", () => {
     expect([...(stmts(contentCreatorRole).course ?? [])].sort()).toEqual(
-      ["create", "delete", "list", "read", "update"].sort(),
+      ["create", "delete", "generate", "list", "read", "update"].sort(),
     );
   });
 });
