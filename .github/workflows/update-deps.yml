@@ -24,6 +24,12 @@ jobs:
         run: |
           output=$(bun run scripts/update-deps.ts --audit 2>&1)
           echo "$output"
+          {
+            echo "## Dependency update log"
+            echo '```'
+            echo "$output"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
           echo "log<<EOF" >> "$GITHUB_OUTPUT"
           echo "$output" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"

@@ -197,92 +197,66 @@ interface RootPackageJson {
   devDependencies?: Record<string, string>;
 }
 
-async function runAudit(rootPkg: RootPackageJson, workspaceFiles: PkgFile[]): Promise<void> {
-  const catalog: Record<string, string> = rootPkg.workspaces?.catalog ?? {};
-  const packages = new Map<string, string>();
+interface BunAuditAdvisory {
+  id: number;
+  url: string;
+  title: string;
+  severity: "low" | "moderate" | "high" | "critical";
+  vulnerable_versions: string;
+}
 
-  function collectDeps(deps: Record<string, string>) {
-    for (const [name, range] of Object.entries(deps)) {
-      if (range.startsWith("workspace:")) continue;
-      const resolved = range.startsWith("catalog:") ? catalog[name] : range;
-      if (!resolved) continue;
-      const { version } = parseRange(resolved);
-      packages.set(name, version);
-    }
-  }
+const SEVERITY_ORDER = ["critical", "high", "moderate", "low"] as const;
 
-  for (const field of ["dependencies", "devDependencies"] as const) {
-    if (rootPkg[field]) collectDeps(rootPkg[field]);
-  }
-  for (const file of workspaceFiles) {
-    for (const field of ["dependencies", "devDependencies"] as const) {
-      if (file.data[field]) collectDeps(file.data[field]);
-    }
-  }
+// Shells out to `bun audit` instead of querying OSV directly with just the
+// declared (package.json) versions: that missed almost everything, since
+// most real advisories land on transitive deps that only exist in the
+// resolved lockfile, not any dependencies/devDependencies field.
+async function runAudit(): Promise<void> {
+  console.log("\nSecurity audit (bun audit)...");
 
-  const queries = Array.from(packages.entries()).map(([name, version]) => ({
-    package: { name, ecosystem: "npm" },
-    version,
-  }));
+  const proc = Bun.spawn(["bun", "audit", "--json"], {
+    cwd: ROOT,
+    stdout: "pipe",
+    stderr: "pipe",
+  });
+  const [stdout] = await Promise.all([new Response(proc.stdout).text(), proc.exited]);
 
-  console.log(`\nSecurity audit (${queries.length} packages)...`);
-
+  let byPackage: Record<string, BunAuditAdvisory[]>;
   try {
-    const res = await fetch("https://api.osv.dev/v1/querybatch", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ queries }),
-    });
+    byPackage = JSON.parse(stdout);
+  } catch {
+    console.log("  Failed to parse `bun audit` output.");
+    return;
+  }
 
-    if (!res.ok) {
-      console.log("  Failed to reach OSV API");
-      return;
+  const counts: Record<(typeof SEVERITY_ORDER)[number], number> = {
+    critical: 0,
+    high: 0,
+    moderate: 0,
+    low: 0,
+  };
+  const rows: Array<{ pkg: string } & BunAuditAdvisory> = [];
+  for (const [pkg, advisories] of Object.entries(byPackage)) {
+    for (const advisory of advisories) {
+      counts[advisory.severity]++;
+      rows.push({ pkg, ...advisory });
     }
+  }
 
-    const data = (await res.json()) as {
-      results: Array<{
-        vulns?: Array<{ id: string; summary?: string; database_specific?: { severity?: string } }>;
-      }>;
-    };
+  if (rows.length === 0) {
+    console.log("  No known vulnerabilities found.");
+    return;
+  }
 
-    const packageList = Array.from(packages.entries());
-    const vulnerable: Array<{
-      name: string;
-      version: string;
-      id: string;
-      summary: string;
-      severity: string;
-    }> = [];
+  rows.sort((a, b) => SEVERITY_ORDER.indexOf(a.severity) - SEVERITY_ORDER.indexOf(b.severity));
 
-    for (let i = 0; i < data.results.length; i++) {
-      const result = data.results[i];
-      const pkgEntry = packageList[i];
-      if (result?.vulns?.length && pkgEntry) {
-        const [pkgName, pkgVersion] = pkgEntry;
-        for (const vuln of result.vulns) {
-          vulnerable.push({
-            name: pkgName,
-            version: pkgVersion,
-            id: vuln.id,
-            summary: vuln.summary ?? "No description",
-            severity: vuln.database_specific?.severity ?? "unknown",
-          });
-        }
-      }
-    }
-
-    if (vulnerable.length === 0) {
-      console.log("  No known vulnerabilities found.");
-      return;
-    }
-
-    console.log(`\n  Found ${vulnerable.length} vulnerability(ies):\n`);
-    for (const v of vulnerable) {
-      console.log(`  ! ${v.name}@${v.version} — ${v.id} [${v.severity}]`);
-      console.log(`    ${v.summary}`);
-    }
-  } catch (err) {
-    console.log(`  Audit failed: ${err}`);
+  const summary = SEVERITY_ORDER.filter((s) => counts[s] > 0)
+    .map((s) => `${counts[s]} ${s}`)
+    .join(", ");
+  console.log(`\n  ${rows.length} advisories (${summary}):\n`);
+  for (const r of rows) {
+    console.log(`  ! [${r.severity}] ${r.pkg} ${r.vulnerable_versions} — ${r.title}`);
+    console.log(`    ${r.url}`);
   }
 }
 
@@ -418,7 +392,7 @@ async function main() {
       console.log(`\nUpdated ${totalUpdated} location(s). Run \`bun install\` to apply.`);
     }
 
-    if (audit) await runAudit(rootPkg, workspaceFiles);
+    if (audit) await runAudit();
     return;
   }
 
@@ -466,7 +440,7 @@ async function main() {
     console.log(`\nUpdated ${totalUpdated} deps. Run \`bun install\` to apply.`);
   }
 
-  if (audit) await runAudit(rootPkg, workspaceFiles);
+  if (audit) await runAudit();
 }
 
 main();
