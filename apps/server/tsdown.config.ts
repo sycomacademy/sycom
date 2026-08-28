@@ -8,4 +8,7 @@ export default defineConfig({
   deps: {
     alwaysBundle: [/@sycom\/.*/],
   },
+  outputOptions: {
+    codeSplitting: false,
+  },
 });
