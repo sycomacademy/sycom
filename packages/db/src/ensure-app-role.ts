@@ -9,6 +9,13 @@ import { poolOptions } from "./pool-config";
 // after every schema change.
 const APP_ROLE = "sycom_app";
 
+// Every Postgres schema the app's tables live in. Drizzle's better-auth
+// tables (packages/db/src/schema/auth.ts) live in a dedicated "auth" schema,
+// separate from "public" — easy to miss since most of the app's own tables
+// are unqualified (public). Keep this in sync with any `pgSchema(...)` call
+// added under packages/db/src/schema.
+const APP_SCHEMAS = ["public", "auth"];
+
 // Standard SQL identifier quoting: wrap in double quotes, double any
 // embedded double-quote. Needed because dbName can contain characters
 // (e.g. a hyphen in a dev database name) that aren't valid unquoted.
@@ -49,17 +56,20 @@ async function main() {
 
     console.log(`Granting least-privilege access on ${dbName} to "${APP_ROLE}"...`);
     await pool.query(`GRANT CONNECT ON DATABASE ${dbName} TO ${role}`);
-    await pool.query(`GRANT USAGE ON SCHEMA public TO ${role}`);
-    await pool.query(
-      `GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO ${role}`,
-    );
-    await pool.query(`GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO ${role}`);
-    await pool.query(
-      `ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO ${role}`,
-    );
-    await pool.query(
-      `ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO ${role}`,
-    );
+    for (const schemaName of APP_SCHEMAS) {
+      const schema = quoteIdent(schemaName);
+      await pool.query(`GRANT USAGE ON SCHEMA ${schema} TO ${role}`);
+      await pool.query(
+        `GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA ${schema} TO ${role}`,
+      );
+      await pool.query(`GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA ${schema} TO ${role}`);
+      await pool.query(
+        `ALTER DEFAULT PRIVILEGES IN SCHEMA ${schema} GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO ${role}`,
+      );
+      await pool.query(
+        `ALTER DEFAULT PRIVILEGES IN SCHEMA ${schema} GRANT USAGE, SELECT ON SEQUENCES TO ${role}`,
+      );
+    }
 
     console.log("Done.");
   } finally {
