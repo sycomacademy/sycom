@@ -15,10 +15,10 @@
     "test": "bun test ./src"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^3.0.61",
-    "@hono/node-server": "^2.0.12",
+    "@ai-sdk/openai": "^3.0.105",
+    "@hono/node-server": "^2.1.1",
     "@hono/trpc-server": "^0.4.2",
-    "@react-pdf/renderer": "^4.5.1",
+    "@react-pdf/renderer": "^4.9.0",
     "@sycom/auth": "workspace:*",
     "@sycom/certificates": "workspace:*",
     "@sycom/db": "workspace:*",
@@ -28,9 +28,9 @@
     "@sycom/storage": "workspace:*",
     "@sycom/ui": "workspace:*",
     "@trpc/server": "catalog:",
-    "ai": "^6.0.175",
+    "ai": "^6.0.272",
     "better-auth": "catalog:",
-    "cloudinary": "^2.10.0",
+    "cloudinary": "^2.11.0",
     "dotenv": "catalog:",
     "drizzle-orm": "catalog:",
     "hono": "catalog:",
@@ -42,8 +42,8 @@
   "devDependencies": {
     "@sycom/config": "workspace:*",
     "@types/bun": "catalog:",
-    "@types/pg": "^8.20.0",
-    "pg": "^8.20.0",
+    "@types/pg": "^8.23.1",
+    "pg": "^8.23.0",
     "tsdown": "^0.21.10",
     "typescript": "^6.0.3"
   }
